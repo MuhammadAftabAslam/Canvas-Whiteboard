@@ -1,0 +1,61 @@
+<ion-view hide-nav-bar="true" hide-back-button="true" view-title="Dashboard">
+  <ion-content scroll="false">
+    <div arbi-canvas id="wrapper">
+      <aside class="sidebar">
+        <a href="#" id="aside-opener" class="aside-opener">
+          <i class="fa fa-list-ul" aria-hidden="true"></i>
+        </a>
+
+        <div class="slide">
+          <ul class="jcf-scrollable list">
+            <li id="{{ recording.id }}" ng-repeat="recording in recordings">
+              <a class="link" ng-click="savedPlaying(recording)">{{ recording.id }}</a>
+              <a class="fa fa-trash-o delete"></a>
+            </li>
+          </ul>
+          <div class="btns-block">
+            <a><span class="fa fa-trash-o"></span> Delete All</a>
+            <a><span class="fa fa-play"></span> Play All</a>
+          </div>
+        </div>
+      </aside>
+      <div ng-audio-recorder audio-model='recordedInput' show-player="false" time-limit="timeLimit" id="content"
+           ng-init="selectedLineWidth = 2">
+
+        <div data-ng-app="canvasdemo">
+          <canvas id="rbcanvas"></canvas>
+        </div>
+        <div class="btn-list">
+          <div class="holder">
+            <a href="#" id="play-btn">
+              <i class="fa fa-play" aria-hidden="true"></i>
+            </a>
+            <a href="#" id="save-btn">
+              <i class="fa fa-floppy-o" aria-hidden="true"></i>
+            </a>
+            <a href="#" id="dalate-btn">
+              <i class="fa fa-trash-o" aria-hidden="true"></i>
+            </a>
+          </div>
+        </div>
+        <div class="btn-holder">
+          <a href="#" id="main-btn" class="btn-primary">
+          </a>
+        </div>
+        <div class="color-picker">
+          <div id="colorPicker">
+            <a class="color">
+              <div class="colorInner"></div>
+            </a>
+
+            <div class="track"></div>
+            <ul class="dropdown">
+              <li></li>
+            </ul>
+            <input id="hidden-color" type="hidden" class="colorInput"/>
+          </div>
+        </div>
+      </div>
+    </div>
+  </ion-content>
+</ion-view>

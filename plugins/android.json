@@ -1,0 +1,43 @@
+{
+    "prepare_queue": {
+        "installed": [],
+        "uninstalled": []
+    },
+    "config_munge": {
+        "files": {}
+    },
+    "installed_plugins": {
+        "cordova-plugin-console": {
+            "PACKAGE_NAME": "com.ionicframework.canvasarbi103262"
+        },
+        "cordova-plugin-device": {
+            "PACKAGE_NAME": "com.ionicframework.canvasarbi103262"
+        },
+        "cordova-plugin-splashscreen": {
+            "PACKAGE_NAME": "com.ionicframework.canvasarbi103262"
+        },
+        "cordova-plugin-statusbar": {
+            "PACKAGE_NAME": "com.ionicframework.canvasarbi103262"
+        },
+        "cordova-plugin-whitelist": {
+            "PACKAGE_NAME": "com.ionicframework.canvasarbi103262"
+        },
+        "ionic-plugin-keyboard": {
+            "PACKAGE_NAME": "com.ionicframework.canvasarbi103262"
+        },
+        "cordova-plugin-media-capture": {
+            "PACKAGE_NAME": "com.ionicframework.canvasarbi103262"
+        },
+        "cordova-plugin-media": {
+            "PACKAGE_NAME": "com.ionicframework.canvasarbi103262"
+        }
+    },
+    "dependent_plugins": {
+        "cordova-plugin-compat": {
+            "PACKAGE_NAME": "com.ionicframework.canvasarbi103262"
+        },
+        "cordova-plugin-file": {
+            "PACKAGE_NAME": "com.ionicframework.canvasarbi103262"
+        }
+    }
+}
