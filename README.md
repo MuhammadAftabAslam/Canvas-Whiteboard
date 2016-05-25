@@ -16,7 +16,7 @@ Clone the repo from the above given URI
  Create Virtual device for emulator using ADB
  
  Below are the commands for initializing ionic project.
- These are commands must use with sudo
+ These commands must be use without sudo
  
  Run application on emulator : 
     ionic emulate android
