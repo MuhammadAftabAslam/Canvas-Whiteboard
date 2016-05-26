@@ -1,0 +1,152 @@
+#content {
+  display: block;
+  width: 100%;
+  height: 100%;
+}
+
+.btn-holder {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 20px;
+  pointer-events: none;
+  text-align: center;
+  visibility: visible;
+  opacity: 1;
+  @extend %transition;
+  
+  @include media("≥tablet"){bottom: 100px;}
+}
+
+.btn-primary {
+  @include border-radius(35px);
+  @include inline-block(top);
+  pointer-events: all;
+  padding: 5px 20px;
+  background: $red;
+  color: $white;
+  position: relative;
+  font-size: 18px;
+  line-height: 18px;
+  text-align: left;
+  
+  @include media("≥tablet"){
+    font-size: 24px;
+    line-height: 24px;
+  }
+  
+  &:before {
+    content: '\f111';
+    font-family: FontAwesome;
+    font-style: normal;
+    font-weight: normal;
+    text-decoration: inherit;
+    padding: 0;
+    @include inline-block(top);
+
+  }
+  
+  .text-stop{display: none;}
+  
+  &:hover,
+  &:active,
+  &:focus{
+    color: $white;
+    background: darken($red,10%);
+  }
+  
+}
+
+.record{
+  .btn-primary {
+    background: $gray;
+    .text-stop{display: block;}
+    
+    .text-record{display: none;}
+    
+    &:before {content: '\f04d';}
+    
+    &:hover,
+    &:active,
+    &:focus{
+      color: $white;
+      background: darken($gray,10%);
+    }
+  }
+}
+
+
+.btn-list{
+  visibility: hidden;
+  opacity: 0;
+  background: black;
+  @extend %transition;
+  pointer-events: none;
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: 0;
+  bottom: 0;
+  @include v-align(100%, middle, before);
+  .holder{width: 100%;}
+  
+  a{
+    @include inline-block(top);
+    font-size: 20px;
+    line-height: 20px;
+    margin: 0 2%;
+    
+    i{
+      display: block;
+      font-size: 50px;
+      line-height: 50px;
+    }
+  }
+  @include media("≥tablet"){
+    a{
+      font-size: 30px;
+      line-height: 30px;
+
+      i{
+        font-size: 100px;
+        line-height: 100px;
+      }
+    }
+  }
+  @include media("≥desktop"){
+    a{
+      font-size: 40px;
+      line-height: 40px;
+      
+      i{
+        font-size: 150px;
+        line-height: 150px;
+      }
+    }
+  }
+  
+  @include media("≥widescreen"){
+    a{
+      i{
+        font-size: 170px;
+        line-height: 170px;
+      }
+    }
+  }
+}
+
+.stop{
+  .btn-list{
+    pointer-events: all;
+    visibility: visible;
+    opacity: 1;
+    @extend %transition;
+  }
+  .color-picker,
+  .btn-holder {
+    visibility: hidden;
+    opacity: 0;
+    @extend %transition;
+    pointer-events: none;
+  }
+}

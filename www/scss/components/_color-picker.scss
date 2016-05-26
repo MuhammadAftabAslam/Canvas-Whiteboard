@@ -1,0 +1,13 @@
+.color-picker{
+  position: absolute;
+  right: 54px;
+  bottom: 60px;
+  visibility: visible;
+  opacity: 1;
+  @extend %transition;
+  
+  @include media("≥tablet"){
+    right: 70px;
+    bottom: 70px;
+  }
+}

@@ -1,0 +1,51 @@
+html {
+	box-sizing: border-box;
+  height: 100%;
+}
+*, *:before, *:after {
+	box-sizing: inherit;
+}
+
+* {max-height: 1000000px;}
+
+body {
+  height: 100%;
+  color: $base-text-color;
+  background: $base-background-color;
+  font: #{$base-font-size}/#{$base-line-height} $base-font-family;
+  min-width: $base-min-width;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  overflow: hidden;
+}
+
+// adaptive images
+img {
+  max-width: 100%;
+  height: auto;
+}
+
+a{
+  color: $base-link-color;
+  text-decoration: none;
+  @extend %transition;
+  
+  &:hover,
+  &:active,
+  &:focus{
+    @extend %transition;
+    text-decoration: none;
+    color: lighten($base-link-color,20%);
+  }
+}
+
+// google map fix
+.gm-style img {max-width: none}
+
+// hide tel links on desktop
+@media only screen and (min-width:1025px) {
+    a[href^=tel],a[href^=skype], a[href^=sms] {
+    cursor:default;
+    pointer-events:none;
+  }
+}

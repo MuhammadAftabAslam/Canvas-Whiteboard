@@ -1,42 +1,14 @@
 angular.module('starter.controllers', [])
-
-  .controller('DashCtrl', ['$scope','Sounds', function ($scope, Sounds) {
-
-
-
-
-
-  }])
-
-  .controller('ChatsCtrl', function ($scope, Chats) {
-    // With the new view caching in Ionic, Controllers are only called
-    // when they are recreated or on app start, instead of every page change.
-    // To listen for when this page is active (for example, to refresh data),
-    // listen for the $ionicView.enter event:
-    //
-    //$scope.$on('$ionicView.enter', function(e) {
-    //});
-
-    $scope.chats = Chats.all();
-    $scope.remove = function (chat) {
-      Chats.remove(chat);
-    };
-  })
-
-  .controller('ChatDetailCtrl', function ($scope, $stateParams, Chats) {
-    $scope.chat = Chats.get($stateParams.chatId);
-  })
-
-  .controller('AccountCtrl', function ($scope) {
-    $scope.settings = {
-      enableFriends: true
-    };
-  })
+  .controller('DashCtrl', ['$scope', 'Sounds', function ($scope, Sounds) {}])
   .controller('NavCtrl', function ($scope, $ionicSideMenuDelegate) {
     $scope.showMenu = function () {
       $ionicSideMenuDelegate.toggleLeft();
     };
   })
+
+
+
+  // Main directive for the canvas recordings
   .directive('arbiCanvas', ['$ionicPlatform', '$cordovaMedia', '$cordovaCapture', 'Sounds', 'recorderService',
     function ($ionicPlatform, $cordovaMedia, $cordovaCapture, Sounds, recorderService) {
 
@@ -46,17 +18,14 @@ angular.module('starter.controllers', [])
 
           $ionicPlatform.ready(function () {
             var init = function () {
-              console.log('init 12: ');
               Sounds.get().then(function (res) {
-                console.log('init fun : ',res,'      Length : ',res.length);
-                scope.chats = res;
+                scope.recordings = res;
               })
             }
 
             init();
 
-            console.log('recorderService  : ', recorderService);
-            recorderService.isReady = true;
+            /*recorderService.isReady = true;
             var onallow = function () {
               console.log('allowed : ');
             }
@@ -66,17 +35,15 @@ angular.module('starter.controllers', [])
             var closed = function () {
               console.log('closed : ');
             }
-            console.log('recorderService isAvailable : ', recorderService.isAvailable());
-            console.log('recorderService showPermission : ', recorderService.showPermission({
+            recorderService.showPermission({
               onAllowed: onallow,
               onDenied: ondeny,
               onClosed: closed
-            }));
+            })*/
+
 
 
             var media = recorderService.controller('content');
-            //media.audio-model = 'recordedInput';
-            console.log('recorderService :', media, 'isHtml5() : ', media.isHtml5());
             media.timeLimit = 10;
             var $mainBtn = $('#main-btn');
             var $playBtn = $('#play-btn');
@@ -90,7 +57,7 @@ angular.module('starter.controllers', [])
               drawingElement.setColor($('#hidden-color').val());
             });
 
-            media.onRecordStart = function (s) {
+           /* media.onRecordStart = function (s) {
               console.log('onRecordStart callback: ======= >', s);
             }
 
@@ -99,21 +66,8 @@ angular.module('starter.controllers', [])
               console.log('onPlaybackStart callback: ======= >', s);
             }
 
-            media.onPlaybackComplete = function (s) {
-              console.log('onPlaybackComplete callback: ======= >', s);
-              drawingElement.clearCanvas();
-            }
-
             media.onConversionComplete = function (locals) {
               console.log('onConversionComplete callback: ======= >', locals);
-            }
-
-            media.onRecordComplete = function (locals) {
-              console.log('onRecordComplete callback: ======= >', locals);
-              $wrapper.removeClass('record');
-              $wrapper.addClass('stop');
-              drawingElement.stopRecording();
-              media.stopRecord();
             }
 
             media.onConversionStart = function (locals) {
@@ -122,6 +76,23 @@ angular.module('starter.controllers', [])
 
             media.onConversionComplete = function (locals) {
               console.log('onConversionComplete callback: ======= >', locals);
+            }
+
+            */
+
+            media.onPlaybackComplete = function (s) {
+              console.log('onPlaybackComplete callback: ======= >', s);
+              drawingElement.clearCanvas();
+            }
+
+
+
+            media.onRecordComplete = function (locals) {
+              console.log('onRecordComplete callback: ======= >', locals);
+              $wrapper.removeClass('record');
+              $wrapper.addClass('stop');
+              drawingElement.stopRecording();
+              media.stopRecord();
             }
 
 
@@ -142,20 +113,16 @@ angular.module('starter.controllers', [])
                 //  drawingElement.setStokeSize(2);
               }, function () {
               }, function () {
-                //status callback
                 return playbackInterruptCommand;
               });
             }
 
             var onclick = function () {
-              console.log("do something on every change of color", $wrapper.hasClass('record'));
               if ($wrapper.hasClass('record')) {
                 $wrapper.removeClass('record');
                 $wrapper.addClass('stop');
                 drawingElement.stopRecording();
                 media.stopRecord();
-                //media.save('test-aftab')
-
               }
               else if ($wrapper.hasClass('stop')) {
                 $wrapper.removeClass('stop');
@@ -171,12 +138,10 @@ angular.module('starter.controllers', [])
             var onPlay = function () {
               $wrapper.removeClass('stop').removeClass('record');
               if (drawingElement.recordings.length == 0) {
-                console.log("No recording to play");
               }
               else {
                 playRecording();
                 media.playbackRecording();
-                console.log('media after playback : ', media);
               }
             }
 
@@ -189,10 +154,8 @@ angular.module('starter.controllers', [])
                 voice: media.save('shh'),
                 id: (new Date()).getTime()
               }
-              console.log('obj on saving : ', obj);
-              Sounds.save(obj).then(function(){
-                console.log('saved in local storage');
-              init();
+              Sounds.save(obj).then(function () {
+                init();
               })
 
             }
@@ -202,11 +165,10 @@ angular.module('starter.controllers', [])
               if (result == null)
                 result = "Error : Unknown error in deserializing the data";
               if (result instanceof Array == false) {
-                console.log('error occured on instance ');
+
                 return;
               }
               else {
-                //data is successfully deserialize
                 drawingElement.recordings = result;
                 //set drawing property of each recording
                 for (var i = 0; i < result.length; i++) {
@@ -218,10 +180,6 @@ angular.module('starter.controllers', [])
               }
             }
 
-
-            var testfun = function () {
-              console.log('media testfun :', media);
-            }
             var toggleSideBar = function () {
               $wrapper.toggleClass('aside-active');
             }
@@ -229,7 +187,6 @@ angular.module('starter.controllers', [])
             $mainBtn.bind("mousedown touch", onclick);
             $playBtn.bind("mousedown touch", onPlay);
             $saveBtn.bind("mousedown touch", onSave);
-            //$('.btn-primary').bind("mousedown touch", testfun);
             $('#aside-opener').bind("mousedown touch", toggleSideBar);
 
           })
