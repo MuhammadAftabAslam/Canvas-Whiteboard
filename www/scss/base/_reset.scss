@@ -29,6 +29,7 @@ a{
   color: $base-link-color;
   text-decoration: none;
   @extend %transition;
+  cursor: pointer;
   
   &:hover,
   &:active,

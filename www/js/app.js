@@ -26,7 +26,7 @@ angular.module('starter', ['ionic', 'ngCordova','starter.controllers', 'starter.
 .config(function($stateProvider, $urlRouterProvider, recorderServiceProvider) {
     recorderServiceProvider.forceSwf(false)
       //.setSwfUrl('/lib/recorder.swf')
-      .withMp3Conversion(true)
+      .withMp3Conversion(false)
     ;
 
   // Ionic uses AngularUI Router which uses the concept of states

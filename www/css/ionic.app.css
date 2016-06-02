@@ -10154,7 +10154,7 @@ th {
   display: block;
   clear: both; }
 
-a, a:hover, a:active, a:focus, .slide, .list .link:before, .aside-active .slide, .btn-holder, .btn-list, .stop .btn-list, .stop .color-picker,
+a, a:hover, a:active, a:focus, .slide, .aside-active .slide, .btn-holder, .btn-list, .stop .btn-list, .stop .color-picker,
 .stop .btn-holder, .color-picker, #wrapper, #wrapper.aside-active {
   -webkit-transition: all 0.3s ease-in-out;
   transition: all 0.3s ease-in-out; }
@@ -10192,7 +10192,8 @@ img {
 
 a {
   color: #666;
-  text-decoration: none; }
+  text-decoration: none;
+  cursor: pointer; }
   a:hover, a:active, a:focus {
     text-decoration: none;
     color: #999999; }
@@ -10210,25 +10211,19 @@ a {
   width: 100%;
   height: 100%; }
 
-.sidebar {
+.aside-opener {
   position: absolute;
   left: 20px;
   top: 20px;
-  z-index: 99; }
-  @media (min-width: 768px) {
-    .sidebar {
-      left: 40px;
-      top: 40px; } }
-
-.aside-opener {
-  display: inline-block;
-  vertical-align: top;
+  z-index: 99;
   font-size: 30px;
   line-height: 30px; }
   @media (min-width: 768px) {
     .aside-opener {
       font-size: 42px;
-      line-height: 42px; } }
+      line-height: 42px;
+      left: 40px;
+      top: 40px; } }
 
 .slide {
   position: fixed;
@@ -10236,22 +10231,42 @@ a {
   left: -220px;
   top: 0;
   bottom: 0;
+  overflow: hidden;
   background: #666; }
   @media (min-width: 768px) {
     .slide {
       width: 320px;
       left: -320px; } }
-  .slide .jcf-scrollable-wrapper,
   .slide .jcf-scrollable {
+    overflow: hidden;
     width: 100% !important;
     height: 100% !important; }
 
 .list {
   padding: 0 0 35px; }
-  .list li {
-    overflow: hidden;
-    border-bottom: 1px solid #999;
-    position: relative; }
+  .list .list {
+    overflow: auto;
+    height: 100%;
+    width: 100%;
+    pointer-events: all; }
+    .list .list > * {
+      overflow: hidden;
+      border-width: 0;
+      border-bottom: 1px solid #999;
+      position: relative;
+      cursor: move;
+      padding: 10px 30px 10px 0;
+      background: none;
+      margin: 0; }
+    .list .list.list-right-editing > * > * {
+      background: none;
+      padding: 0; }
+    .list .list.list-right-editing > * .item-content {
+      padding-left: 35px; }
+    .list .list.list-right-editing .item-right-edit {
+      right: auto;
+      left: 0;
+      width: 40px; }
   .list .delete {
     position: absolute;
     right: 0;
@@ -10262,23 +10277,9 @@ a {
     margin-top: -10px;
     color: red; }
   .list .link {
-    display: block;
-    padding: 10px 30px 10px 25px;
+    float: left;
     color: #fff;
     position: relative; }
-    .list .link:before {
-      content: '\f04b';
-      font-family: FontAwesome;
-      font-style: normal;
-      font-weight: normal;
-      text-decoration: inherit;
-      padding: 0;
-      position: absolute;
-      top: 50%;
-      left: 10px;
-      font-size: 12px;
-      line-height: 12px;
-      margin-top: -6px; }
 
 .aside-active .slide {
   left: 0; }
@@ -10287,12 +10288,14 @@ a {
   color: #999999; }
 
 .btns-block {
+  background: #666;
   position: absolute;
   left: 0;
   right: 0;
   bottom: 0;
   font-size: 14px;
   line-height: 20px;
+  z-index: 5;
   border-top: 1px solid #fff; }
   .btns-block a {
     float: left;
@@ -10309,7 +10312,8 @@ a {
 #content {
   display: block;
   width: 100%;
-  height: 100%; }
+  height: 100%;
+  overflow: hidden; }
 
 .btn-holder {
   position: absolute;

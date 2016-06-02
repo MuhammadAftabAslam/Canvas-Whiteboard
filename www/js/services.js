@@ -51,17 +51,30 @@ angular.module('starter.services', [])
 
 .factory('Sounds', function($q) {
 
-	var deleteSound = function(x) {
-		console.log("calling deleteSound");
+		var deleteSound = function (x) {
+			console.log("calling deleteSound service ");
+			var deferred = $q.defer();
+			getSounds().then(function (sounds) {
+				//sounds.splice(x, 1);
+				//localStorage.rbboard = JSON.stringify(sounds);
+
+				for (var i = 0; i < sounds.length; i++) {
+					if (sounds[i].id === x) {
+						sounds.splice(i, 1);
+					}
+				}
+				localStorage.rbboard = JSON.stringify(sounds);
+				deferred.resolve();
+			});
+			return deferred.promise;
+		}
+
+	var deleteAll = function() {
+		console.log("calling deleteALLL");
+		localStorage.clear();
 		var deferred = $q.defer();
-		getSounds().then(function(sounds) {
-			sounds.splice(x,1);
-			localStorage.rbboard = JSON.stringify(sounds);
-			deferred.resolve();
-		});
-
+		deferred.resolve();
 		return deferred.promise;
-
 	}
 
 	var getSounds = function() {
@@ -101,7 +114,17 @@ angular.module('starter.services', [])
 		console.log("calling saveSound");
 		var deferred = $q.defer();
 		getSounds().then(function(sounds) {
-			sounds.push(s);
+			var flag = false;
+			for (var i = 0; i < sounds.length; i++) {
+					if (sounds[i].id === s.id) {
+						sounds[i] = s;
+						flag = true;
+					}
+				}
+
+			if(!flag){
+				sounds.push(s);
+			}
 			localStorage.rbboard = JSON.stringify(sounds);
 			deferred.resolve();
 		});
@@ -109,11 +132,21 @@ angular.module('starter.services', [])
 		return deferred.promise;
 	}
 
+	var swap = function(arr) {
+		console.log("calling swap services");
+		var deferred = $q.defer();
+		localStorage.rbboard = JSON.stringify(arr);
+		deferred.resolve();
+		return deferred.promise;
+	}
+
 	return {
 		get:getSounds,
 		save:saveSound,
 		delete:deleteSound,
-		play:playSound
+		deleteAll:deleteAll,
+		play:playSound,
+		swap:swap
 	};
 });
 
