@@ -1,15 +1,28 @@
 angular.module('starter.controllers', [])
-  .controller('DashCtrl', ['$scope', 'Sounds', function ($scope, Sounds) {}])
+  .controller('DashCtrl', ['$scope', 'Sounds', function ($scope, Sounds) {
+  }])
   .controller('NavCtrl', function ($scope, $ionicSideMenuDelegate) {
     $scope.showMenu = function () {
       $ionicSideMenuDelegate.toggleLeft();
     };
+
+    $scope.dragOptions = {
+      start: function (e) {
+        console.log("STARTING");
+      },
+      drag: function (e) {
+        console.log("DRAGGING");
+      },
+      stop: function (e) {
+        console.log("STOPPING");
+      },
+      container: 'color-holder'
+    }
   })
 
 
-
   // Main directive for the canvas recordings
-  .directive('arbiCanvas', ['$ionicPlatform', '$cordovaMedia', '$cordovaCapture', 'Sounds', 'recorderService','$ionicListDelegate','$ionicPopup',
+  .directive('arbiCanvas', ['$ionicPlatform', '$cordovaMedia', '$cordovaCapture', 'Sounds', 'recorderService', '$ionicListDelegate', '$ionicPopup',
     function ($ionicPlatform, $cordovaMedia, $cordovaCapture, Sounds, recorderService, $ionicListDelegate, $ionicPopup) {
 
       return {
@@ -38,20 +51,20 @@ angular.module('starter.controllers', [])
 
 
             /*recorderService.isReady = true;
-            var onallow = function () {
-              console.log('allowed : ');
-            }
-            var ondeny = function () {
-              console.log('ondeny : ');
-            }
-            var closed = function () {
-              console.log('closed : ');
-            }
-            recorderService.showPermission({
-              onAllowed: onallow,
-              onDenied: ondeny,
-              onClosed: closed
-            })*/
+             var onallow = function () {
+             console.log('allowed : ');
+             }
+             var ondeny = function () {
+             console.log('ondeny : ');
+             }
+             var closed = function () {
+             console.log('closed : ');
+             }
+             recorderService.showPermission({
+             onAllowed: onallow,
+             onDenied: ondeny,
+             onClosed: closed
+             })*/
 
 
 
@@ -80,15 +93,15 @@ angular.module('starter.controllers', [])
               toggleMenu(false);
             }
 
-           media.onConversionComplete = function (locals) {
+            media.onConversionComplete = function (locals) {
               console.log('onConversionComplete callback: ======= >', locals);
-            // onSave();
+              // onSave();
             }
-/*
-            media.onConversionStart = function (locals) {
-              console.log('onConversionStart callback  : ======= >', locals);
-            }
-            */
+            /*
+             media.onConversionStart = function (locals) {
+             console.log('onConversionStart callback  : ======= >', locals);
+             }
+             */
 
             media.onPlaybackComplete = function (s) {
               console.log('onPlaybackComplete callback: ======= >', s);
@@ -98,19 +111,18 @@ angular.module('starter.controllers', [])
             }
 
 
-
             media.onRecordComplete = function (locals) {
               console.log('onRecordComplete callback: ======= >', locals);
               $wrapper.removeClass('record');
               $wrapper.addClass('stop');
               drawingElement.stopRecording();
               media.stopRecord();
-              console.log('isConverting : ',media.status.isConverting);
-              console.log('isRecording : ',media.status.isRecording);
-              console.log('isPlaying : ',media.status.isPlaying);
-              console.log('playback : ',media.status.playback);
+              console.log('isConverting : ', media.status.isConverting);
+              console.log('isRecording : ', media.status.isRecording);
+              console.log('isPlaying : ', media.status.isPlaying);
+              console.log('playback : ', media.status.playback);
               onSave();
-              console.log('recorderService.getHandler(); : ',recorderService.getHandler());
+              console.log('recorderService.getHandler(); : ', recorderService.getHandler());
             }
 
 
@@ -128,7 +140,7 @@ angular.module('starter.controllers', [])
               }, function () {
                 //if ($('#hidden-color').val())
                 //drawingElement.setColor('#fff');
-                //  drawingElement.setStokeSize(2);
+                //drawingElement.setStokeSize(2);
               }, function () {
               }, function () {
                 return playbackInterruptCommand;
@@ -136,6 +148,7 @@ angular.module('starter.controllers', [])
             }
 
             var onclick = function () {
+              $wrapper.removeClass('aside-active');
               if ($wrapper.hasClass('record')) {
                 $wrapper.removeClass('record');
                 $wrapper.addClass('stop');
@@ -157,14 +170,20 @@ angular.module('starter.controllers', [])
 
 
             var onPlay = function () {
-              console.log('on play : ');
-              $wrapper.removeClass('stop').removeClass('record');
-              if (drawingElement.recordings.length == 0) {
-                console.log('no recording exist ');
+              /*console.log('on play : ');
+               $wrapper.removeClass('stop').removeClass('record').removeClass('aside-active');
+               if (drawingElement.recordings.length == 0) {
+               console.log('no recording exist ');
+               }
+               else {
+               playRecording();
+               media.playbackRecording();
+               }*/
+              if (!$.isEmptyObject(currentRecording)) {
+                scope.savedPlaying(currentRecording);
               }
               else {
-                playRecording();
-                media.playbackRecording();
+                alert('Sorry, System do not have any recording yet. Please select from the right bar.');
               }
             }
 
@@ -172,16 +191,17 @@ angular.module('starter.controllers', [])
             var onSave = function () {
               //$wrapper.removeClass('stop').removeClass('record');
               var serializedData = serializeDrawing(drawingElement);
-              var obj = {
-                canvas: serializedData,
-                voice: media.save('shh'),
-                id: (!$.isEmptyObject(currentRecording)) ? currentRecording.id : (new Date()).getTime()
-              }
-              currentRecording = obj;
-              Sounds.save(obj).then(function () {
-                init();
-              })
-
+              media.save('shh', function (res) {
+                var obj = {
+                  canvas: serializedData,
+                  voice: res,
+                  id: (!$.isEmptyObject(currentRecording)) ? currentRecording.id : (new Date()).getTime()
+                }
+                currentRecording = obj;
+                Sounds.save(obj).then(function () {
+                  init();
+                })
+              });
             }
 
             scope.savedPlaying = function (obj) {
@@ -199,13 +219,13 @@ angular.module('starter.controllers', [])
                 for (var i = 0; i < result.length; i++) {
                   result[i].drawing = drawingElement;
                 }
-                $wrapper.toggleClass('aside-active');
+                $wrapper.removeClass('aside-active');
                 playRecording();
                 media.playbackRecording(obj.voice);
               }
             }
 
-            scope.itemDelete = function (obj,flag) {
+            scope.itemDelete = function (obj, flag) {
               console.log('delete in controller :');
               var confirmPopup = $ionicPopup.confirm({
                 title: 'Are you sure?',
@@ -242,18 +262,19 @@ angular.module('starter.controllers', [])
               });
             }
 
-            var toggleMenu = function(flag){
-              if(flag){
+            var toggleMenu = function (flag) {
+              if (flag) {
                 $mainBtn.show();
                 $('#aside-opener').show();
               }
-              else{
+              else {
                 $mainBtn.hide();
                 $('#aside-opener').hide();
               }
             }
 
             var onRetake = function () {
+              $wrapper.removeClass('aside-active');
               var confirmPopup = $ionicPopup.confirm({
                 title: 'Are you sure?',
                 template: 'Are you sure for retake this recording?'
@@ -263,7 +284,7 @@ angular.module('starter.controllers', [])
                   drawingElement.clearCanvas();
                   if (!$.isEmptyObject(currentRecording)) {
                     $wrapper.removeClass('stop').removeClass('record');
-                      onclick();
+                    onclick();
                   }
                 } else {
                   alert('select recording first');
@@ -273,6 +294,7 @@ angular.module('starter.controllers', [])
             }
 
             var deleteRecording = function () {
+              $wrapper.removeClass('aside-active');
               var confirmPopup = $ionicPopup.confirm({
                 title: 'Are you sure?',
                 template: 'Are you sure to delete current recording?'
@@ -294,25 +316,106 @@ angular.module('starter.controllers', [])
               });
             }
 
-            var onNewRecording = function(){
+            var onNewRecording = function () {
               currentRecording = {};
               alert('Are you really want to make a new recording');
               drawingElement.clearCanvas();
-
+              $wrapper.removeClass('stop').removeClass('record');
+              $wrapper.removeClass('aside-active');
+              onclick();
+            }
+            var closeSideBar = function () {
+              $wrapper.removeClass('aside-active');
             }
 
             $mainBtn.bind("mousedown touch", onclick);
             $playBtn.bind("mousedown touch", onPlay);
-            $saveBtn.bind("mousedown touch", onSave);
+            //$saveBtn.bind("mousedown touch", onSave);
             $('#newfile-btn').bind("mousedown touch", onNewRecording);
             $retakeBtn.bind("mousedown touch", onRetake);
             $('#delete-btn').bind("mousedown touch", clearLocalStorage);
             $('#delete-recording').bind("mousedown touch", deleteRecording);
             $('#aside-opener').bind("mousedown touch", toggleSideBar);
+            $('#rbcanvas').bind("mousedown touch", closeSideBar);
 
           })
 
         }
       };
 
-    }]);
+    }])
+  .directive('ngDraggable', function ($document) {
+    return {
+      restrict: 'A',
+      scope: {
+        dragOptions: '=ngDraggable'
+      },
+      link: function (scope, elem, attr) {
+        var startX, startY, x = 0, y = 0,
+          start, stop, drag, container;
+
+        var width = elem[0].offsetWidth,
+          height = elem[0].offsetHeight;
+
+        // Obtain drag options
+        if (scope.dragOptions) {
+          start = scope.dragOptions.start;
+          drag = scope.dragOptions.drag;
+          stop = scope.dragOptions.stop;
+          var id = scope.dragOptions.container;
+          if (id) {
+            container = document.getElementById(id).getBoundingClientRect();
+          }
+        }
+
+        // Bind mousedown event
+        elem.on('mousedown', function (e) {
+          e.preventDefault();
+          startX = e.clientX - elem[0].offsetLeft;
+          startY = e.clientY - elem[0].offsetTop;
+          $document.on('mousemove', mousemove);
+          $document.on('mouseup', mouseup);
+          if (start) start(e);
+        });
+
+        // Handle drag event
+        function mousemove(e) {
+          y = e.clientY - startY;
+          x = e.clientX - startX;
+          setPosition();
+          if (drag) drag(e);
+        }
+
+        // Unbind drag events
+        function mouseup(e) {
+          $document.unbind('mousemove', mousemove);
+          $document.unbind('mouseup', mouseup);
+          if (stop) stop(e);
+        }
+
+        // Move element, within container if provided
+        function setPosition() {
+          if (container) {
+            console.log('x : ', x);
+            if (x < container.left) {
+              x = container.left;
+            } else if (x > container.right - width) {
+              x = container.right - width;
+            }
+            console.log('y : ', y);
+            if (y < container.top) {
+              y = container.top;
+            } else if (y > container.bottom - height) {
+              y = container.bottom - height;
+            }
+          }
+
+          elem.css({
+            top: y + 'px',
+            left: x + 'px'
+          });
+        }
+      }
+    }
+
+  });

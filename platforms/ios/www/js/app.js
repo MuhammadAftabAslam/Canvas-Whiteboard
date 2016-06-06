@@ -26,7 +26,7 @@ angular.module('starter', ['ionic', 'ngCordova','starter.controllers', 'starter.
 .config(function($stateProvider, $urlRouterProvider, recorderServiceProvider) {
     recorderServiceProvider.forceSwf(false)
       //.setSwfUrl('/lib/recorder.swf')
-      .withMp3Conversion(true)
+      .withMp3Conversion(false)
     ;
 
   // Ionic uses AngularUI Router which uses the concept of states
@@ -50,35 +50,6 @@ angular.module('starter', ['ionic', 'ngCordova','starter.controllers', 'starter.
       'tab-dash': {
         templateUrl: 'templates/tab-dash.html',
         controller: 'DashCtrl'
-      }
-    }
-  })
-
-  .state('tab.chats', {
-      url: '/chats',
-      views: {
-        'tab-chats': {
-          templateUrl: 'templates/tab-chats.html',
-          controller: 'ChatsCtrl'
-        }
-      }
-    })
-    .state('tab.chat-detail', {
-      url: '/chats/:chatId',
-      views: {
-        'tab-chats': {
-          templateUrl: 'templates/chat-detail.html',
-          controller: 'ChatDetailCtrl'
-        }
-      }
-    })
-
-  .state('tab.account', {
-    url: '/account',
-    views: {
-      'tab-account': {
-        templateUrl: 'templates/tab-account.html',
-        controller: 'AccountCtrl'
       }
     }
   });

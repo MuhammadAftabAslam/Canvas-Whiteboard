@@ -15,8 +15,8 @@
     position:       absolute;
     cursor:         crosshair;
     float:          left;
-    left:           -71px;
-    top:            -71px;
+    left:           -69px;
+    top:            -63px;
     display:        none;
     border:         1px solid #ccc;
     z-index:        10;

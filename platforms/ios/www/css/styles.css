@@ -18,6 +18,7 @@ html {
  */
 body {
     margin: 0;
+    overflow: hidden;
 }
 
 /* HTML5 display definitions
@@ -518,25 +519,51 @@ a:hover, a:active, a:focus {
     }
 }
 
+.btns-block{
+    position: absolute;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    font-size: 14px;
+    line-height: 20px;
+    border-top: 1px solid #fff;
+}
+
+.btns-block a{
+    color: #fff;
+    width: 50%;
+    float: left;
+    border-left: 1px solid #fff;
+    padding: 13px 20px;
+    text-emphasis: circle;
+    text-align: center;
+}
+
+.btns-block a:first-child{border-left: 0;}
+
+.btns-block a span{margin-right: 5px}
 .slide .jcf-scrollable-wrapper,
 .slide .jcf-scrollable {
     width: 100% !important;
     height: 100% !important;
 }
 
+.slide .jcf-scrollable{padding-bottom: 50px;}
+
 .list li {
     overflow: hidden;
+    position: relative;
     border-bottom: 1px solid #999;
 }
 
-.list a {
+.list .link {
     display: block;
-    padding: 10px 10px 10px 25px;
+    padding: 10px 20px 10px 25px;
     color: #fff;
     position: relative;
 }
 
-.list a:before {
+.list .link:before {
     content: '\f04b';
     font-family: FontAwesome;
     font-style: normal;
@@ -551,7 +578,7 @@ a:hover, a:active, a:focus {
     margin-top: -6px;
 }
 
-.list a:after {
+.list .link:after {
     position: absolute;
     left: 0;
     top: 0;
@@ -562,11 +589,34 @@ a:hover, a:active, a:focus {
     background: rgba(255, 255, 255, 0.1);
 }
 
-.list a:hover:after, .list a:active:after {
+.list li:hover .link:after, .list:active .link:after {
     height: 100%;
 }
 
-.list a:hover:before, .list a:active:before {
+.list li .delete{
+    position: absolute;
+    right: 10px;
+    top: 50%;
+    font-size: 14px;
+    line-height: 1;
+    margin-top: -7px;
+    visibility: hidden;
+    opacity: 0;
+    color: red;
+    z-index: 99;
+    transition: all 0.3s ease-in-out;
+    -webkit-transition: all 0.3s ease-in-out;
+}
+
+
+.list li:hover .delete, .list:active .delete {
+    visibility: visible;
+    opacity: 1;
+    transition: all 0.3s ease-in-out;
+    -webkit-transition: all 0.3s ease-in-out;
+}
+
+.list li:hover .link:before, .list li:active .link:before {
     -webkit-transform: rotate(360deg);
     transform: rotate(360deg);
 }
@@ -588,8 +638,6 @@ a:hover, a:active, a:focus {
 #content .container{
     width: 100%;
     height: 100%;
-    max-width:;
-    mg
 }
 
 .btn-holder {
@@ -614,7 +662,7 @@ a:hover, a:active, a:focus {
     display: inline-block;
     vertical-align: top;
     pointer-events: all;
-    padding: 12px 20px 12px 40px;
+    padding: 5px 20px 6px;
     background: #f00;
     color: #fff;
     position: relative;
@@ -627,27 +675,18 @@ a:hover, a:active, a:focus {
     .btn-primary {
         font-size: 24px;
         line-height: 24px;
-        padding: 17px 20px 17px 45px;
     }
 }
 
 .btn-primary:before {
-    content: '\f04d';
+    content: '\f111';
     font-family: FontAwesome;
     font-style: normal;
     font-weight: normal;
     text-decoration: inherit;
     padding: 0;
-    position: absolute;
-    top: 50%;
-    left: 15px;
-    margin-top: -9px;
-}
-
-@media (min-width: 768px) {
-    .btn-primary:before {
-        margin-top: -12px;
-    }
+    display: inline-block;
+    vertical-align: top;
 }
 
 .btn-primary .text-stop {
@@ -691,6 +730,7 @@ a:hover, a:active, a:focus {
     bottom: 0;
     white-space: nowrap;
     text-align: center;
+    background: #000;
 }
 
 .btn-list:before {
@@ -715,26 +755,26 @@ a:hover, a:active, a:focus {
 .btn-list a {
     display: inline-block;
     vertical-align: top;
-    font-size: 30px;
-    line-height: 30px;
+    font-size: 25px;
+    line-height: 25px;
     margin: 0 5%;
 }
 
 .btn-list a i {
     display: block;
-    font-size: 135px;
-    line-height: 135px;
+    font-size: 100px;
+    line-height: 100px;
 }
 
 @media (min-width: 1024px) {
     .btn-list a {
-        font-size: 50px;
-        line-height: 50px;
+        font-size: 40px;
+        line-height: 40px;
     }
 
     .btn-list a i {
-        font-size: 250px;
-        line-height: 250px;
+        font-size: 200px;
+        line-height: 200px;
     }
 }
 
@@ -874,7 +914,6 @@ a:hover, a:active, a:focus {
 #wrapper {
     height: 100%;
     width: 100%;
-    overflow: hidden;
     position: relative;
 }
 

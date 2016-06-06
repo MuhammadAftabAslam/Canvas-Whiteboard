@@ -293,6 +293,14 @@ module.exports = [
         "clobbers": [
             "window.Media"
         ]
+    },
+    {
+        "file": "plugins/ionic-plugin-deploy/www/ionicdeploy.js",
+        "id": "ionic-plugin-deploy.IonicDeploy",
+        "pluginId": "ionic-plugin-deploy",
+        "clobbers": [
+            "IonicDeploy"
+        ]
     }
 ];
 module.exports.metadata = 
@@ -307,7 +315,8 @@ module.exports.metadata =
     "cordova-plugin-compat": "1.0.0",
     "cordova-plugin-file": "4.2.0",
     "cordova-plugin-media-capture": "1.3.0",
-    "cordova-plugin-media": "2.3.0"
+    "cordova-plugin-media": "2.3.0",
+    "ionic-plugin-deploy": "0.5.4"
 }
 // BOTTOM OF METADATA
 });

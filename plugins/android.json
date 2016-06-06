@@ -30,6 +30,9 @@
         },
         "cordova-plugin-media": {
             "PACKAGE_NAME": "com.ionicframework.canvasarbi103262"
+        },
+        "ionic-plugin-deploy": {
+            "PACKAGE_NAME": "com.ionicframework.canvasarbi103262"
         }
     },
     "dependent_plugins": {

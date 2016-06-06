@@ -10154,8 +10154,8 @@ th {
   display: block;
   clear: both; }
 
-a, a:hover, a:active, a:focus, .slide, .aside-active .slide, .btn-holder, .btn-list, .stop .btn-list, .stop .color-picker,
-.stop .btn-holder, .color-picker, #wrapper, #wrapper.aside-active {
+a, a:hover, a:active, a:focus, .slide, .aside-active .slide, .btn-holder, .btn-list, .stop .btn-list, .stop .color-holder,
+.stop .btn-holder, .color-holder, #wrapper, #wrapper.aside-active {
   -webkit-transition: all 0.3s ease-in-out;
   transition: all 0.3s ease-in-out; }
 
@@ -10434,22 +10434,50 @@ a {
   visibility: visible;
   opacity: 1; }
 
-.stop .color-picker,
+.stop .color-holder,
 .stop .btn-holder {
   visibility: hidden;
   opacity: 0;
   pointer-events: none; }
 
+.color-holder {
+  position: absolute;
+  visibility: visible;
+  opacity: 1;
+  pointer-events: none;
+  left: 0;
+  right: 0;
+  top: 0;
+  bottom: 0; }
+
 .color-picker {
   position: absolute;
-  right: 54px;
-  bottom: 60px;
-  visibility: visible;
-  opacity: 1; }
+  right: 60px;
+  bottom: 50px;
+  width: 155px;
+  height: 155px;
+  pointer-events: all; }
   @media (min-width: 768px) {
     .color-picker {
       right: 70px;
       bottom: 70px; } }
+  .color-picker #colorPicker {
+    margin: 0 auto;
+    min-width: 40px;
+    min-height: 40px;
+    width: inherit;
+    height: inherit;
+    overflow: hidden; }
+    .color-picker #colorPicker .color {
+      position: absolute;
+      left: 50%;
+      top: 50%;
+      margin: -12px 0 0 -12px; }
+    .color-picker #colorPicker .track {
+      position: static;
+      border: 0;
+      left: 0;
+      top: 0; }
 
 /* custom scrollbars styles */
 .jcf-scrollable-wrapper {

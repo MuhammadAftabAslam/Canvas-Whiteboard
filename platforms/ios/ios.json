@@ -47,6 +47,10 @@
                         {
                             "xml": "<feature name=\"Media\"><param name=\"ios-package\" value=\"CDVSound\" /></feature>",
                             "count": 1
+                        },
+                        {
+                            "xml": "<feature name=\"IonicDeploy\"><param name=\"ios-package\" onload=\"true\" value=\"IonicDeploy\" /></feature>",
+                            "count": 1
                         }
                     ]
                 }
@@ -82,6 +86,9 @@
             "PACKAGE_NAME": "com.ionicframework.canvasarbi103262"
         },
         "cordova-plugin-media": {
+            "PACKAGE_NAME": "com.ionicframework.canvasarbi103262"
+        },
+        "ionic-plugin-deploy": {
             "PACKAGE_NAME": "com.ionicframework.canvasarbi103262"
         }
     },
@@ -380,6 +387,14 @@
             "clobbers": [
                 "window.Media"
             ]
+        },
+        {
+            "file": "plugins/ionic-plugin-deploy/www/ionicdeploy.js",
+            "id": "ionic-plugin-deploy.IonicDeploy",
+            "pluginId": "ionic-plugin-deploy",
+            "clobbers": [
+                "IonicDeploy"
+            ]
         }
     ],
     "plugin_metadata": {
@@ -392,6 +407,7 @@
         "cordova-plugin-compat": "1.0.0",
         "cordova-plugin-file": "4.2.0",
         "cordova-plugin-media-capture": "1.3.0",
-        "cordova-plugin-media": "2.3.0"
+        "cordova-plugin-media": "2.3.0",
+        "ionic-plugin-deploy": "0.5.4"
     }
 }
