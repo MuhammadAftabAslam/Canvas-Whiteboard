@@ -47,8 +47,17 @@ function serializeActionSet (actionSet)
 
 function serializeAction (action)
 {
-	if (action.actionType == 1) //Point action
-		return serializePoint (action);
+	switch (action.actionType)
+	{
+		case 1: //Point Action
+			return serializePoint (action);
+		case 2: //SeColor Action
+			return {actionType : 2,
+					color : action.color};
+		case 3: //Set Stroke Size
+			return {actionType : 3,
+					size : action.size};
+	}
 	return null;
 }
 
@@ -128,9 +137,14 @@ function deserializeActionSet(actionSetWrp)
 
 function deserializeAction (actionWrp)
 {
-	if (actionWrp.actionType == 1) //point action
+	switch (actionWrp.actionType)
 	{
-		return deserializePoint(actionWrp);
+		case 1: //Point action
+			return deserializePoint(actionWrp);
+		case 2: //SetColor action
+			return new SetColor(actionWrp.color);
+		case 3: //Set Stroke Size
+			return new SetStokeSize(actionWrp.size);
 	}
 	return null;
 }
