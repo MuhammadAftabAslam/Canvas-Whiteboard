@@ -9,14 +9,19 @@ Clone the repo from the above given URI
  Install ionic globally using npm
     npm install -g cordova ionic
     
- Install android SDK manager
- Install all dependent APIs
- Install ADB globally
+If you want to run android emulator    
+ 
+  Install android SDK manager
+ 
+  Install all dependent APIs
+ 
+  Install ADB globally
  
  Create Virtual device for emulator using ADB
  
  Below are the commands for initializing ionic project.
- These are commands must use with sudo
+ 
+ These are commands must use without sudo
  
  Run application on emulator : 
     ionic emulate android
