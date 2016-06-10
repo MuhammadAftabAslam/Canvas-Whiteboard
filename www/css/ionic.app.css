@@ -10267,6 +10267,10 @@ a {
       right: auto;
       left: 0;
       width: 40px; }
+      .list .list.list-right-editing .item-right-edit .button.icon {
+        color: #fff;
+        padding: 0 0 4px 6px;
+        margin: 0; }
   .list .delete {
     position: absolute;
     right: 0;
@@ -10374,6 +10378,35 @@ a {
       color: #fff;
       background: #02c94e; }
 
+.btn-clear {
+  position: absolute;
+  right: 10px;
+  top: 10px;
+  display: none;
+  -webkit-border-radius: 35px;
+  -moz-border-radius: 35px;
+  -ms-border-radius: 35px;
+  -o-border-radius: 35px;
+  border-radius: 35px;
+  pointer-events: all;
+  padding: 5px 15px 7px;
+  background: #f00;
+  color: #fff;
+  position: relative;
+  font-size: 18px;
+  line-height: 18px;
+  text-align: left; }
+  @media (min-width: 768px) {
+    .btn-clear {
+      font-size: 24px;
+      line-height: 24px; } }
+  .btn-clear i {
+    display: inline-block;
+    vertical-align: top; }
+  .btn-clear:hover, .btn-clear:active, .btn-clear:focus {
+    color: #fff;
+    background: #cc0000; }
+
 .record .btn-primary {
   background: #666; }
   .record .btn-primary .text-stop {
@@ -10385,12 +10418,11 @@ a {
   .record .btn-primary:hover, .record .btn-primary:active, .record .btn-primary:focus {
     color: #fff;
     background: #4d4d4d; }
-  .record .btn-primary.clear {
-    display: inline-block;
-    vertical-align: top;
-    background: #03fb61; }
-    .record .btn-primary.clear:before {
-      content: '\f044'; }
+
+.record .btn-clear {
+  display: inline-block;
+  vertical-align: top;
+  position: absolute; }
 
 .btn-list {
   visibility: hidden;
@@ -10585,28 +10617,35 @@ a {
   padding: 10px 40px 10px 10px;
   height: 50px;
   max-width: 500px;
-  margin: 0 auto 10px;
+  margin: 0 auto 20px;
   position: relative; }
   .btn-list .form fieldset {
     padding: 0;
     border: 0;
     margin: 0; }
+  .btn-list .form .inner-box {
+    display: block; }
   .btn-list .form .input-holder {
     display: none; }
   .btn-list .form .inner-holder {
     overflow: hidden; }
   .btn-list .form .name {
-    color: white;
+    color: #fff;
     float: left;
+    width: 100%;
+    font-weight: bold;
     font-size: 16px;
     line-height: 30px;
     overflow: hidden;
     white-space: nowrap;
-    text-overflow: ellipsis; }
+    text-overflow: ellipsis;
+    text-align: left; }
     .btn-list .form .name a {
+      display: block;
       color: white;
       font-size: 16px;
-      line-height: 30px; }
+      line-height: 30px;
+      margin: 0; }
   .btn-list .form a.opener {
     color: white;
     position: absolute;
@@ -10614,7 +10653,7 @@ a {
     top: 50%;
     font-size: 20px;
     line-height: 20px;
-    margin: -10px 0 0; }
+    margin: -9px 0 0; }
     .btn-list .form a.opener i {
       margin: 0;
       font-size: 20px;
@@ -10628,32 +10667,19 @@ a {
     right: 0;
     bottom: 0;
     padding: 10px 40px 10px 10px;
-    display: block; }
+    display: block;
+    background: #fff; }
   .btn-list .form.form-active input {
     float: left;
     width: 100%;
     font-size: 16px;
     line-height: 30px;
-    color: white;
+    height: 30px;
+    color: #666;
     font-weight: bold;
     padding: 0;
     border: 0;
     background: none; }
-  .btn-list .form.form-active button {
-    background: none;
-    border: 0;
-    padding: 0;
-    color: white;
-    position: absolute;
-    right: 10px;
-    top: 50%;
-    font-size: 20px;
-    line-height: 20px;
-    margin: -10px 0 0; }
-    .btn-list .form.form-active button i {
-      margin: 0;
-      font-size: 20px;
-      line-height: 20px; }
 
 #wrapper {
   height: 100%;

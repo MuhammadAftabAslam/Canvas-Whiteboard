@@ -203,7 +203,6 @@ angular.module('starter.controllers', [])
                   voice: res,
                   id: (!$.isEmptyObject(currentRecording)) ? currentRecording.id : (new Date()).getTime()
                 }
-                debugger;
                 if(scope.recordings){
                    obj.name =  'scene : '+(scope.recordings.length + 1);
                 }

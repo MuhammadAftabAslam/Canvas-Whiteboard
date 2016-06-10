@@ -25,9 +25,7 @@
       <div ng-audio-recorder audio-model='recorded' show-player="false" time-limit="timeLimit" id="content"
            ng-init="selectedLineWidth = 2">
 
-        <a href="#" id="btn-clear" class="btn-primary clear"></a>
-
-
+        <a href="#" id="btn-clear" class="btn-clear"><i class="fa fa-times" aria-hidden="true"></i> clear</a>
 
         <div data-ng-app="canvasdemo">
           <canvas id="rbcanvas"></canvas>
@@ -38,13 +36,11 @@
               <fieldset>
                 <div class="inner-holder">
                   <div class="inner-box">
-                    <strong class="name"><a id="recording-text" href="#"></a></strong>
-                    <a href="#" class="opener"><i class="fa fa-pencil-square-o" aria-hidden="true"></i></a>
-                  </div>
-                  <div class="input-holder">
                     <input id="edit-recording-text" type="text" value="">
-                    <button type="submit"><i class="fa fa-pencil-square-o" aria-hidden="true"></i></button>
                   </div>
+                  <!--<div class="input-holder">
+                    <input id="edit-recording-text" type="text" value="">
+                  </div>-->
                 </div>
               </fieldset>
             </form>
