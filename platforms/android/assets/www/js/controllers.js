@@ -80,21 +80,22 @@ angular.module('starter.controllers', [])
             var currentRecording = {};
 
             $tinyColor.bind("change", function () {
+              console.log('change color : ',$('#hidden-color').val());
               drawingElement.setColor($('#hidden-color').val());
             });
 
             media.onRecordStart = function (s) {
-              console.log('onRecordStart callback: ======= >', s);
+              //console.log('onRecordStart callback: ======= >', s);
             }
 
 
             media.onPlaybackStart = function (s) {
-              console.log('onPlaybackStart callback: ======= >', s);
+              //console.log('onPlaybackStart callback: ======= >', s);
               toggleMenu(false);
             }
 
             media.onConversionComplete = function (locals) {
-              console.log('onConversionComplete callback: ======= >', locals);
+              //console.log('onConversionComplete callback: ======= >', locals);
               // onSave();
             }
             /*
@@ -106,6 +107,8 @@ angular.module('starter.controllers', [])
             media.onPlaybackComplete = function (s) {
               console.log('onPlaybackComplete callback: ======= >', s);
               drawingElement.clearCanvas();
+              $($('#recording-text')[0]).text(currentRecording.name);
+              $($('#edit-recording-text')[0]).val(currentRecording.name);
               $wrapper.removeClass('record').addClass('stop');
               toggleMenu(true);
             }
@@ -117,12 +120,12 @@ angular.module('starter.controllers', [])
               $wrapper.addClass('stop');
               drawingElement.stopRecording();
               media.stopRecord();
-              console.log('isConverting : ', media.status.isConverting);
+              /*console.log('isConverting : ', media.status.isConverting);
               console.log('isRecording : ', media.status.isRecording);
               console.log('isPlaying : ', media.status.isPlaying);
-              console.log('playback : ', media.status.playback);
+              console.log('playback : ', media.status.playback);*/
               onSave();
-              console.log('recorderService.getHandler(); : ', recorderService.getHandler());
+              //console.log('recorderService.getHandler(); : ', recorderService.getHandler());
             }
 
 
@@ -138,9 +141,12 @@ angular.module('starter.controllers', [])
               drawingElement.playRecording(function () {
                 playbackInterruptCommand = "";
               }, function () {
-                //if ($('#hidden-color').val())
-                //drawingElement.setColor('#fff');
+                console.log('change color : ',$('#hidden-color').val(),'====',$('#hidden-color').value);
+                /*if ($('#hidden-color').value){
+                  drawingElement.setColor($('#hidden-color').value);
+                }*/
                 //drawingElement.setStokeSize(2);
+                //drawingElement.setColor('#000');
               }, function () {
               }, function () {
                 return playbackInterruptCommand;
@@ -162,8 +168,10 @@ angular.module('starter.controllers', [])
               else {
                 console.log('start recording on onclick fun');
                 $wrapper.addClass('record');
-                drawingElement.clearCanvas();
+                //drawingElement.clearCanvas();
                 drawingElement.startRecording();
+                //drawingElement.setColor($('#hidden-color').value);
+		            //drawingElement.setStokeSize(2);
                 media.startRecord();
               }
             }
@@ -197,7 +205,15 @@ angular.module('starter.controllers', [])
                   voice: res,
                   id: (!$.isEmptyObject(currentRecording)) ? currentRecording.id : (new Date()).getTime()
                 }
+                if(scope.recordings){
+                   obj.name =  'scene : '+(scope.recordings.length + 1);
+                }
+                else{
+                  obj.name =  'scene :  1';
+                }
                 currentRecording = obj;
+                $($('#recording-text')[0]).text(obj.name);
+                $($('#edit-recording-text')[0]).val(obj.name);
                 Sounds.save(obj).then(function () {
                   init();
                 })
@@ -226,7 +242,7 @@ angular.module('starter.controllers', [])
             }
 
             scope.itemDelete = function (obj, flag) {
-              console.log('delete in controller :');
+              //console.log('delete in controller :');
               var confirmPopup = $ionicPopup.confirm({
                 title: 'Are you sure?',
                 template: 'Are you sure to delete this recording?'
@@ -237,7 +253,7 @@ angular.module('starter.controllers', [])
                     init();
                   });
                 } else {
-                  console.log('You are not sure');
+                  //console.log('You are not sure');
                 }
               });
             }
@@ -276,8 +292,8 @@ angular.module('starter.controllers', [])
             var onRetake = function () {
               $wrapper.removeClass('aside-active');
               var confirmPopup = $ionicPopup.confirm({
-                title: 'Are you sure?',
-                template: 'Are you sure for retake this recording?'
+                title: 'Retake this scene?',
+                template: 'Re-taking will delete previous recording of this scene, are you sure?'
               });
               confirmPopup.then(function (res) {
                 if (res) {
@@ -318,14 +334,37 @@ angular.module('starter.controllers', [])
 
             var onNewRecording = function () {
               currentRecording = {};
-              alert('Are you really want to make a new recording');
-              drawingElement.clearCanvas();
+              //drawingElement.clearCanvas(); clear if user click on the clear
               $wrapper.removeClass('stop').removeClass('record');
               $wrapper.removeClass('aside-active');
-              onclick();
+              //onclick();
             }
+
             var closeSideBar = function () {
               $wrapper.removeClass('aside-active');
+            }
+
+            var clearCanvas = function () {
+              $wrapper.removeClass('aside-active');
+              drawingElement.clearCanvas();
+            }
+
+            var editRecording = function () {
+              if ($('#recordingName').hasClass('form-active')) {
+                if ($($('#edit-recording-text')[0]).val() != $($('#recording-text')[0]).text()) {
+                  currentRecording.name = $($('#edit-recording-text')[0]).val();
+                  Sounds.save(currentRecording).then(function () {
+                    init();
+                    $($('#recording-text')[0]).text(currentRecording.name);
+                  })
+                }
+                $('#recordingName').removeClass('form-active');
+              }
+              else {
+                $('#recordingName').addClass('form-active');
+                $($('#recording-text')[0]).text(currentRecording.name);
+                $($('#edit-recording-text')[0]).val(currentRecording.name);
+              }
             }
 
             $mainBtn.bind("mousedown touch", onclick);
@@ -337,6 +376,8 @@ angular.module('starter.controllers', [])
             $('#delete-recording').bind("mousedown touch", deleteRecording);
             $('#aside-opener').bind("mousedown touch", toggleSideBar);
             $('#rbcanvas').bind("mousedown touch", closeSideBar);
+            $('#btn-clear').bind("mousedown touch", clearCanvas);
+            $('#recordingName').bind("mousedown touch", editRecording);
 
           })
 

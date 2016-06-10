@@ -10362,6 +10362,17 @@ a {
   .btn-primary:hover, .btn-primary:active, .btn-primary:focus {
     color: #fff;
     background: #cc0000; }
+  .btn-primary.clear {
+    position: absolute;
+    right: 10px;
+    top: 10px;
+    display: none;
+    background: #03fb61; }
+    .btn-primary.clear:before {
+      content: '\f044'; }
+    .btn-primary.clear:hover, .btn-primary.clear:active, .btn-primary.clear:focus {
+      color: #fff;
+      background: #02c94e; }
 
 .record .btn-primary {
   background: #666; }
@@ -10374,6 +10385,12 @@ a {
   .record .btn-primary:hover, .record .btn-primary:active, .record .btn-primary:focus {
     color: #fff;
     background: #4d4d4d; }
+  .record .btn-primary.clear {
+    display: inline-block;
+    vertical-align: top;
+    background: #03fb61; }
+    .record .btn-primary.clear:before {
+      content: '\f044'; }
 
 .btn-list {
   visibility: hidden;
@@ -10561,6 +10578,82 @@ a {
 
 .jcf-focus, .jcf-focus * {
   border-color: #f00 !important; }
+
+.btn-list .form {
+  border: 1px solid rgba(255, 255, 255, 0.4);
+  background: rgba(102, 102, 102, 0.3);
+  padding: 10px 40px 10px 10px;
+  height: 50px;
+  max-width: 500px;
+  margin: 0 auto 10px;
+  position: relative; }
+  .btn-list .form fieldset {
+    padding: 0;
+    border: 0;
+    margin: 0; }
+  .btn-list .form .input-holder {
+    display: none; }
+  .btn-list .form .inner-holder {
+    overflow: hidden; }
+  .btn-list .form .name {
+    color: white;
+    float: left;
+    font-size: 16px;
+    line-height: 30px;
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis; }
+    .btn-list .form .name a {
+      color: white;
+      font-size: 16px;
+      line-height: 30px; }
+  .btn-list .form a.opener {
+    color: white;
+    position: absolute;
+    right: 10px;
+    top: 50%;
+    font-size: 20px;
+    line-height: 20px;
+    margin: -10px 0 0; }
+    .btn-list .form a.opener i {
+      margin: 0;
+      font-size: 20px;
+      line-height: 20px; }
+  .btn-list .form.form-active .inner-box {
+    display: none; }
+  .btn-list .form.form-active .input-holder {
+    position: absolute;
+    left: 0;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    padding: 10px 40px 10px 10px;
+    display: block; }
+  .btn-list .form.form-active input {
+    float: left;
+    width: 100%;
+    font-size: 16px;
+    line-height: 30px;
+    color: white;
+    font-weight: bold;
+    padding: 0;
+    border: 0;
+    background: none; }
+  .btn-list .form.form-active button {
+    background: none;
+    border: 0;
+    padding: 0;
+    color: white;
+    position: absolute;
+    right: 10px;
+    top: 50%;
+    font-size: 20px;
+    line-height: 20px;
+    margin: -10px 0 0; }
+    .btn-list .form.form-active button i {
+      margin: 0;
+      font-size: 20px;
+      line-height: 20px; }
 
 #wrapper {
   height: 100%;

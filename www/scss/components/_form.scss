@@ -1,0 +1,89 @@
+.btn-list .form{
+  border: 1px solid rgba($white,.4);
+  background: rgba($gray,.3);
+  padding: 10px 40px 10px 10px;
+  height: 50px;
+  max-width: 500px;
+  margin: 0 auto 10px;
+  position: relative;
+
+  fieldset{
+    padding: 0;
+    border: 0;
+    margin: 0;
+  }
+
+  .input-holder{display: none;}
+  .inner-holder{overflow: hidden;}
+  .name{
+    color: white;
+    float: left;
+    font-size: 16px;
+    line-height: 30px;
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    a{
+      color: white;
+      font-size: 16px;
+      line-height: 30px;
+    }
+  }
+
+  a.opener{
+    color: white;
+    position: absolute;
+    right: 10px;
+    top: 50%;
+    font-size: 20px;
+    line-height: 20px;
+    margin: -10px 0 0;
+
+    i{
+      margin: 0;
+      font-size: 20px;
+      line-height: 20px;
+    }
+  }
+  &.form-active{
+    .inner-box{display: none;}
+    .input-holder{
+      position: absolute;
+      left: 0;
+      top: 0;
+      right: 0;
+      bottom: 0;
+      padding: 10px 40px 10px 10px;
+      display: block;
+    }
+    input{
+      float: left;
+      width: 100%;
+      font-size: 16px;
+      line-height: 30px;
+      color: white;
+      font-weight: bold;
+      padding: 0;
+      border: 0;
+      background: none;
+    }
+    button{
+      background: none;
+      border: 0;
+      padding: 0;
+      color: white;
+      position: absolute;
+      right: 10px;
+      top: 50%;
+      font-size: 20px;
+      line-height: 20px;
+      margin: -10px 0 0;
+
+      i{
+        margin: 0;
+        font-size: 20px;
+        line-height: 20px;
+      }
+    }
+  }
+}

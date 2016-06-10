@@ -6,10 +6,10 @@
   <title></title>
 
   <!--<link href="lib/ionic/css/ionic.css" rel="stylesheet">-->
-  <link href="css/font-awesome.min.css" rel="stylesheet">
+  <link href="css/ionic.app.css" rel="stylesheet">
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.6.1/css/font-awesome.min.css">
   <!--<link href="css/styles.css" rel="stylesheet">-->
   <link href="css/tinycolorpicker.css" rel="stylesheet">
-  <link href="css/ionic.app.css" rel="stylesheet">
 
   <!-- IF using Sass (run gulp sass first), then uncomment below and remove the CSS includes above
   <link href="css/ionic.app.css" rel="stylesheet">
@@ -23,6 +23,7 @@
   <script src="lib/ngCordova/dist/ng-cordova.js"></script>
   <script src="cordova.js"></script>
   <script src="lib/angular-local-storage/dist/angular-local-storage.js"></script>
+  <script src="lib/ionic-platform-web-client/dist/ionic.io.bundle.js"></script>
 
   <!-- your app's js -->
   <script src="http://code.jquery.com/jquery-latest.min.js"></script>
@@ -36,7 +37,7 @@
   <script src="js/controllers.js"></script>
   <script src="js/services.js"></script>
 </head>
-<body ng-app="starter">
+<body ng-app="starter" class="platform-android platform-cordova platform-webview">
 <!--
   The nav bar that will be updated as we navigate between views.
 -->

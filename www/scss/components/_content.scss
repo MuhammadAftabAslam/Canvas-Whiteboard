@@ -55,7 +55,22 @@
     color: $white;
     background: darken($red,10%);
   }
-  
+  &.clear{
+    position: absolute;
+    right: 10px;
+    top: 10px;
+    display: none;
+    background: $green;
+    &:before {
+      content: '\f044';
+    }
+    &:hover,
+    &:active,
+    &:focus{
+      color: $white;
+      background: darken($green,10%);
+    }
+  }
 }
 
 .record{
@@ -72,6 +87,14 @@
     &:focus{
       color: $white;
       background: darken($gray,10%);
+    }
+    &.clear{
+      display: inline-block;
+      vertical-align: top;
+      background: $green;
+      &:before {
+        content: '\f044';
+      }
     }
   }
 }
