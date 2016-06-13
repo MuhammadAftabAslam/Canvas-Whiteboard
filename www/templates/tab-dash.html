@@ -1,81 +1,100 @@
 <ion-view hide-nav-bar="true" hide-back-button="true" view-title="Dashboard">
-  <ion-content scroll="true">
-    <div arbi-canvas id="wrapper">
-      <aside class="sidebar">
-        <a href="#" id="aside-opener" class="aside-opener">
-          <i class="fa fa-list-ul" aria-hidden="true"></i>
-        </a>
+	<ion-content scroll="true">
+		<div arbi-canvas id="wrapper">
+			<aside class="sidebar">
+				<a href="#" id="aside-opener" class="aside-opener">
+					<i class="fa fa-list-ul" aria-hidden="true"></i>
+				</a>
 
-        <div class="slide">
-          <ion-list can-swipe="true" class="jcf-scrollable list">
-            <ion-item item="recording" class="item-remove-animate" id="{{ recording.id }}"
-                      ng-repeat="recording in recordings">
-              <a href="" class="link" ng-click="savedPlaying(recording)">{{ recording.name }}</a>
-              <a href="" class="fa fa-trash-o delete" ng-click="itemDelete(recording)"></a>
-              <ion-reorder-button class="ion-navicon"
-                                  on-reorder="moveItem(recording, $fromIndex, $toIndex)"></ion-reorder-button>
-            </ion-item>
-          </ion-list>
-          <div class="btns-block">
-            <a id="delete-btn"><span class="fa fa-trash-o"></span> Delete All</a>
-            <a><span class="fa fa-play"></span> Play All</a>
-          </div>
-        </div>
-      </aside>
-      <div ng-audio-recorder audio-model='recorded' show-player="false" time-limit="timeLimit" id="content"
-           ng-init="selectedLineWidth = 2">
+				<div class="slide">
+					<ion-list can-swipe="true" class="jcf-scrollable list">
+						<ion-item item="recording" class="item-remove-animate" id="{{ recording.id }}" ng-repeat="recording in recordings">
+							<a href="" class="link" ng-click="savedPlaying(recording)">{{ recording.name }}</a>
+							<a href="" class="fa fa-trash-o delete" ng-click="itemDelete(recording)"></a>
+							<ion-reorder-button class="ion-navicon" on-reorder="moveItem(recording, $fromIndex, $toIndex)"></ion-reorder-button>
+						</ion-item>
+					</ion-list>
+					<div class="btns-block">
+						<a id="delete-btn"><span class="fa fa-trash-o"></span> Delete All</a>
+						<a><span class="fa fa-play"></span> Play All</a>
+					</div>
+				</div>
+			</aside>
+			<div ng-audio-recorder audio-model='recorded' show-player="false" time-limit="timeLimit" id="content" ng-init="selectedLineWidth = 2">
 
-        <a href="#" id="btn-clear" class="btn-clear"><i class="fa fa-times" aria-hidden="true"></i> clear</a>
+				<a href="#" id="btn-clear" class="btn-clear"><i class="fa fa-times" aria-hidden="true"></i> clear</a>
 
-        <div data-ng-app="canvasdemo">
-          <canvas id="rbcanvas"></canvas>
-        </div>
-        <div class="btn-list">
-          <div class="holder">
-            <form id="recordingName" action="#" class="form">
-              <fieldset>
-                <div class="inner-holder">
-                  <div class="inner-box">
-                    <strong class="name"><a id="recording-text" href="#"></a></strong>
-                    <a href="#" class="opener"><i class="fa fa-pencil-square-o" aria-hidden="true"></i></a>
-                  </div>
-                  <input class="input" id="edit-recording-text" type="text" value="">
-                </div>
-              </fieldset>
-            </form>
-            <a href="#" id="play-btn">
-              <i class="fa fa-play" aria-hidden="true"></i>
-            </a>
-            <a href="#" id="newfile-btn">
-              <i class="fa fa-file" aria-hidden="true"></i>
-            </a>
-            <a href="#" id="retake-btn">
-              <i class="fa fa-repeat" aria-hidden="true"></i>
-            </a>
-            <a href="#" id="delete-recording">
-              <i class="fa fa-trash-o" aria-hidden="true"></i>
-            </a>
-          </div>
-        </div>
-        <div class="btn-holder">
-          <a href="#" id="main-btn" class="btn-primary"></a>
-        </div>
-        <div id="color-holder" class="color-holder">
-          <div ng-draggable='dragOptions' class="color-picker">
-            <div id="colorPicker">
-              <a class="color">
-                <div class="colorInner"></div>
-              </a>
+				<div data-ng-app="canvasdemo">
+					<canvas id="rbcanvas"></canvas>
+				</div>
+				<div class="btn-list">
+					<div class="holder">
+						<form id="recordingName" action="#" class="form">
+							<fieldset>
+								<div class="inner-holder">
+									<div class="inner-box">
+										<strong class="name"><a id="recording-text" href="#"></a></strong>
+										<a href="#" class="opener"><i class="fa fa-pencil-square-o" aria-hidden="true"></i></a>
+									</div>
+									<input class="input" id="edit-recording-text" type="text" value="">
+								</div>
+							</fieldset>
+						</form>
+						<ul class="btns-holder">
+							<li>
+								<a href="#" id="play-btn">
+									<i class="fa fa-play" aria-hidden="true"></i>
+								</a>
+								<a href="#" class="arrow bounce">
+									<span class="fa fa-angle-down" aria-hidden="true"></span>
+								</a>
+							</li>
+							<li>
+								<a href="#" id="newfile-btn">
+									<i class="fa fa-file" aria-hidden="true"></i>
+								</a>
+								<a href="#" class="arrow bounce">
+									<span class="fa fa-angle-down" aria-hidden="true"></span>
+								</a>
+							</li>
+							<li>
+								<a href="#" id="retake-btn">
+									<i class="fa fa-repeat" aria-hidden="true"></i>
+								</a>
+								<a href="#" class="arrow bounce">
+									<span class="fa fa-angle-down" aria-hidden="true"></span>
+								</a>
+							</li>
+							<li>
+								<a href="#" id="delete-recording">
+									<i class="fa fa-trash-o" aria-hidden="true"></i>
+								</a>
+								<a href="#" class="arrow bounce">
+									<span class="fa fa-angle-down" aria-hidden="true"></span>
+								</a>
+							</li>
+						</ul>
+					</div>
+				</div>
+				<div class="btn-holder">
+					<a href="#" id="main-btn" class="btn-primary"></a>
+				</div>
+				<div id="color-holder" class="color-holder">
+					<div ng-draggable='dragOptions' class="color-picker">
+						<div id="colorPicker">
+							<a class="color">
+								<div class="colorInner"></div>
+							</a>
 
-              <div class="track"></div>
-              <ul class="dropdown">
-                <li></li>
-              </ul>
-              <input id="hidden-color" type="hidden" class="colorInput"/>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
-  </ion-content>
+							<div class="track"></div>
+							<ul class="dropdown">
+								<li></li>
+							</ul>
+							<input id="hidden-color" type="hidden" class="colorInput" />
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</ion-content>
 </ion-view>

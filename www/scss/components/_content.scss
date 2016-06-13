@@ -89,7 +89,9 @@
 		font-size: 24px;
 		line-height: 24px;
 	}
-	i{@include inline-block(top);}
+	i {
+		@include inline-block(top);
+	}
 	&:hover,
 	&:active,
 	&:focus {
@@ -101,10 +103,15 @@
 .record {
 	.btn-primary {
 		background: $gray;
-		.text-stop {display: block;}
-		.text-record {display: none;}
-		
-		&:before {content: '\f04d';}
+		.text-stop {
+			display: block;
+		}
+		.text-record {
+			display: none;
+		}
+		&:before {
+			content: '\f04d';
+		}
 		&:hover,
 		&:active,
 		&:focus {
@@ -134,11 +141,22 @@
 		width: 100%;
 		margin: 0 0 0 -4px;
 	}
+	.btns-holder{
+		@extend %listreset;
+		@extend %clearfix;
+		letter-spacing: -6px;
+		
+		li{
+			@include inline-block(top);
+			padding: 0 2% 50px;
+			letter-spacing: 0;
+			position: relative;
+		}
+	}
 	a {
 		@include inline-block(top);
 		font-size: 20px;
 		line-height: 20px;
-		margin: 0 2%;
 		i {
 			display: block;
 			font-size: 50px;
@@ -189,4 +207,17 @@
 		@extend %transition;
 		pointer-events: none;
 	}
+}
+
+.arrow {
+	position: absolute;
+	left: 50%;
+	bottom: 0;
+	font-size: 20px;
+	line-height: 20px;
+	margin: 0 0 0 -10px;
+}
+
+#wrapper .bounce {
+	@include animation(bounce, 1s, infinite, normal);
 }

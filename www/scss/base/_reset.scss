@@ -34,9 +34,9 @@ a{
   &:hover,
   &:active,
   &:focus{
-    @extend %transition;
     text-decoration: none;
-    color: lighten($base-link-color,20%);
+//    @extend %transition;
+//    color: lighten($base-link-color,20%);
   }
 }
 
