@@ -362,6 +362,7 @@ angular.module('starter.controllers', [])
                 $('#recordingName').addClass('form-active');
                 $($('#recording-text')[0]).text(currentRecording.name);
                 $($('#edit-recording-text')[0]).val(currentRecording.name);
+				$($('#edit-recording-text')[0]).focus();
               }
             }
 

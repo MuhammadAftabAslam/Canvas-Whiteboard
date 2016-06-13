@@ -10448,7 +10448,8 @@ a {
     vertical-align: middle;
     max-width: 99%; }
   .btn-list .holder {
-    width: 100%; }
+    width: 100%;
+    margin: 0 0 0 -4px; }
   .btn-list a {
     display: inline-block;
     vertical-align: top;
@@ -10625,8 +10626,10 @@ a {
     margin: 0; }
   .btn-list .form .inner-box {
     display: block; }
-  .btn-list .form .input-holder {
-    display: none; }
+  .btn-list .form .input {
+    position: absolute;
+    left: -9999em;
+    top: -9999em; }
   .btn-list .form .inner-holder {
     overflow: hidden; }
   .btn-list .form .name {
@@ -10660,26 +10663,23 @@ a {
       line-height: 20px; }
   .btn-list .form.form-active .inner-box {
     display: none; }
-  .btn-list .form.form-active .input-holder {
-    position: absolute;
+  .btn-list .form.form-active .input {
     left: 0;
     top: 0;
     right: 0;
     bottom: 0;
-    padding: 10px 40px 10px 10px;
     display: block;
-    background: #fff; }
-  .btn-list .form.form-active input {
     float: left;
     width: 100%;
     font-size: 16px;
     line-height: 30px;
-    height: 30px;
+    height: 50px;
     color: #666;
     font-weight: bold;
-    padding: 0;
+    padding: 10px 40px 10px 10px;
     border: 0;
-    background: none; }
+    background: #fff;
+    outline: none; }
 
 #wrapper {
   height: 100%;
