@@ -47,7 +47,7 @@ angular.module('starter.controllers', [])
             };
 
             init();
-
+			window.initTooltip();
 
 
             /*recorderService.isReady = true;
@@ -65,7 +65,6 @@ angular.module('starter.controllers', [])
              onDenied: ondeny,
              onClosed: closed
              })*/
-
 
 
             var media = recorderService.controller('content');
@@ -364,16 +363,24 @@ angular.module('starter.controllers', [])
                 $('#recordingName').addClass('form-active');
                 $($('#recording-text')[0]).text(currentRecording.name);
                 $($('#edit-recording-text')[0]).val(currentRecording.name);
+				        $($('#edit-recording-text')[0]).focus();
               }
             }
 
+
+            $playBtn.on('swipedown',onPlay );
+            $retakeBtn.on('swipedown',onRetake );
+            $('#newfile-btn').on('swipedown',onNewRecording );
+            $('#delete-recording').on('swipedown', deleteRecording);
+            //$playBtn.on('on-drag-down',scope.editRecording12 );
             $mainBtn.bind("mousedown touch", onclick);
-            $playBtn.bind("mousedown touch", onPlay);
+            //$playBtn.bind("mousedown touch", onPlay);
+            //$playBtn.bind("dragstart onDragDown", scope.editRecording12);
             //$saveBtn.bind("mousedown touch", onSave);
-            $('#newfile-btn').bind("mousedown touch", onNewRecording);
-            $retakeBtn.bind("mousedown touch", onRetake);
+            //$('#newfile-btn').bind("mousedown touch", onNewRecording);
+            //$retakeBtn.bind("mousedown touch", onRetake);
+            //$('#delete-recording').bind("mousedown touch", deleteRecording);
             $('#delete-btn').bind("mousedown touch", clearLocalStorage);
-            $('#delete-recording').bind("mousedown touch", deleteRecording);
             $('#aside-opener').bind("mousedown touch", toggleSideBar);
             $('#rbcanvas').bind("mousedown touch", closeSideBar);
             $('#btn-clear').bind("mousedown touch", clearCanvas);
