@@ -46,7 +46,6 @@
 			border-width: 0;
 			border-bottom: 1px solid $gray2;
 			position: relative;
-			cursor: move;
 			padding: 10px 30px 10px 0;
 			background: none;
 			margin: 0;
@@ -59,16 +58,31 @@
 				}
 				.item-content {
 					padding-left: 35px;
+					position: static;
+					color: $white;
 				}
 			}
 			.item-right-edit {
 				right: auto;
 				left: 0;
-				width: 40px;
+				width: 35px;
+				cursor: move;
 				.button.icon {
 					color: $white;
 					padding: 0 0 4px 6px;
 					margin: 0;
+					cursor: move;
+					min-width: inherit;
+					width: 100%;
+					
+					&:after,
+					&:before{
+						left: 0;
+						right: 0;
+						top: 0;
+						bottom: 0;
+						width: 100%;
+					}
 				}
 			}
 		}
@@ -84,24 +98,8 @@
 		color: red;
 	}
 	.link {
-		float: left;
 		color: $white;
 		position: relative;
-		//&:before {
-		//  content: '\f04b';
-		//  font-family: FontAwesome;
-		//  font-style: normal;
-		//  font-weight: normal;
-		//  text-decoration: inherit;
-		//  padding: 0;
-		//  position: absolute;
-		//  top: 50%;
-		//  left: 10px;
-		//  font-size: 12px;
-		//  line-height: 12px;
-		//  margin-top: -6px;
-		//  @extend %transition;
-		//}
 	}
 }
 

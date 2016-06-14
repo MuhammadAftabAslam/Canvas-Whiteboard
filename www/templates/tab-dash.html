@@ -21,7 +21,6 @@
 				</div>
 			</aside>
 			<div ng-audio-recorder audio-model='recorded' show-player="false" time-limit="timeLimit" id="content" ng-init="selectedLineWidth = 2">
-
 				<a href="#" id="btn-clear" class="btn-clear"><i class="fa fa-times" aria-hidden="true"></i> clear</a>
 
 				<div data-ng-app="canvasdemo">
@@ -42,34 +41,42 @@
 						</form>
 						<ul class="btns-holder">
 							<li>
-								<a href="#" id="play-btn">
+								<a href="#" id="play-btn" title="Swipe Me To Play">
 									<i class="fa fa-play" aria-hidden="true"></i>
 								</a>
 								<a href="#" class="arrow bounce">
 									<span class="fa fa-angle-down" aria-hidden="true"></span>
+									<span class="second fa fa-angle-down" aria-hidden="true"></span>
+									<span class="fa fa-angle-down" aria-hidden="true"></span>
 								</a>
 							</li>
 							<li>
-								<a href="#" id="newfile-btn">
+								<a href="#" id="newfile-btn" title="Swipe Me To Create New File">
 									<i class="fa fa-file" aria-hidden="true"></i>
 								</a>
 								<a href="#" class="arrow bounce">
 									<span class="fa fa-angle-down" aria-hidden="true"></span>
-								</a>
-							</li>
-							<li>
-								<a href="#" id="retake-btn">
-									<i class="fa fa-repeat" aria-hidden="true"></i>
-								</a>
-								<a href="#" class="arrow bounce">
+									<span class="second fa fa-angle-down" aria-hidden="true"></span>
 									<span class="fa fa-angle-down" aria-hidden="true"></span>
 								</a>
 							</li>
 							<li>
-								<a href="#" id="delete-recording">
+								<a href="#" id="retake-btn" title="Swipe Me To Retake">
+									<i class="fa fa-repeat" aria-hidden="true"></i>
+								</a>
+								<a href="#" class="arrow bounce">
+									<span class="fa fa-angle-down" aria-hidden="true"></span>
+									<span class="second fa fa-angle-down" aria-hidden="true"></span>
+									<span class="fa fa-angle-down" aria-hidden="true"></span>
+								</a>
+							</li>
+							<li>
+								<a href="#" id="delete-recording" title="Swipe Me To Delete Recording">
 									<i class="fa fa-trash-o" aria-hidden="true"></i>
 								</a>
 								<a href="#" class="arrow bounce">
+									<span class="fa fa-angle-down" aria-hidden="true"></span>
+									<span class="second fa fa-angle-down" aria-hidden="true"></span>
 									<span class="fa fa-angle-down" aria-hidden="true"></span>
 								</a>
 							</li>

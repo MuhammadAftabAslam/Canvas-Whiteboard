@@ -148,7 +148,7 @@
 		
 		li{
 			@include inline-block(top);
-			padding: 0 2% 50px;
+			padding: 0 2% 55px;
 			letter-spacing: 0;
 			position: relative;
 		}
@@ -209,15 +209,52 @@
 	}
 }
 
-.arrow {
+#wrapper .arrow {
 	position: absolute;
 	left: 50%;
 	bottom: 0;
 	font-size: 20px;
 	line-height: 20px;
 	margin: 0 0 0 -10px;
+	color: $white;
+	
+	.fa{
+		display: block;
+		&:first-child{opacity: 0.5;}
+		&.second{
+			margin: -10px 0;
+			opacity: 0.75;
+		}
+	}
 }
 
 #wrapper .bounce {
-	@include animation(bounce, 1s, infinite, normal);
+	@include animation(bounce, 1.5s, infinite, normal);
+}
+
+/* tooltip styles */
+.hover-tooltip {
+	background: $white;
+	color: black;
+	font-size: 12px;
+	line-height: 16px;
+	font-weight: normal;
+	padding: 5px 10px;
+	max-width: 100%;
+	z-index: 999;
+	&:after {
+		top: 100%;
+		left: 50%;
+		border: solid transparent;
+		content: " ";
+		height: 0;
+		width: 0;
+		position: absolute;
+		pointer-events: none;
+		border-color: rgba($white, 0);
+		border-top-color: #fff;
+		border-width: 10px;
+		margin-left: -10px;
+	}
+
 }

@@ -47,6 +47,7 @@ angular.module('starter.controllers', [])
             };
 
             init();
+			window.initTooltip();
 
 
             /*recorderService.isReady = true;
