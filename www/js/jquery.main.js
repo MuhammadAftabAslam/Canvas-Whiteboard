@@ -24,8 +24,8 @@ function initTooltip() {
 			positionTypeX: 'right',
 			positionTypeY: 'top',
 			attribute:'title',
-			extraOffsetX: 10,
-			extraOffsetY: 10,
+			extraOffsetX: 50,
+			extraOffsetY: 50,
 			showOnTouchDevice: true
 		},o);
 		
@@ -45,7 +45,7 @@ function initTooltip() {
 				if(options.showOnTouchDevice) {
 					item.bind('touchstart', function(e) {
 						showTooltip(item, tooltipText, getEvent(e));
-						jQuery(document).one('touchend', hideTooltip);
+						jQuery(document).one('touchend', hideMobileTooltip);
 					});
 				}
 			} else {
@@ -64,6 +64,13 @@ function initTooltip() {
 		function hideTooltip() {
 			tooltip.remove();
 		}
+
+		function hideMobileTooltip() {
+			setTimeout(function(){
+				tooltip.remove();
+			}, 1000);
+		}
+
 		function moveTooltip(e) {
 			var top, left, x = e.pageX, y = e.pageY;
 

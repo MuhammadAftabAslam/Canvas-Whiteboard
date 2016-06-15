@@ -47,7 +47,7 @@ angular.module('starter.controllers', [])
             };
 
             init();
-			window.initTooltip();
+			      window.initTooltip();
 
 
             /*recorderService.isReady = true;
@@ -333,14 +333,28 @@ angular.module('starter.controllers', [])
 
             var onNewRecording = function () {
               currentRecording = {};
-              //drawingElement.clearCanvas(); clear if user click on the clear
               $wrapper.removeClass('stop').removeClass('record');
               $wrapper.removeClass('aside-active');
-              //onclick();
             }
 
-            var closeSideBar = function () {
+            var clickOnCanvas = function () {
               $wrapper.removeClass('aside-active');
+            }
+
+            var clickOnOutsideForRecordingName = function (event) {
+              event.stopPropagation();
+              event.preventDefault();
+              $wrapper.removeClass('aside-active');
+              if ($('#recordingName').hasClass('form-active')) {
+                if ($($('#edit-recording-text')[0]).val() != $($('#recording-text')[0]).text()) {
+                  currentRecording.name = $($('#edit-recording-text')[0]).val();
+                  Sounds.save(currentRecording).then(function () {
+                    init();
+                    $($('#recording-text')[0]).text(currentRecording.name);
+                  })
+                }
+                $('#recordingName').removeClass('form-active');
+              }
             }
 
             var clearCanvas = function () {
@@ -348,7 +362,8 @@ angular.module('starter.controllers', [])
               drawingElement.clearCanvas();
             }
 
-            var editRecording = function () {
+            scope.editRecording = function () {
+              $wrapper.removeClass('aside-active');
               if ($('#recordingName').hasClass('form-active')) {
                 if ($($('#edit-recording-text')[0]).val() != $($('#recording-text')[0]).text()) {
                   currentRecording.name = $($('#edit-recording-text')[0]).val();
@@ -367,6 +382,15 @@ angular.module('starter.controllers', [])
               }
             }
 
+            $($('#edit-recording-text')[0]).keydown(function (event) {
+              console.log("Handler for .keydown() called.",event);
+              if(event.keyCode == 13){
+                if(cordova) {
+                  cordova.plugins.Keyboard.close();
+                }
+                scope.editRecording();
+              }
+            });
 
             $playBtn.on('swipedown',onPlay );
             $retakeBtn.on('swipedown',onRetake );
@@ -382,9 +406,10 @@ angular.module('starter.controllers', [])
             //$('#delete-recording').bind("mousedown touch", deleteRecording);
             $('#delete-btn').bind("mousedown touch", clearLocalStorage);
             $('#aside-opener').bind("mousedown touch", toggleSideBar);
-            $('#rbcanvas').bind("mousedown touch", closeSideBar);
+            $('#rbcanvas').bind("mousedown touch", clickOnCanvas);
             $('#btn-clear').bind("mousedown touch", clearCanvas);
-            $('#recordingName').bind("mousedown touch", editRecording);
+            $('#recordingName').bind("mousedown touch", scope.editRecording);
+            //$('.btn-list').bind("mousedown touch", clickOnOutsideForRecordingName);
 
           })
 
