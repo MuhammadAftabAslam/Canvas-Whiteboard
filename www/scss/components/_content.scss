@@ -148,9 +148,14 @@
 		
 		li{
 			@include inline-block(top);
-			padding: 0 2% 55px;
+			padding: 0 2%;
 			letter-spacing: 0;
 			position: relative;
+		  	height: 110px;
+
+		  @include media("≥tablet") {height: 160px;}
+		  @include media("≥desktop") {height: 215px;}
+		  @include media("≥widescreen") {height: 240px;}
 		}
 	}
 	a {

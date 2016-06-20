@@ -1,5 +1,5 @@
 <ion-view hide-nav-bar="true" hide-back-button="true" view-title="Dashboard">
-	<ion-content scroll="true">
+	<ion-content scroll="false">
 		<div arbi-canvas id="wrapper">
 			<aside class="sidebar">
 				<a href="#" id="aside-opener" class="aside-opener">
@@ -20,13 +20,7 @@
 					</div>
 				</div>
 			</aside>
-			<div ng-audio-recorder audio-model='recorded' show-player="false" time-limit="timeLimit" id="content" ng-init="selectedLineWidth = 2">
-				<a href="#" id="btn-clear" class="btn-clear"><i class="fa fa-times" aria-hidden="true"></i> clear</a>
-
-				<div data-ng-app="canvasdemo">
-					<canvas id="rbcanvas"></canvas>
-				</div>
-				<div class="btn-list">
+      <div class="btn-list">
 					<div class="holder">
 						<form id="recordingName" class="form">
 							<fieldset>
@@ -41,7 +35,7 @@
 						</form>
 						<ul class="btns-holder">
 							<li>
-								<a href="" on-drag-down="onPlay()" id="play-btn" title="Swipe Me To Play">
+								 <a data-drag="true" data-jqyoui-options="{revert: 'invalid',containment:'parent'}" jqyoui-draggable="{animate:true,onStop:'onPlay()',onDrag:'calcOpacity'}" href=""  id="play-btn" title="Swipe Me To Play">
 									<i class="fa fa-play" aria-hidden="true"></i>
 								</a>
 								<a href="" class="arrow bounce">
@@ -51,7 +45,7 @@
 								</a>
 							</li>
 							<li>
-								<a href="" on-drag-down="onNewRecording()" id="newfile-btn" title="Swipe Me To Create New File">
+								<a data-drag="true" data-jqyoui-options="{revert: 'invalid',containment:'parent'}" jqyoui-draggable="{animate:true,onStop:'onNewRecording()',onDrag:'calcOpacity'}" href="" id="newfile-btn" title="Swipe Me To Create New File">
 									<i class="fa fa-file" aria-hidden="true"></i>
 								</a>
 								<a href="#" class="arrow bounce">
@@ -61,7 +55,7 @@
 								</a>
 							</li>
 							<li>
-								<a href="" on-drag-down="onRetake()" id="retake-btn" title="Swipe Me To Retake">
+								<a data-drag="true" data-jqyoui-options="{revert: 'invalid',containment:'parent'}" jqyoui-draggable="{animate:true,onStop:'onRetake()',onDrag:'calcOpacity'}" href="" id="retake-btn" title="Swipe Me To Retake">
 									<i class="fa fa-repeat" aria-hidden="true"></i>
 								</a>
 								<a href="#" class="arrow bounce">
@@ -71,7 +65,7 @@
 								</a>
 							</li>
 							<li>
-								<a href="" on-drag-down="deleteRecording()" id="delete-recording" title="Swipe Me To Delete Recording">
+								<a data-drag="true" data-jqyoui-options="{revert: 'invalid',containment:'parent'}" jqyoui-draggable="{animate:true,onStop:'deleteRecording()',onDrag:'calcOpacity'}" href="" id="delete-recording" title="Swipe Me To Delete Recording">
 									<i class="fa fa-trash-o" aria-hidden="true"></i>
 								</a>
 								<a href="#" class="arrow bounce">
@@ -83,12 +77,17 @@
 						</ul>
 					</div>
 				</div>
+			<div ng-audio-recorder audio-model='recorded' show-player="false" time-limit="timeLimit" id="content" ng-init="selectedLineWidth = 2">
+        <a href="" id="btn-clear" class="btn-clear"><i class="fa fa-times" aria-hidden="true"></i> clear</a>
+				<div data-ng-app="canvasdemo">
+					<canvas id="rbcanvas"></canvas>
+				</div>
 				<div class="btn-holder">
 					<a href="#" id="main-btn" class="btn-primary"></a>
 				</div>
 				<div id="color-holder" class="color-holder">
-					<div ng-draggable='dragOptions' class="color-picker">
-						<div id="colorPicker">
+					<div class="color-picker">
+						<div data-drag="true" data-drop="true" jqyoui-draggable id="colorPicker">
 							<a class="color">
 								<div class="colorInner"></div>
 							</a>

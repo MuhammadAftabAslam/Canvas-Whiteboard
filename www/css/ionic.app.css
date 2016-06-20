@@ -10560,9 +10560,19 @@ a {
     .btn-list .btns-holder li {
       display: inline-block;
       vertical-align: top;
-      padding: 0 2% 55px;
+      padding: 0 2%;
       letter-spacing: 0;
-      position: relative; }
+      position: relative;
+      height: 110px; }
+      @media (min-width: 768px) {
+        .btn-list .btns-holder li {
+          height: 160px; } }
+      @media (min-width: 1024px) {
+        .btn-list .btns-holder li {
+          height: 215px; } }
+      @media (min-width: 1200px) {
+        .btn-list .btns-holder li {
+          height: 240px; } }
   .btn-list a {
     display: inline-block;
     vertical-align: top;

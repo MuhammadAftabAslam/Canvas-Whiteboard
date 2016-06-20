@@ -1,37 +1,61 @@
-angular.module('starter.controllers', [])
+angular.module('starter.controllers', ['ngDragDrop'])
   .controller('DashCtrl', ['$scope', 'Sounds', function ($scope, Sounds) {
+
+   /* $scope.onplay = function () {
+      console.log('on play : controller : ');
+    }
+
+
+          $scope.dropCallback = function (e, u) {
+            console.log('dropCallback hi on start')
+          };
+          $scope.dragCallback = function (e, u) {
+            console.log('dropCallback hi on start')
+          };
+          $scope.startCallback = function (e, u) {
+            console.log('startCallback hi on start')
+          };
+          $scope.stopCallback = function (e, u) {
+            console.log('stopCallback hi on start')
+          };*/
+
   }])
   .controller('NavCtrl', function ($scope, $ionicSideMenuDelegate) {
     $scope.showMenu = function () {
       $ionicSideMenuDelegate.toggleLeft();
     };
-
-    $scope.dragOptions = {
-      start: function (e) {
-        console.log("STARTING");
-      },
-      drag: function (e) {
-        console.log("DRAGGING");
-      },
-      stop: function (e) {
-        console.log("STOPPING");
-      },
-      container: 'color-holder'
-    }
   })
 
-
   // Main directive for the canvas recordings
-  .directive('arbiCanvas', ['$ionicPlatform', '$cordovaMedia', '$cordovaCapture', 'Sounds', 'recorderService', '$ionicListDelegate', '$ionicPopup',
-    function ($ionicPlatform, $cordovaMedia, $cordovaCapture, Sounds, recorderService, $ionicListDelegate, $ionicPopup) {
+  .directive('arbiCanvas', ['$ionicPlatform', '$cordovaMedia', '$cordovaCapture', 'Sounds', 'recorderService', '$ionicListDelegate', '$ionicPopup', '$rootScope',
+    function ($ionicPlatform, $cordovaMedia, $cordovaCapture, Sounds, recorderService, $ionicListDelegate, $ionicPopup, $rootScope) {
 
       return {
-        restrict: "A",
+        restrict: "AE",
+        scope: false,
         link: function (scope, element) {
+
+
+
           $ionicListDelegate.showReorder(true);
           scope.shouldShowDelete = true;
-
           $ionicPlatform.ready(function () {
+
+
+          scope.dropCallback = function (e, u) {
+            console.log('dropCallback hi on start')
+          };
+          scope.dragCallback = function (e, u) {
+            console.log('dropCallback hi on start')
+          };
+          scope.startCallback = function (e, u) {
+            console.log('startCallback hi on start');
+            playRecording();
+          };
+          scope.stopCallback = function (e, u) {
+            console.log('stopCallback hi on start')
+          };
+
             var init = function () {
               Sounds.get().then(function (res) {
                 scope.recordings = res;
@@ -176,7 +200,10 @@ angular.module('starter.controllers', [])
             }
 
 
-            var onPlay = function () {
+            scope.onPlay = function () {
+              $('.btns-holder a').css({
+                opacity :  1
+              });
               /*console.log('on play : ');
                $wrapper.removeClass('stop').removeClass('record').removeClass('aside-active');
                if (drawingElement.recordings.length == 0) {
@@ -192,6 +219,18 @@ angular.module('starter.controllers', [])
               else {
                 alert('Sorry, System do not have any recording yet. Please select from the right bar.');
               }
+            }
+
+            scope.calcOpacity = function(){
+
+              var btn = $('.btns-holder a'),
+                opacity = 100,
+                position = parseFloat(btn.css('top'));
+              btn.css({
+                opacity : (opacity - position) / 100
+              });
+console.log('opcaity : ',opacity , position);
+              //return opacity - position;
             }
 
 
@@ -213,6 +252,7 @@ angular.module('starter.controllers', [])
                 currentRecording = obj;
                 $($('#recording-text')[0]).text(obj.name);
                 $($('#edit-recording-text')[0]).val(obj.name);
+                console.log(' obj rec : ',obj);
                 Sounds.save(obj).then(function () {
                   init();
                 })
@@ -288,7 +328,7 @@ angular.module('starter.controllers', [])
               }
             }
 
-            var onRetake = function () {
+            scope.onRetake = function () {
               $wrapper.removeClass('aside-active');
               var confirmPopup = $ionicPopup.confirm({
                 title: 'Retake this scene?',
@@ -308,7 +348,7 @@ angular.module('starter.controllers', [])
               });
             }
 
-            var deleteRecording = function () {
+            scope.deleteRecording = function () {
               $wrapper.removeClass('aside-active');
               var confirmPopup = $ionicPopup.confirm({
                 title: 'Are you sure?',
@@ -331,7 +371,7 @@ angular.module('starter.controllers', [])
               });
             }
 
-            var onNewRecording = function () {
+            scope.onNewRecording = function () {
               currentRecording = {};
               $wrapper.removeClass('stop').removeClass('record');
               $wrapper.removeClass('aside-active');
@@ -339,22 +379,6 @@ angular.module('starter.controllers', [])
 
             var clickOnCanvas = function () {
               $wrapper.removeClass('aside-active');
-            }
-
-            var clickOnOutsideForRecordingName = function (event) {
-              event.stopPropagation();
-              event.preventDefault();
-              $wrapper.removeClass('aside-active');
-              if ($('#recordingName').hasClass('form-active')) {
-                if ($($('#edit-recording-text')[0]).val() != $($('#recording-text')[0]).text()) {
-                  currentRecording.name = $($('#edit-recording-text')[0]).val();
-                  Sounds.save(currentRecording).then(function () {
-                    init();
-                    $($('#recording-text')[0]).text(currentRecording.name);
-                  })
-                }
-                $('#recordingName').removeClass('form-active');
-              }
             }
 
             var clearCanvas = function () {
@@ -391,11 +415,11 @@ angular.module('starter.controllers', [])
                 scope.editRecording();
               }
             });
-
-            $playBtn.on('swipedown',onPlay );
-            $retakeBtn.on('swipedown',onRetake );
-            $('#newfile-btn').on('swipedown',onNewRecording );
-            $('#delete-recording').on('swipedown', deleteRecording);
+            //var onPlay = scope.onPlay;
+            //$playBtn.on('swipedown',onPlay );
+            //$retakeBtn.on('swipedown',onRetake );
+            //$('#newfile-btn').on('swipedown',onNewRecording );
+            //$('#delete-recording').on('swipedown', deleteRecording);
             //$playBtn.on('on-drag-down',scope.editRecording12 );
             $mainBtn.bind("mousedown touch", onclick);
             //$playBtn.bind("mousedown touch", onPlay);
@@ -416,79 +440,4 @@ angular.module('starter.controllers', [])
         }
       };
 
-    }])
-  .directive('ngDraggable', function ($document) {
-    return {
-      restrict: 'A',
-      scope: {
-        dragOptions: '=ngDraggable'
-      },
-      link: function (scope, elem, attr) {
-        var startX, startY, x = 0, y = 0,
-          start, stop, drag, container;
-
-        var width = elem[0].offsetWidth,
-          height = elem[0].offsetHeight;
-
-        // Obtain drag options
-        if (scope.dragOptions) {
-          start = scope.dragOptions.start;
-          drag = scope.dragOptions.drag;
-          stop = scope.dragOptions.stop;
-          var id = scope.dragOptions.container;
-          if (id) {
-            container = document.getElementById(id).getBoundingClientRect();
-          }
-        }
-
-        // Bind mousedown event
-        elem.on('mousedown', function (e) {
-          e.preventDefault();
-          startX = e.clientX - elem[0].offsetLeft;
-          startY = e.clientY - elem[0].offsetTop;
-          $document.on('mousemove', mousemove);
-          $document.on('mouseup', mouseup);
-          if (start) start(e);
-        });
-
-        // Handle drag event
-        function mousemove(e) {
-          y = e.clientY - startY;
-          x = e.clientX - startX;
-          setPosition();
-          if (drag) drag(e);
-        }
-
-        // Unbind drag events
-        function mouseup(e) {
-          $document.unbind('mousemove', mousemove);
-          $document.unbind('mouseup', mouseup);
-          if (stop) stop(e);
-        }
-
-        // Move element, within container if provided
-        function setPosition() {
-          if (container) {
-            console.log('x : ', x);
-            if (x < container.left) {
-              x = container.left;
-            } else if (x > container.right - width) {
-              x = container.right - width;
-            }
-            console.log('y : ', y);
-            if (y < container.top) {
-              y = container.top;
-            } else if (y > container.bottom - height) {
-              y = container.bottom - height;
-            }
-          }
-
-          elem.css({
-            top: y + 'px',
-            left: x + 'px'
-          });
-        }
-      }
-    }
-
-  });
+    }]);
