@@ -327,6 +327,22 @@ $animation-speed: .3s !default;
 	}
 }
 
+@include keyframes(dragging) {
+	from{color: $gray;}
+	to{color: $white;}
+}
+
+@mixin colorChangeAnimation ($name, $duration) {
+	-webkit-animation-name: $name;
+	-moz-animation-name: $name;
+	-o-animation-name: $name;
+	animation-name: $name;
+	-webkit-animation-duration: $duration;
+	-moz-animation-duration: $duration;
+	-o-animation-duration: $duration;
+	animation-duration: $duration;
+}
+
 @include keyframes(bounce) {
 	0%,
 	20%,
@@ -360,4 +376,13 @@ $animation-speed: .3s !default;
 	-moz-animation-direction: $direction;
 	-o-animation-direction: $direction;
 	animation-direction: $direction;
+}
+
+// @include cubic-transition(all, 600ms, 0.77, 0, 0.175, 1);
+
+@mixin cubic-transition($func, $time , $val1, $val2, $val3, $val4){
+	-moz-transition: $func $time cubic-bezier($val1, $val2, $val3, $val4);
+	-o-transition: $func $time cubic-bezier($val1, $val2, $val3, $val4);
+	-webkit-transition: $func $time cubic-bezier($val1, $val2, $val3, $val4);
+	transition: $func $time cubic-bezier($val1, $val2, $val3, $val4);
 }

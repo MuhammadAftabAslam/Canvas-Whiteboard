@@ -101,6 +101,13 @@
 }
 
 .record {
+	.sidebar,
+	.aside{
+		visibility: hidden;
+		opacity: 0;
+		pointer-events: none;
+		@extend %transition;
+	}
 	.btn-primary {
 		background: $gray;
 		.text-stop {

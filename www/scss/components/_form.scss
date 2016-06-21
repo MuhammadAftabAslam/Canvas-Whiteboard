@@ -12,7 +12,7 @@
 		margin: 0;
 	}
 	.inner-box{display: block;}
-	.input{
+	.input-holder{
 		position: absolute;
 		left: -9999em;
 		top: -9999em;
@@ -38,38 +38,79 @@
 		}
 	}
 	a.opener {
-		color: white;
 		position: absolute;
-		right: 10px;
-		top: 50%;
+		right: 0;
+		top: 0;
+		bottom: 0;
 		font-size: 20px;
 		line-height: 20px;
-		margin: -9px 0 0;
+		width: 50px;
+		background: $white;
+		color: $black;
+		margin: 0;
+		@include v-align(100%, middle, before);
 		i {
-			margin: 0;
+			margin: 0 0 0 2px;
 			font-size: 20px;
 			line-height: 20px;
 		}
 	}
 	&.form-active {
 		.inner-box {display: none;}
-		.input {
+		.input-holder {
+            display: block;
 			left: 0;
 			top: 0;
 			right: 0;
 			bottom: 0;
-            display: block;
+			width: 100%;
+			height: 50px;
+			padding: 10px 50px 10px 10px;
+			border: 0;
+			background: $white;
+            outline: none;
+		}
+		.input{
 			float: left;
 			width: 100%;
 			font-size: 16px;
 			line-height: 30px;
-			height: 50px;
+			height: 30px;
 			color: $gray;
 			font-weight: bold;
-			padding: 10px 40px 10px 10px;
+			padding: 0;
 			border: 0;
 			background: $white;
             outline: none;
+		}
+		.btn-submit{
+			position: absolute;
+			right: 0;
+			top: 0;
+			bottom: 0;
+			border: 0;
+			padding: 0;
+			background: $lime-green;
+			color: $white;
+			width: 50px;
+			font-size: 20px;
+			line-height: 20px;
+			
+			@include v-align(100%, middle, before);
+			
+			i{
+				font-size: 20px;
+				line-height: 20px;
+				margin: 0 0 0 -4px;
+			}
+			
+			&:hover,
+			&:active,
+			&:focus{
+				background: darken($lime-green,5%);
+				color: $white;
+				text-decoration: none;
+			}
 		}
 	}
 }

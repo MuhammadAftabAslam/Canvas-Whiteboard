@@ -1,50 +1,25 @@
 .color-holder {
-  position: absolute;
-  visibility: visible;
-  opacity: 1;
-  @extend %transition;
-  pointer-events: none;
-  left: 0;
-  right: 0;
-  top: 0;
-  bottom: 0;
+	position: absolute;
+	visibility: visible;
+	opacity: 1;
+	@extend %transition;
+	pointer-events: none;
+	left: 0;
+	right: 0;
+	top: 0;
+	bottom: 0;
 }
 
-.color-picker {
-  position: absolute;
-  right: 60px;
-  bottom: 50px;
-  width: 155px;
-  height: 155px;
-  pointer-events: all;
-
-  @include media("≥tablet") {
-    right: 70px;
-    bottom: 70px;
-  }
-
-  #colorPicker {
-    margin: 0 auto;
-    min-width: 40px;
-    min-height: 40px;
-    width: inherit;
-    height: inherit;
-    overflow: hidden;
-
-    .color {
-      position: absolute;
-      left: 50%;
-      top: 50%;
-      margin: -12px 0 0 -12px;
-    }
-
-    .track {
-      position: static;
-      border: 0;
-      left: 0;
-      top: 0;
-    }
-  }
-
+.color-picker#colorPicker {
+	position: absolute;
+	right: 50px;
+	bottom: 35px;
+	width: 50px;
+	height: 50px;
+	padding: 10px;
+	pointer-events: all;
+	@include media("≥tablet") {
+		right: 70px;
+		bottom: 70px;
+	}
 }
-

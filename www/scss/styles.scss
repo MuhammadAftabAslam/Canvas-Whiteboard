@@ -30,28 +30,37 @@ $media-expressions: (
 
 @import 'components/canvas';
 @import 'components/sidebar';
+@import 'components/aside';
 @import 'components/content';
 @import 'components/color-picker';
 @import 'components/jcf';
 @import 'components/form';
 
-
 #wrapper {
-  height: 100%;
+	height: 100%;
 	width: 100%;
-  position: relative;
-  @extend %transition;
-  
-  &.aside-active{
-    @extend %transition;
-    margin: 0 0 0 220px;
-    @include media("≥tablet"){margin: 0 0 0 320px;}
-  }
+	position: relative;
+	@include cubic-transition(all, 600ms, 0.77, 0, 0.175, 1);
+	&.aside-active {
+		@include cubic-transition(all, 600ms, 0.77, 0, 0.175, 1);
+		margin: 0 0 0 220px;
+		@include media("≥tablet") {
+			margin: 0 0 0 320px;
+		}
+	}
+	
+	&.menu-active {
+		@include cubic-transition(all, 600ms, 0.77, 0, 0.175, 1);
+		margin: 0 0 0 -150px;
+		@include media("≥tablet") {
+			margin: 0 0 0 -250px;
+		}
+	}
 }
 
 .resize-active #wrapper,
 .resize-active #wrapper.aside-active,
-.resize-active .slide{
-  -webkit-transition: none;
-  transition: none;
+.resize-active .slide {
+	-webkit-transition: none;
+	transition: none;
 }

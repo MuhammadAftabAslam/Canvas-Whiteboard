@@ -160,7 +160,7 @@ angular.module('starter.controllers', [])
                 media.startRecord();
               }
             }
-
+			
 
             scope.onPlay = function () {
               $('.btns-holder a').css({
@@ -182,17 +182,26 @@ angular.module('starter.controllers', [])
                 alert('Sorry, System do not have any recording yet. Please select from the right bar.');
               }
             }
+			
+			
+			scope.changeColorOnDrag = function(){
 
-            scope.calcOpacity = function(){
-
-              var btn = $('.btns-holder a'),
-                opacity = 100,
-                position = parseFloat(btn.css('top'));
-              btn.css({
-                opacity : (opacity - position) / 100
-              });
-              //return opacity - position;
+              var btn = $('.ui-draggable-dragging'),
+                color = '#fff';
+								
+				btn.each(function(index){
+					var item = $(this),
+						currColor = item.css('color');
+					
+					item.animate({
+						color : color
+					},function(){
+						color = currColor;
+						item.css('color',currColor);
+					});
+				});
             }
+
 
 
             var onSave = function () {
@@ -258,7 +267,13 @@ angular.module('starter.controllers', [])
             }
 
             var toggleSideBar = function () {
+				$wrapper.removeClass('menu-active');
               $wrapper.toggleClass('aside-active');
+            }
+			
+			var toggleImagesAside = function () {
+			  $wrapper.removeClass('aside-active');
+              $wrapper.toggleClass('menu-active');
             }
 
             var clearLocalStorage = function () {
@@ -339,6 +354,7 @@ angular.module('starter.controllers', [])
 
             var clickOnCanvas = function () {
               $wrapper.removeClass('aside-active');
+			  $wrapper.removeClass('menu-active');
             }
 
             var clearCanvas = function () {
@@ -390,6 +406,7 @@ angular.module('starter.controllers', [])
             //$('#delete-recording').bind("mousedown touch", deleteRecording);
             $('#delete-btn').bind("mousedown touch", clearLocalStorage);
             $('#aside-opener').bind("mousedown touch", toggleSideBar);
+            $('#menu-opener').bind("mousedown touch", toggleImagesAside);
             $('#rbcanvas').bind("mousedown touch", clickOnCanvas);
             $('#btn-clear').bind("mousedown touch", clearCanvas);
             $('#recordingName').bind("mousedown touch", scope.editRecording);
