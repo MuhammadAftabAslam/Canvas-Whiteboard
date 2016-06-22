@@ -1,0 +1,122 @@
+.menu-opener {
+	position: absolute;
+	right: 20px;
+	top: 20px;
+	z-index: 99;
+	font-size: 30px;
+	line-height: 30px;
+	@include media("≥tablet") {
+		font-size: 42px;
+		line-height: 42px;
+		right: 40px;
+		top: 40px;
+	}
+}
+
+.menu-slide {
+	position: fixed;
+	width: 150px;
+	right: -150px;
+	top: 0;
+	bottom: 0;
+	overflow: hidden;
+	background: $grayish-blue;
+	@include cubic-transition(all, 600ms, 0.77, 0, 0.175, 1);
+	@include media("≥tablet") {
+		width: 250px;
+		right: -250px;
+	}
+	.jcf-scrollable {
+		overflow: hidden;
+		width: 100% !important;
+		height: 100% !important;
+	}
+}
+
+.images-list {
+	@extend %listreset;
+	padding: 20px 20px 10px;
+	.list {
+		overflow: auto;
+		height: 100%;
+		width: 100%;
+		pointer-events: all;
+		> * {
+			overflow: hidden;
+			border-width: 0;
+			border-bottom: 1px solid $gray2;
+			position: relative;
+			padding: 10px 30px 10px 0;
+			background: none;
+			margin: 0;
+		}
+		&.list-right-editing {
+			> * {
+				> * {
+					background: none;
+					padding: 0;
+				}
+				.item-content {
+					padding-left: 35px;
+					position: static;
+					color: $white;
+				}
+			}
+			.item-right-edit {
+				right: auto;
+				left: 0;
+				width: 35px;
+				cursor: move;
+				.button.icon {
+					color: $white;
+					padding: 0 0 4px 6px;
+					margin: 0;
+					cursor: move;
+					min-width: inherit;
+					width: 100%;
+					
+					&:after,
+					&:before{
+						left: 0;
+						right: 0;
+						top: 0;
+						bottom: 0;
+						width: 100%;
+					}
+				}
+			}
+		}
+	}
+	li{
+		border: 2px solid $white;
+		@include border-radius(5px);
+		position: relative;
+		margin: 0 0 20px;
+		
+		img{
+			display: block;
+			width: 100%;
+			height: auto;
+		}
+		
+		.btn-delete{
+			color: $white;
+			position: absolute;
+			left: -17px;
+			top: -17px;
+			font-size: 25px;
+			line-height: 25px;
+			z-index: 9;
+		}
+	}
+}
+
+.menu-active {
+	.menu-slide {
+		right: 0;
+		@include cubic-transition(all, 600ms, 0.77, 0, 0.175, 1);
+	}
+	.menu-opener {
+		color: lighten($base-link-color, 20%);
+	}
+}
