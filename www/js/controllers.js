@@ -182,24 +182,24 @@ angular.module('starter.controllers', [])
                 alert('Sorry, System do not have any recording yet. Please select from the right bar.');
               }
             }
-			
-			
-			scope.changeColorOnDrag = function(){
+
+
+            scope.changeColorOnDrag = function () {
 
               var btn = $('.ui-draggable-dragging'),
                 color = '#fff';
-								
-				btn.each(function(index){
-					var item = $(this),
-						currColor = item.css('color');
-					
-					item.animate({
-						color : color
-					},function(){
-						color = currColor;
-						item.css('color',currColor);
-					});
-				});
+
+              btn.each(function () {
+                var item = $(this),
+                  currColor = item.css('color');
+
+                item.animate({
+                  color: color
+                }, function () {
+                  color = currColor;
+                  item.css('color', currColor);
+                });
+              });
             }
 
 
