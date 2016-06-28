@@ -33,7 +33,8 @@ angular.module('starter.controllers', [])
             };
 
             init();
-			      window.initTooltip();
+			window.initTooltip();
+			window.initAccordion();
 
 
             /*recorderService.isReady = true;
@@ -192,6 +193,7 @@ angular.module('starter.controllers', [])
 				btn.each(function(index){
 					var item = $(this),
 						currColor = item.css('color');
+					
 					
 					item.animate({
 						color : color

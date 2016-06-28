@@ -10144,7 +10144,7 @@ td,
 th {
   padding: 0; }
 
-.list, .images-list, .btn-list .btns-holder {
+#wrapper .list, .images-list, .btn-list .btns-holder, .accordion {
   margin: 0;
   padding: 0;
   list-style: none; }
@@ -10366,58 +10366,61 @@ a {
     width: 100% !important;
     height: 100% !important; }
 
-.list {
-  padding: 0 0 53px; }
-  .list .list {
-    overflow: auto;
-    height: 100%;
-    width: 100%;
-    pointer-events: all; }
-    .list .list > * {
-      overflow: hidden;
-      border-width: 0;
-      border-bottom: 1px solid #999;
-      position: relative;
-      padding: 10px 30px 10px 0;
-      background: none;
-      margin: 0; }
-    .list .list.list-right-editing > * > * {
-      background: none;
-      padding: 0; }
-    .list .list.list-right-editing > * .item-content {
-      padding-left: 35px;
-      position: static;
-      color: #fff; }
-    .list .list.list-right-editing .item-right-edit {
-      right: auto;
-      left: 0;
-      width: 35px;
-      cursor: move; }
-      .list .list.list-right-editing .item-right-edit .button.icon {
-        color: #fff;
-        padding: 0 0 4px 6px;
-        margin: 0;
-        cursor: move;
-        min-width: inherit;
-        width: 100%; }
-        .list .list.list-right-editing .item-right-edit .button.icon:after, .list .list.list-right-editing .item-right-edit .button.icon:before {
-          left: 0;
-          right: 0;
-          top: 0;
-          bottom: 0;
-          width: 100%; }
-  .list .delete {
-    position: absolute;
-    right: 0;
-    top: 50%;
-    font-size: 20px;
-    line-height: 20px;
-    padding: 0 5px 0 0;
-    margin-top: -10px;
-    color: red; }
-  .list .link {
-    color: #fff;
-    position: relative; }
+#wrapper .list .list {
+  overflow: auto;
+  pointer-events: all; }
+  #wrapper .list .list > * {
+    overflow: hidden;
+    border-width: 0;
+    border-bottom: 1px solid #999;
+    position: relative;
+    padding: 10px 30px 10px 0;
+    background: none;
+    margin: 0; }
+  #wrapper .list .list.list-right-editing > * > * {
+    background: none;
+    padding: 0; }
+  #wrapper .list .list.list-right-editing > * .item-content {
+    padding-left: 35px;
+    position: static;
+    color: #fff; }
+  #wrapper .list .list.list-right-editing .item-right-edit {
+    right: auto;
+    left: 0;
+    width: 35px;
+    cursor: move; }
+    #wrapper .list .list.list-right-editing .item-right-edit .button,
+    #wrapper .list .list.list-right-editing .item-right-edit .icon {
+      color: #fff;
+      padding: 0 6px;
+      margin: 0;
+      cursor: move;
+      min-width: inherit;
+      min-height: inherit;
+      width: 100%; }
+      #wrapper .list .list.list-right-editing .item-right-edit .button:after, #wrapper .list .list.list-right-editing .item-right-edit .button:before,
+      #wrapper .list .list.list-right-editing .item-right-edit .icon:after,
+      #wrapper .list .list.list-right-editing .item-right-edit .icon:before {
+        left: 0;
+        right: 0;
+        top: 0;
+        bottom: 0;
+        width: 100%;
+        line-height: 100%; }
+
+#wrapper .list .delete {
+  position: absolute;
+  right: 0;
+  top: 50%;
+  font-size: 20px;
+  line-height: 20px;
+  padding: 0 5px 0 0;
+  margin-top: -10px;
+  color: red; }
+
+#wrapper .list .link {
+  color: #fff;
+  position: relative; }
 
 .aside-active .slide {
   left: 0;
@@ -11046,6 +11049,36 @@ a {
       background: #449c44;
       color: #fff;
       text-decoration: none; }
+
+.accordion {
+  overflow: hidden;
+  width: 100%;
+  height: 100%; }
+  .accordion > li {
+    overflow: hidden;
+    font-size: 16px;
+    line-height: 16px; }
+    .accordion > li > a {
+      display: block;
+      color: #fff;
+      padding: 10px 10px 10px 35px;
+      position: relative;
+      border-bottom: 1px solid #999; }
+      .accordion > li > a:before {
+        font-family: FontAwesome;
+        content: '\f107';
+        font-style: normal;
+        font-weight: normal;
+        text-decoration: inherit;
+        padding: 0;
+        font-size: 16px;
+        line-height: 16px;
+        position: absolute;
+        top: 50%;
+        left: 10px;
+        margin-top: -8px; }
+    .accordion > li.active > a:before {
+      content: '\f106'; }
 
 #wrapper {
   height: 100%;
