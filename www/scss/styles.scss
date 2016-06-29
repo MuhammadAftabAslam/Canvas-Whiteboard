@@ -41,6 +41,7 @@ $media-expressions: (
 	height: 100%;
 	width: 100%;
 	position: relative;
+	background: $grayish-blue;
 	@include cubic-transition(all, 600ms, 0.77, 0, 0.175, 1);
 	&.aside-active {
 		@include cubic-transition(all, 600ms, 0.77, 0, 0.175, 1);

@@ -6,44 +6,13 @@
 					<i class="fa fa-list-ul" aria-hidden="true"></i>
 				</a>
 				<div class="slide">
-					<ul class="accordion">
-						<li>
-							<a href="#" class="slide-opener">Project</a>
-							<div class="slides">
-								<ion-list can-swipe="true" class="jcf-scrollable list">
-									<ion-item item="recording" class="item-remove-animate" id="{{ recording.id }}" ng-repeat="recording in recordings">
-										<a href="" class="link" ng-click="savedPlaying(recording)">{{ recording.name }}</a>
-										<a href="" class="fa fa-trash-o delete" ng-click="itemDelete(recording)"></a>
-										<ion-reorder-button class="ion-navicon" on-reorder="moveItem(recording, $fromIndex, $toIndex)"></ion-reorder-button>
-									</ion-item>
-								</ion-list>
-							</div>
-						</li>
-						<li>
-							<a href="#" class="slide-opener">Project</a>
-							<div class="slides">
-								<ion-list can-swipe="true" class="jcf-scrollable list">
-									<ion-item item="recording" class="item-remove-animate" id="{{ recording.id }}" ng-repeat="recording in recordings">
-										<a href="" class="link" ng-click="savedPlaying(recording)">{{ recording.name }}</a>
-										<a href="" class="fa fa-trash-o delete" ng-click="itemDelete(recording)"></a>
-										<ion-reorder-button class="ion-navicon" on-reorder="moveItem(recording, $fromIndex, $toIndex)"></ion-reorder-button>
-									</ion-item>
-								</ion-list>
-							</div>
-						</li>
-						<li>
-							<a href="#" class="slide-opener">Project</a>
-							<div class="slides">
-								<ion-list can-swipe="true" class="jcf-scrollable list">
-									<ion-item item="recording" class="item-remove-animate" id="{{ recording.id }}" ng-repeat="recording in recordings">
-										<a href="" class="link" ng-click="savedPlaying(recording)">{{ recording.name }}</a>
-										<a href="" class="fa fa-trash-o delete" ng-click="itemDelete(recording)"></a>
-										<ion-reorder-button class="ion-navicon" on-reorder="moveItem(recording, $fromIndex, $toIndex)"></ion-reorder-button>
-									</ion-item>
-								</ion-list>
-							</div>
-						</li>
-					</ul>
+					<ion-list can-swipe="true" class="jcf-scrollable list">
+						<ion-item item="recording" class="item-remove-animate" id="{{ recording.id }}" ng-repeat="recording in recordings">
+							<a href="" class="link" ng-click="savedPlaying(recording)">{{ recording.name }}</a>
+							<a href="" class="fa fa-trash-o delete" ng-click="itemDelete(recording)"></a>
+							<ion-reorder-button class="ion-navicon" on-reorder="moveItem(recording, $fromIndex, $toIndex)"></ion-reorder-button>
+						</ion-item>
+					</ion-list>
 					<div class="btns-block">
 						<a id="delete-btn"><span class="fa fa-trash-o"></span> Delete All</a>
 						<a><span class="fa fa-play"></span> Play All</a>
