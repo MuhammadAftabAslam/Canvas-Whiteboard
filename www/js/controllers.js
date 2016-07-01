@@ -35,6 +35,7 @@ angular.module('starter.controllers', [])
             init();
 			window.initTooltip();
 			window.initAccordion();
+			window.initLightbox();
 
 
             /*recorderService.isReady = true;

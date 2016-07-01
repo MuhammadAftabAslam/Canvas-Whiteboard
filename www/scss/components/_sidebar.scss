@@ -127,16 +127,22 @@
 	line-height: 20px;
 	z-index: 5;
 	border-top: 1px solid $white;
+	display: table;
+	width: 100%;
 	a {
-		float: left;
-		width: 50%;
+		display: table-cell;
+		vertical-align: top;
 		color: $white;
 		padding: 15px 10px;
 		text-align: center;
 		border-left: 1px solid $white;
+		width: 38%;
 		&:first-child {border-left: 0;}
-		.fa {
-			margin-right: 5px;
+		&:last-child {
+			width: 14%;
+			
+			i{@include rotate (-45);}
 		}
+		.fa {margin-right: 5px;}
 	}
 }

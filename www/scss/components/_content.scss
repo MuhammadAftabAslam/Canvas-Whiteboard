@@ -278,3 +278,15 @@
 	}
 
 }
+
+.popup-holder {
+	position: relative;
+	overflow: hidden;
+	height: 0;
+}
+.lightbox {
+	padding: 5px;
+	width: 300px;
+}
+.lightbox h2 {margin: 0 0 10px;}
+.lightbox p {margin: 0;}
