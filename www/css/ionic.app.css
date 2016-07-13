@@ -10346,6 +10346,27 @@ a {
       left: 40px;
       top: 40px; } }
 
+.project-title {
+  display: block;
+  color: #fff;
+  position: relative;
+  padding: 15px 10px 15px 35px;
+  text-transform: capitalize;
+  border-bottom: 1px solid #999; }
+  .project-title:before {
+    position: absolute;
+    left: 10px;
+    top: 50%;
+    font-size: 16px;
+    line-height: 16px;
+    margin-top: -8px;
+    content: '\f115';
+    font-family: FontAwesome;
+    font-style: normal;
+    font-weight: normal;
+    text-decoration: inherit;
+    padding: 0; }
+
 .slide {
   position: fixed;
   width: 220px;

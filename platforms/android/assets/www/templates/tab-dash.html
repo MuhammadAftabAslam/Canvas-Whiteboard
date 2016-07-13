@@ -5,8 +5,8 @@
 				<a href="#" id="aside-opener" class="aside-opener">
 					<i class="fa fa-list-ul" aria-hidden="true"></i>
 				</a>
-
 				<div class="slide">
+          <strong class="project-title">{{ project.project_name }}</strong>
 					<ion-list can-swipe="true" class="jcf-scrollable list">
 						<ion-item item="recording" class="item-remove-animate" id="{{ recording.id }}" ng-repeat="recording in recordings">
 							<a href="" class="link" ng-click="savedPlaying(recording)">{{ recording.name }}</a>
@@ -17,68 +17,102 @@
 					<div class="btns-block">
 						<a id="delete-btn"><span class="fa fa-trash-o"></span> Delete All</a>
 						<a><span class="fa fa-play"></span> Play All</a>
+						<a class="lightbox" ng-click="openProjectModal()"><i class="fa fa-arrow-right" aria-hidden="true"></i></a>
 					</div>
 				</div>
 			</aside>
-      <div class="btn-list">
-					<div class="holder">
-						<form id="recordingName" class="form">
-							<fieldset>
-								<div class="inner-holder">
-									<div class="inner-box">
-										<strong class="name"><a id="recording-text" href="#"></a></strong>
-										<a href="#" class="opener"><i class="fa fa-pencil-square-o" aria-hidden="true"></i></a>
-									</div>
-									<input class="input" id="edit-recording-text" type="text" value="">
-								</div>
-							</fieldset>
-						</form>
-						<ul class="btns-holder">
-							<li>
-								 <a data-drag="true" data-jqyoui-options="{revert: 'invalid',containment:'parent'}" jqyoui-draggable="{animate:true,onStop:'onPlay()',onDrag:'calcOpacity'}" href=""  id="play-btn" title="Swipe Me To Play">
-									<i class="fa fa-play" aria-hidden="true"></i>
-								</a>
-								<a href="" class="arrow bounce">
-									<span class="fa fa-angle-down" aria-hidden="true"></span>
-									<span class="second fa fa-angle-down" aria-hidden="true"></span>
-									<span class="fa fa-angle-down" aria-hidden="true"></span>
-								</a>
-							</li>
-							<li>
-								<a data-drag="true" data-jqyoui-options="{revert: 'invalid',containment:'parent'}" jqyoui-draggable="{animate:true,onStop:'onNewRecording()',onDrag:'calcOpacity'}" href="" id="newfile-btn" title="Swipe Me To Create New File">
-									<i class="fa fa-file" aria-hidden="true"></i>
-								</a>
-								<a href="#" class="arrow bounce">
-									<span class="fa fa-angle-down" aria-hidden="true"></span>
-									<span class="second fa fa-angle-down" aria-hidden="true"></span>
-									<span class="fa fa-angle-down" aria-hidden="true"></span>
-								</a>
-							</li>
-							<li>
-								<a data-drag="true" data-jqyoui-options="{revert: 'invalid',containment:'parent'}" jqyoui-draggable="{animate:true,onStop:'onRetake()',onDrag:'calcOpacity'}" href="" id="retake-btn" title="Swipe Me To Retake">
-									<i class="fa fa-repeat" aria-hidden="true"></i>
-								</a>
-								<a href="#" class="arrow bounce">
-									<span class="fa fa-angle-down" aria-hidden="true"></span>
-									<span class="second fa fa-angle-down" aria-hidden="true"></span>
-									<span class="fa fa-angle-down" aria-hidden="true"></span>
-								</a>
-							</li>
-							<li>
-								<a data-drag="true" data-jqyoui-options="{revert: 'invalid',containment:'parent'}" jqyoui-draggable="{animate:true,onStop:'deleteRecording()',onDrag:'calcOpacity'}" href="" id="delete-recording" title="Swipe Me To Delete Recording">
-									<i class="fa fa-trash-o" aria-hidden="true"></i>
-								</a>
-								<a href="#" class="arrow bounce">
-									<span class="fa fa-angle-down" aria-hidden="true"></span>
-									<span class="second fa fa-angle-down" aria-hidden="true"></span>
-									<span class="fa fa-angle-down" aria-hidden="true"></span>
-								</a>
-							</li>
-						</ul>
-					</div>
+			<aside class="aside">
+				<a href="#" id="menu-opener" class="menu-opener">
+					<i class="fa fa-list-ul" aria-hidden="true"></i>
+				</a>
+				<div class="menu-slide">
+					<ul class="jcf-scrollable images-list">
+						<li>
+							<a href="#"><img src="images/img1.jpg" alt=""></a>
+							<a href="#" class="btn-delete">
+								<i class="fa fa-times-circle" aria-hidden="true"></i>
+							</a>
+						</li>
+						<li>
+							<a href="#"><img src="images/img2.jpg" alt=""></a>
+							<a href="#" class="btn-delete">
+								<i class="fa fa-times-circle" aria-hidden="true"></i>
+							</a>
+						</li>
+						<li>
+							<a href="#"><img src="images/img3.jpg" alt=""></a>
+							<a href="#" class="btn-delete">
+								<i class="fa fa-times-circle" aria-hidden="true"></i>
+							</a>
+						</li>
+					</ul>
+					<a href="#" class="load-more">Load More</a>
 				</div>
+			</aside>
+			<div class="btn-list">
+				<div class="holder">
+					<form id="recordingName" class="form">
+						<fieldset>
+							<div class="inner-holder">
+								<div class="inner-box">
+									<strong class="name"><a id="recording-text" href="#"></a></strong>
+									<a href="#" class="opener"><i class="fa fa-pencil-square-o" aria-hidden="true"></i></a>
+								</div>
+								<div class="input-holder">
+									<input class="input" id="edit-recording-text" type="text" value="">
+									<button type="submit" class="btn-submit">
+										<i class="fa fa-paper-plane" aria-hidden="true"></i>
+									</button>
+								</div>
+							</div>
+						</fieldset>
+					</form>
+					<ul class="btns-holder">
+						<li>
+							<a data-drag="true" data-jqyoui-options="{revert: 'invalid',containment:'parent'}" jqyoui-draggable="{animate:true,onStop:'onPlay()',onDrag:'changeColorOnDrag'}" href="" id="play-btn" title="Swipe Me To Play">
+								<i class="fa fa-play" aria-hidden="true"></i>
+							</a>
+							<a href="" class="arrow bounce">
+								<span class="fa fa-angle-down" aria-hidden="true"></span>
+								<span class="second fa fa-angle-down" aria-hidden="true"></span>
+								<span class="fa fa-angle-down" aria-hidden="true"></span>
+							</a>
+						</li>
+						<li>
+							<a data-drag="true" data-jqyoui-options="{revert: 'invalid',containment:'parent'}" jqyoui-draggable="{animate:true,onStop:'onNewRecording()',onDrag:'changeColorOnDrag'}" href="" id="newfile-btn" title="Swipe Me To Create New File">
+								<i class="fa fa-file" aria-hidden="true"></i>
+							</a>
+							<a href="#" class="arrow bounce">
+								<span class="fa fa-angle-down" aria-hidden="true"></span>
+								<span class="second fa fa-angle-down" aria-hidden="true"></span>
+								<span class="fa fa-angle-down" aria-hidden="true"></span>
+							</a>
+						</li>
+						<li>
+							<a data-drag="true" data-jqyoui-options="{revert: 'invalid',containment:'parent'}" jqyoui-draggable="{animate:true,onStop:'onRetake()',onDrag:'changeColorOnDrag'}" href="" id="retake-btn" title="Swipe Me To Retake">
+								<i class="fa fa-repeat" aria-hidden="true"></i>
+							</a>
+							<a href="#" class="arrow bounce">
+								<span class="fa fa-angle-down" aria-hidden="true"></span>
+								<span class="second fa fa-angle-down" aria-hidden="true"></span>
+								<span class="fa fa-angle-down" aria-hidden="true"></span>
+							</a>
+						</li>
+						<li>
+							<a data-drag="true" data-jqyoui-options="{revert: 'invalid',containment:'parent'}" jqyoui-draggable="{animate:true,onStop:'deleteRecording()',onDrag:'changeColorOnDrag'}" href="" id="delete-recording" title="Swipe Me To Delete Recording">
+								<i class="fa fa-trash-o" aria-hidden="true"></i>
+							</a>
+							<a href="#" class="arrow bounce">
+								<span class="fa fa-angle-down" aria-hidden="true"></span>
+								<span class="second fa fa-angle-down" aria-hidden="true"></span>
+								<span class="fa fa-angle-down" aria-hidden="true"></span>
+							</a>
+						</li>
+					</ul>
+				</div>
+			</div>
 			<div ng-audio-recorder audio-model='recorded' show-player="false" time-limit="timeLimit" id="content" ng-init="selectedLineWidth = 2">
-        <a href="" id="btn-clear" class="btn-clear"><i class="fa fa-times" aria-hidden="true"></i> clear</a>
+				<a href="" id="btn-clear" class="btn-clear"><i class="fa fa-times" aria-hidden="true"></i> clear</a>
 				<div data-ng-app="canvasdemo">
 					<canvas id="rbcanvas"></canvas>
 				</div>
@@ -86,12 +120,11 @@
 					<a href="#" id="main-btn" class="btn-primary"></a>
 				</div>
 				<div id="color-holder" class="color-holder">
-					<div class="color-picker">
-						<div data-drag="true" data-drop="true" jqyoui-draggable id="colorPicker">
+					<div class="color-picker" data-drag="true" data-drop="true" jqyoui-draggable id="colorPicker">
+						<div>
 							<a class="color">
 								<div class="colorInner"></div>
 							</a>
-
 							<div class="track"></div>
 							<ul class="dropdown">
 								<li></li>

@@ -1,24 +1,5 @@
-angular.module('starter.controllers', ['ngDragDrop'])
-  .controller('DashCtrl', ['$scope', 'Sounds', function ($scope, Sounds) {
-
-   /* $scope.onplay = function () {
-      console.log('on play : controller : ');
-    }
-
-
-          $scope.dropCallback = function (e, u) {
-            console.log('dropCallback hi on start')
-          };
-          $scope.dragCallback = function (e, u) {
-            console.log('dropCallback hi on start')
-          };
-          $scope.startCallback = function (e, u) {
-            console.log('startCallback hi on start')
-          };
-          $scope.stopCallback = function (e, u) {
-            console.log('stopCallback hi on start')
-          };*/
-
+angular.module('starter.controllers', [])
+  .controller('DashCtrl', ['$scope', 'Sounds', '$ionicModal', function ($scope, Sounds, $ionicModal) {
   }])
   .controller('NavCtrl', function ($scope, $ionicSideMenuDelegate) {
     $scope.showMenu = function () {
@@ -27,51 +8,54 @@ angular.module('starter.controllers', ['ngDragDrop'])
   })
 
   // Main directive for the canvas recordings
-  .directive('arbiCanvas', ['$ionicPlatform', '$cordovaMedia', '$cordovaCapture', 'Sounds', 'recorderService', '$ionicListDelegate', '$ionicPopup', '$rootScope',
-    function ($ionicPlatform, $cordovaMedia, $cordovaCapture, Sounds, recorderService, $ionicListDelegate, $ionicPopup, $rootScope) {
+  .directive('arbiCanvas', ['$ionicPlatform', '$cordovaMedia', '$cordovaCapture', 'Sounds', 'recorderService', '$ionicListDelegate', '$ionicPopup',
+    '$ionicModal',
+    function ($ionicPlatform, $cordovaMedia, $cordovaCapture, Sounds, recorderService, $ionicListDelegate, $ionicPopup, $ionicModal) {
 
       return {
         restrict: "AE",
         scope: false,
         link: function (scope, element) {
-
-
-
           $ionicListDelegate.showReorder(true);
           scope.shouldShowDelete = true;
+
           $ionicPlatform.ready(function () {
+            var init = function (project_id) {
+              if (!project_id) {
+                Sounds.getInitialProject().then(function (res) {
+                  scope.project = res;
+                  scope.recordings = res ? res.scenes : '';
+                  console.log('without  id : ', res);
+                });
+                getAllProjects();
+              }
+              else {
+                Sounds.getInitialProject(project_id).then(function (res) {
+                  scope.project = res;
+                  scope.recordings = res.scenes;
+                  console.log('with id : ', res);
+                });
+              }
+            }
 
-
-          scope.dropCallback = function (e, u) {
-            console.log('dropCallback hi on start')
-          };
-          scope.dragCallback = function (e, u) {
-            console.log('dropCallback hi on start')
-          };
-          scope.startCallback = function (e, u) {
-            console.log('startCallback hi on start');
-            playRecording();
-          };
-          scope.stopCallback = function (e, u) {
-            console.log('stopCallback hi on start')
-          };
-
-            var init = function () {
+            var getAllProjects = function () {
               Sounds.get().then(function (res) {
-                scope.recordings = res;
-              })
+                scope.allProjects = res;
+              });
             }
 
             scope.moveItem = function (item, fromIndex, toIndex) {
               scope.recordings.splice(fromIndex, 1);
               scope.recordings.splice(toIndex, 0, item);
-              Sounds.swap(scope.recordings).then(function () {
-                init();
+              Sounds.swap(scope.recordings, scope.project.project_id).then(function () {
+                init(scope.project.project_id);
               })
             };
 
             init();
-			      window.initTooltip();
+            window.initTooltip();
+            //window.initAccordion();
+            //window.initLightbox();
 
 
             /*recorderService.isReady = true;
@@ -103,7 +87,7 @@ angular.module('starter.controllers', ['ngDragDrop'])
             var currentRecording = {};
 
             $tinyColor.bind("change", function () {
-              console.log('change color : ',$('#hidden-color').val());
+              console.log('change color : ', $('#hidden-color').val());
               drawingElement.setColor($('#hidden-color').val());
             });
 
@@ -144,9 +128,9 @@ angular.module('starter.controllers', ['ngDragDrop'])
               drawingElement.stopRecording();
               media.stopRecord();
               /*console.log('isConverting : ', media.status.isConverting);
-              console.log('isRecording : ', media.status.isRecording);
-              console.log('isPlaying : ', media.status.isPlaying);
-              console.log('playback : ', media.status.playback);*/
+               console.log('isRecording : ', media.status.isRecording);
+               console.log('isPlaying : ', media.status.isPlaying);
+               console.log('playback : ', media.status.playback);*/
               onSave();
               //console.log('recorderService.getHandler(); : ', recorderService.getHandler());
             }
@@ -164,10 +148,10 @@ angular.module('starter.controllers', ['ngDragDrop'])
               drawingElement.playRecording(function () {
                 playbackInterruptCommand = "";
               }, function () {
-                console.log('change color : ',$('#hidden-color').val(),'====',$('#hidden-color').value);
+                console.log('change color : ', $('#hidden-color').val(), '====', $('#hidden-color').value);
                 /*if ($('#hidden-color').value){
-                  drawingElement.setColor($('#hidden-color').value);
-                }*/
+                 drawingElement.setColor($('#hidden-color').value);
+                 }*/
                 //drawingElement.setStokeSize(2);
                 //drawingElement.setColor('#000');
               }, function () {
@@ -177,6 +161,22 @@ angular.module('starter.controllers', ['ngDragDrop'])
             }
 
             var onclick = function () {
+              if (!scope.project) {
+                var confirmPopup = $ionicPopup.confirm({
+                  title: 'Create a project?',
+                  template: 'Please create a project first. It seems that you do not create any project yet.'
+                });
+                confirmPopup.then(function (res) {
+                  if (res) {
+                    scope.openProjectModal();
+                    return;
+                  } else {
+                    //console.log('You are not sure');
+                    return;
+                  }
+                });
+                return;
+              }
               $wrapper.removeClass('aside-active');
               if ($wrapper.hasClass('record')) {
                 $wrapper.removeClass('record');
@@ -194,7 +194,7 @@ angular.module('starter.controllers', ['ngDragDrop'])
                 //drawingElement.clearCanvas();
                 drawingElement.startRecording();
                 //drawingElement.setColor($('#hidden-color').value);
-		            //drawingElement.setStokeSize(2);
+                //drawingElement.setStokeSize(2);
                 media.startRecord();
               }
             }
@@ -202,7 +202,7 @@ angular.module('starter.controllers', ['ngDragDrop'])
 
             scope.onPlay = function () {
               $('.btns-holder a').css({
-                opacity :  1
+                opacity: 1
               });
               /*console.log('on play : ');
                $wrapper.removeClass('stop').removeClass('record').removeClass('aside-active');
@@ -221,18 +221,21 @@ angular.module('starter.controllers', ['ngDragDrop'])
               }
             }
 
-            scope.calcOpacity = function(){
 
-              var btn = $('.btns-holder a'),
-                opacity = 100,
-                position = parseFloat(btn.css('top'));
-              btn.css({
-                opacity : (opacity - position) / 100
+            scope.changeColorOnDrag = function () {
+              var btn = $('.ui-draggable-dragging'),
+                color = '#fff';
+              btn.each(function (index) {
+                var item = $(this),
+                  currColor = item.css('color');
+                item.animate({
+                  color: color
+                }, function () {
+                  color = currColor;
+                  item.css('color', currColor);
+                });
               });
-console.log('opcaity : ',opacity , position);
-              //return opacity - position;
             }
-
 
             var onSave = function () {
               //$wrapper.removeClass('stop').removeClass('record');
@@ -243,18 +246,17 @@ console.log('opcaity : ',opacity , position);
                   voice: res,
                   id: (!$.isEmptyObject(currentRecording)) ? currentRecording.id : (new Date()).getTime()
                 }
-                if(scope.recordings){
-                   obj.name =  'scene : '+(scope.recordings.length + 1);
+                if (scope.recordings) {
+                  obj.name = 'scene : ' + (scope.recordings.length + 1);
                 }
-                else{
-                  obj.name =  'scene :  1';
+                else {
+                  obj.name = 'scene :  1';
                 }
                 currentRecording = obj;
                 $($('#recording-text')[0]).text(obj.name);
                 $($('#edit-recording-text')[0]).val(obj.name);
-                console.log(' obj rec : ',obj);
-                Sounds.save(obj).then(function () {
-                  init();
+                Sounds.save(obj, scope.project.project_id).then(function () {
+                  init(scope.project.project_id);
                 })
               });
             }
@@ -288,8 +290,8 @@ console.log('opcaity : ',opacity , position);
               });
               confirmPopup.then(function (res) {
                 if (res) {
-                  Sounds.delete(obj.id).then(function () {
-                    init();
+                  Sounds.delete(obj.id, scope.project.project_id).then(function () {
+                    init(scope.project.project_id);
                   });
                 } else {
                   //console.log('You are not sure');
@@ -298,7 +300,13 @@ console.log('opcaity : ',opacity , position);
             }
 
             var toggleSideBar = function () {
+              $wrapper.removeClass('menu-active');
               $wrapper.toggleClass('aside-active');
+            }
+
+            var toggleImagesAside = function () {
+              $wrapper.removeClass('aside-active');
+              $wrapper.toggleClass('menu-active');
             }
 
             var clearLocalStorage = function () {
@@ -358,8 +366,8 @@ console.log('opcaity : ',opacity , position);
                 if (res) {
                   drawingElement.clearCanvas();
                   if (!$.isEmptyObject(currentRecording)) {
-                    Sounds.delete(currentRecording.id).then(function () {
-                      init();
+                    Sounds.delete(currentRecording.id, scope.project.project_id).then(function () {
+                      init(scope.project.project_id);
                       $wrapper.removeClass('record');
                       currentRecording = {};
                     });
@@ -379,6 +387,7 @@ console.log('opcaity : ',opacity , position);
 
             var clickOnCanvas = function () {
               $wrapper.removeClass('aside-active');
+              $wrapper.removeClass('menu-active');
             }
 
             var clearCanvas = function () {
@@ -391,8 +400,8 @@ console.log('opcaity : ',opacity , position);
               if ($('#recordingName').hasClass('form-active')) {
                 if ($($('#edit-recording-text')[0]).val() != $($('#recording-text')[0]).text()) {
                   currentRecording.name = $($('#edit-recording-text')[0]).val();
-                  Sounds.save(currentRecording).then(function () {
-                    init();
+                  Sounds.save(currentRecording, scope.project.project_id).then(function () {
+                    init(scope.project.project_id);
                     $($('#recording-text')[0]).text(currentRecording.name);
                   })
                 }
@@ -402,19 +411,65 @@ console.log('opcaity : ',opacity , position);
                 $('#recordingName').addClass('form-active');
                 $($('#recording-text')[0]).text(currentRecording.name);
                 $($('#edit-recording-text')[0]).val(currentRecording.name);
-				        $($('#edit-recording-text')[0]).focus();
+                $($('#edit-recording-text')[0]).focus();
               }
             }
 
             $($('#edit-recording-text')[0]).keydown(function (event) {
-              console.log("Handler for .keydown() called.",event);
-              if(event.keyCode == 13){
-                if(cordova) {
+              console.log("Handler for .keydown() called.", event);
+              if (event.keyCode == 13) {
+                if (cordova) {
                   cordova.plugins.Keyboard.close();
                 }
                 scope.editRecording();
               }
             });
+
+            scope.openProjectModal = function () {
+              console.log('open modal directive');
+              $ionicModal.fromTemplateUrl('templates/project-view.html', {
+                scope: scope
+              }).then(function (modal) {
+                console.log('open modal directive hode');
+                scope.modal = modal;
+                scope.modal.show();
+              });
+            }
+
+            // Execute action on hide modal
+            scope.$on('modal.hidden', function () {
+              if (scope.newModal && !scope.project) {
+                // when there is no project
+                init();
+              }
+            });
+
+            scope.createProject = function () {
+              console.log('open modal createProject');
+              $ionicModal.fromTemplateUrl('templates/new-project.html', {
+                scope: scope
+              }).then(function (modal) {
+                scope.newModal = modal;
+                scope.newModal.show();
+              });
+            }
+
+            scope.addProject = function (form) {
+              //console.log('open modal addProject', form.description.$modelValue, form.useAsDefault.$modelValue);
+              Sounds.addProject({
+                project_name: form.description.$modelValue,
+                project_id: (new Date()).getTime()
+              }, '').then(function () {
+                scope.newModal.hide();
+                getAllProjects();
+              })
+            }
+
+            scope.loadProject = function (project_id) {
+              init(project_id);
+              scope.modal.hide();
+            };
+
             //var onPlay = scope.onPlay;
             //$playBtn.on('swipedown',onPlay );
             //$retakeBtn.on('swipedown',onRetake );
@@ -430,6 +485,7 @@ console.log('opcaity : ',opacity , position);
             //$('#delete-recording').bind("mousedown touch", deleteRecording);
             $('#delete-btn').bind("mousedown touch", clearLocalStorage);
             $('#aside-opener').bind("mousedown touch", toggleSideBar);
+            $('#menu-opener').bind("mousedown touch", toggleImagesAside);
             $('#rbcanvas').bind("mousedown touch", clickOnCanvas);
             $('#btn-clear').bind("mousedown touch", clearCanvas);
             $('#recordingName').bind("mousedown touch", scope.editRecording);

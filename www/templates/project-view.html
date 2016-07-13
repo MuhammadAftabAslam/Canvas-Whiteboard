@@ -1,0 +1,18 @@
+<ion-modal-view>
+  <ion-header-bar class="bar bar-header bar-positive">
+    <div class="buttons">
+      <button class="button button-icon ion-ios-plus-outline" ng-click="createProject(newUser)"></button>
+    </div>
+    <h1 class="title">Projects</h1>
+    <div class="buttons">
+      <button class="button button-icon  ion-close-round" ng-click="modal.hide()"></button>
+    </div>
+  </ion-header-bar>
+  <ion-content class="padding">
+    <ion-list can-swipe="true" class="jcf-scrollable list">
+						<ion-item class="item-remove-animate" id="{{ project.project_id }}" ng-repeat="project in allProjects" ng-click="loadProject(project.project_id)">
+              <div>{{ project.project_name }}</div>
+						</ion-item>
+					</ion-list>
+  </ion-content>
+</ion-modal-view>

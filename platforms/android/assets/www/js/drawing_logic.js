@@ -312,7 +312,7 @@ RecordableDrawing = function (canvasId)
 			self.ctx.stroke();
 			break;
 		}
-	}	
+	}
 	
 	__init = function()
 	{

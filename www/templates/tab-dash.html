@@ -6,6 +6,7 @@
 					<i class="fa fa-list-ul" aria-hidden="true"></i>
 				</a>
 				<div class="slide">
+          <strong class="project-title">{{ project.project_name }}</strong>
 					<ion-list can-swipe="true" class="jcf-scrollable list">
 						<ion-item item="recording" class="item-remove-animate" id="{{ recording.id }}" ng-repeat="recording in recordings">
 							<a href="" class="link" ng-click="savedPlaying(recording)">{{ recording.name }}</a>
@@ -16,7 +17,7 @@
 					<div class="btns-block">
 						<a id="delete-btn"><span class="fa fa-trash-o"></span> Delete All</a>
 						<a><span class="fa fa-play"></span> Play All</a>
-						<a class="lightbox" href="#popup1"><i class="fa fa-arrow-right" aria-hidden="true"></i></a>
+						<a class="lightbox" ng-click="openProjectModal()"><i class="fa fa-arrow-right" aria-hidden="true"></i></a>
 					</div>
 				</div>
 			</aside>
@@ -111,6 +112,7 @@
 				</div>
 			</div>
 			<div ng-audio-recorder audio-model='recorded' show-player="false" time-limit="timeLimit" id="content" ng-init="selectedLineWidth = 2">
+        <a href="" id="btn-rub" class="btn-clear" style="right: 117px;"><i class="fa fa-eraser" aria-hidden="true"></i></a>
 				<a href="" id="btn-clear" class="btn-clear"><i class="fa fa-times" aria-hidden="true"></i> clear</a>
 				<div data-ng-app="canvasdemo">
 					<canvas id="rbcanvas"></canvas>
