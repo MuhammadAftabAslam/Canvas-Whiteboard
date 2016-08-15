@@ -8,13 +8,14 @@
 				<div class="slide">
           <strong class="project-title">{{ project.project_name }}</strong>
 					<ion-list can-swipe="true" class="jcf-scrollable list">
-						<ion-item item="recording" class="item-remove-animate" id="{{ recording.id }}" ng-repeat="recording in recordings">
+						<ion-item item="recording" class="item-remove-animate" id="{{ recording._id }}" ng-repeat="recording in recordings">
 							<a href="" class="link" ng-click="savedPlaying(recording)">{{ recording.name }}</a>
 							<a href="" class="fa fa-trash-o delete" ng-click="itemDelete(recording)"></a>
 							<ion-reorder-button class="ion-navicon" on-reorder="moveItem(recording, $fromIndex, $toIndex)"></ion-reorder-button>
 						</ion-item>
 					</ion-list>
 					<div class="btns-block">
+            <a ng-click="logout()">Logout</a>
 						<a id="delete-btn"><span class="fa fa-trash-o"></span> Delete All</a>
 						<a><span class="fa fa-play"></span> Play All</a>
 						<a class="lightbox" ng-click="openProjectModal()"><i class="fa fa-arrow-right" aria-hidden="true"></i></a>
@@ -28,19 +29,19 @@
 				<div class="menu-slide">
 					<ul class="jcf-scrollable images-list">
 						<li>
-							<a href="#"><img src="images/img1.jpg" alt=""></a>
+							<a href="#"><img src="images/img1.jpg" id="scream" ng-click="drawImageOnCanvas('images/img1.jpg','img1')" alt=""></a>
 							<a href="#" class="btn-delete">
 								<i class="fa fa-times-circle" aria-hidden="true"></i>
 							</a>
 						</li>
 						<li>
-							<a href="#"><img src="images/img2.jpg" alt=""></a>
+							<a href="#"><img src="images/img2.jpg" ng-click="drawImageOnCanvas('images/img2.jpg','img2')" alt=""></a>
 							<a href="#" class="btn-delete">
 								<i class="fa fa-times-circle" aria-hidden="true"></i>
 							</a>
 						</li>
 						<li>
-							<a href="#"><img src="images/img3.jpg" alt=""></a>
+							<a href="#"><img src="images/img3.jpg" ng-click="drawImageOnCanvas('images/img3.jpg','img3')" alt=""></a>
 							<a href="#" class="btn-delete">
 								<i class="fa fa-times-circle" aria-hidden="true"></i>
 							</a>

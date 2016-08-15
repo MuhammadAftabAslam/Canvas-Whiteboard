@@ -74,7 +74,7 @@
 .btn-clear {
 	position: absolute;
 	right: 10px;
-	top: 10px;
+	top: 3px;
 	display: none;
 	@include border-radius(35px);
 	pointer-events: all;
@@ -109,8 +109,7 @@
 }
 
 .record {
-	.aside-opener,
-	.menu-opener{
+	.aside-opener{
 		visibility: hidden;
 		opacity: 0;
 		pointer-events: none;

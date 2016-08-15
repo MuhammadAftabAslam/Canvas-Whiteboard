@@ -1,16 +1,58 @@
 angular.module('starter.controllers', [])
-  .controller('DashCtrl', ['$scope', 'Sounds', '$ionicModal', function ($scope, Sounds, $ionicModal) {
+  .controller('DashCtrl', ['$scope', '$ionicModal', 'UserService', '$state', function ($scope, $ionicModal, UserService, $state) {
+    UserService.authenticate().then(function (auth) {
+      if (!auth) {
+        debugger;
+        $state.go('login');
+      }
+    })
   }])
   .controller('NavCtrl', function ($scope, $ionicSideMenuDelegate) {
     $scope.showMenu = function () {
       $ionicSideMenuDelegate.toggleLeft();
     };
   })
+  .controller('LoginCtrl', function ($scope, UserService, $ionicPopup, $state, $rootScope) {
+
+    $scope.data = {};
+    $scope.login = function () {
+      UserService.login({username: $scope.data.username, password: $scope.data.password}).then(function (data) {
+        if (data) {
+          $state.go('tab.dash');
+          $rootScope.$emit('user:loggedin');
+        }
+        else {
+          var alertPopup = $ionicPopup.alert({
+            title: 'Login failed!',
+            template: 'Please check your credentials!'
+          });
+        }
+      });
+    }
+
+    $scope.register = function () {
+      UserService.register({
+        username: $scope.data.usernamereg,
+        password: $scope.data.passwordreg
+      }).then(function (data) {
+        if (data) {
+          $state.go('tab.dash');
+        }
+        else {
+          var alertPopup = $ionicPopup.alert({
+            title: 'Registration failed!',
+            template: 'Username already exist!'
+          });
+        }
+      });
+    }
+
+  })
 
   // Main directive for the canvas recordings
-  .directive('arbiCanvas', ['$ionicPlatform', '$cordovaMedia', '$cordovaCapture', 'Sounds', 'recorderService', '$ionicListDelegate', '$ionicPopup',
-    '$ionicModal',
-    function ($ionicPlatform, $cordovaMedia, $cordovaCapture, Sounds, recorderService, $ionicListDelegate, $ionicPopup, $ionicModal) {
+  .directive('arbiCanvas', ['$ionicPlatform', '$cordovaMedia', '$cordovaCapture', 'recorderService', '$ionicListDelegate', '$ionicPopup',
+    '$ionicModal', 'DrawingService', 'UserService', '$state', '$rootScope',
+    function ($ionicPlatform, $cordovaMedia, $cordovaCapture, recorderService, $ionicListDelegate, $ionicPopup, $ionicModal, DrawingService, UserService, $state, $rootScope) {
 
       return {
         restrict: "AE",
@@ -22,24 +64,22 @@ angular.module('starter.controllers', [])
           $ionicPlatform.ready(function () {
             var init = function (project_id) {
               if (!project_id) {
-                Sounds.getInitialProject().then(function (res) {
+                DrawingService.getInitialProject().then(function (res) {
                   scope.project = res;
                   scope.recordings = res ? res.scenes : '';
-                  console.log('without  id : ', res);
                 });
                 getAllProjects();
               }
               else {
-                Sounds.getInitialProject(project_id).then(function (res) {
+                DrawingService.getInitialProject(project_id).then(function (res) {
                   scope.project = res;
                   scope.recordings = res.scenes;
-                  console.log('with id : ', res);
                 });
               }
             }
 
             var getAllProjects = function () {
-              Sounds.get().then(function (res) {
+              DrawingService.get().then(function (res) {
                 scope.allProjects = res;
               });
             }
@@ -47,10 +87,16 @@ angular.module('starter.controllers', [])
             scope.moveItem = function (item, fromIndex, toIndex) {
               scope.recordings.splice(fromIndex, 1);
               scope.recordings.splice(toIndex, 0, item);
-              Sounds.swap(scope.recordings, scope.project.project_id).then(function () {
-                init(scope.project.project_id);
+              DrawingService.swap(scope.recordings, scope.project._id).then(function () {
+                init(scope.project._id);
               })
             };
+
+
+            $rootScope.$on('user:loggedin', function () {
+              console.log('user:loggedin event'); // 'Data to send';
+              init();
+            });
 
             init();
             window.initTooltip();
@@ -76,7 +122,7 @@ angular.module('starter.controllers', [])
 
 
             var media = recorderService.controller('content');
-            media.timeLimit = 100;
+            media.timeLimit = 1000;
             var $mainBtn = $('#main-btn');
             var $playBtn = $('#play-btn');
             var $saveBtn = $('#save-btn');
@@ -148,7 +194,7 @@ angular.module('starter.controllers', [])
               drawingElement.playRecording(function () {
                 playbackInterruptCommand = "";
               }, function () {
-                console.log('change color : ', $('#hidden-color').val(), '====', $('#hidden-color').value);
+                //console.log('change color : ', $('#hidden-color').val(), '====', $('#hidden-color').value);
                 /*if ($('#hidden-color').value){
                  drawingElement.setColor($('#hidden-color').value);
                  }*/
@@ -177,7 +223,7 @@ angular.module('starter.controllers', [])
                 });
                 return;
               }
-              $wrapper.removeClass('aside-active');
+              //$wrapper.removeClass('aside-active');
               if ($wrapper.hasClass('record')) {
                 $wrapper.removeClass('record');
                 $wrapper.addClass('stop');
@@ -228,22 +274,23 @@ angular.module('starter.controllers', [])
               btn.each(function (index) {
                 var item = $(this),
                   currColor = item.css('color');
-                item.animate({
-                  color: color
-                }, function () {
-                  color = currColor;
-                  item.css('color', currColor);
-                });
+                /*item.animate({
+                 color: color
+                 }, function () {
+                 color = currColor;
+                 item.css('color', currColor);
+                 });*/
               });
             }
 
             var onSave = function () {
               //$wrapper.removeClass('stop').removeClass('record');
               var serializedData = serializeDrawing(drawingElement);
+              console.log('yeh : ', serializedData);
               media.save('shh', function (res) {
                 var obj = {
-                  canvas: serializedData,
-                  voice: res,
+                  drawing_data: serializedData,
+                  audio_data: res,
                   id: (!$.isEmptyObject(currentRecording)) ? currentRecording.id : (new Date()).getTime()
                 }
                 if (scope.recordings) {
@@ -255,15 +302,16 @@ angular.module('starter.controllers', [])
                 currentRecording = obj;
                 $($('#recording-text')[0]).text(obj.name);
                 $($('#edit-recording-text')[0]).val(obj.name);
-                Sounds.save(obj, scope.project.project_id).then(function () {
-                  init(scope.project.project_id);
+                DrawingService.save(obj, scope.project._id).then(function () {
+                  init(scope.project._id);
                 })
               });
             }
 
             scope.savedPlaying = function (obj) {
               $wrapper.removeClass('stop').removeClass('record');
-              var result = deserializeDrawing(obj.canvas);
+              var result = deserializeDrawing(JSON.parse(obj.drawing_data));
+              console.log('results : ',result );
               if (result == null)
                 result = "Error : Unknown error in deserializing the data";
               if (result instanceof Array == false) {
@@ -278,7 +326,7 @@ angular.module('starter.controllers', [])
                 }
                 $wrapper.removeClass('aside-active');
                 playRecording();
-                media.playbackRecording(obj.voice);
+                media.playbackRecording(JSON.parse(obj.audio_data));
               }
             }
 
@@ -290,8 +338,8 @@ angular.module('starter.controllers', [])
               });
               confirmPopup.then(function (res) {
                 if (res) {
-                  Sounds.delete(obj.id, scope.project.project_id).then(function () {
-                    init(scope.project.project_id);
+                  DrawingService.delete(obj._id, scope.project._id).then(function () {
+                    init(scope.project._id);
                   });
                 } else {
                   //console.log('You are not sure');
@@ -316,8 +364,8 @@ angular.module('starter.controllers', [])
               });
               confirmPopup.then(function (res) {
                 if (res) {
-                  Sounds.deleteAll().then(function () {
-                    init();
+                  DrawingService.deleteAll(scope.project._id).then(function (res) {
+                    if (res) init();
                   })
                 } else {
                   console.log('You are not sure');
@@ -366,8 +414,8 @@ angular.module('starter.controllers', [])
                 if (res) {
                   drawingElement.clearCanvas();
                   if (!$.isEmptyObject(currentRecording)) {
-                    Sounds.delete(currentRecording.id, scope.project.project_id).then(function () {
-                      init(scope.project.project_id);
+                    DrawingService.delete(currentRecording._id, scope.project._id).then(function () {
+                      init(scope.project._id);
                       $wrapper.removeClass('record');
                       currentRecording = {};
                     });
@@ -386,7 +434,7 @@ angular.module('starter.controllers', [])
             }
 
             var clickOnCanvas = function () {
-              $wrapper.removeClass('aside-active');
+              //$wrapper.removeClass('aside-active');
               $wrapper.removeClass('menu-active');
             }
 
@@ -400,8 +448,8 @@ angular.module('starter.controllers', [])
               if ($('#recordingName').hasClass('form-active')) {
                 if ($($('#edit-recording-text')[0]).val() != $($('#recording-text')[0]).text()) {
                   currentRecording.name = $($('#edit-recording-text')[0]).val();
-                  Sounds.save(currentRecording, scope.project.project_id).then(function () {
-                    init(scope.project.project_id);
+                  DrawingService.save(currentRecording, scope.project._id).then(function () {
+                    init(scope.project._id);
                     $($('#recording-text')[0]).text(currentRecording.name);
                   })
                 }
@@ -436,6 +484,22 @@ angular.module('starter.controllers', [])
               });
             }
 
+            scope.logout = function () {
+              console.log('logout');
+              UserService.logout().then(function () {
+                DrawingService.ClearUserData().then(function () {
+                  drawingElement.clearCanvas();
+                  $state.go('login');
+                });
+
+              })
+            }
+
+            scope.drawImageOnCanvas = function (url,id) {
+              console.log('drawImageOnCanvas');
+              drawingElement.setImage(url,id);
+            }
+
             // Execute action on hide modal
             scope.$on('modal.hidden', function () {
               if (scope.newModal && !scope.project) {
@@ -456,19 +520,33 @@ angular.module('starter.controllers', [])
 
             scope.addProject = function (form) {
               //console.log('open modal addProject', form.description.$modelValue, form.useAsDefault.$modelValue);
-              Sounds.addProject({
+              DrawingService.addProject({
                 project_name: form.description.$modelValue,
-                project_id: (new Date()).getTime()
-              }, '').then(function () {
+              }, '').then(function (data) {
                 scope.newModal.hide();
                 getAllProjects();
               })
             }
 
             scope.loadProject = function (project_id) {
+              ;
               init(project_id);
               scope.modal.hide();
             };
+            scope.eraser = false;
+            var eraseCanvas = function () {
+              //todo save last color
+              if (scope.eraser) {
+                drawingElement.setStokeSize(10);
+                drawingElement.setColor('#fff');
+                scope.eraser = false
+              }
+              else {
+                drawingElement.setStokeSize(30);
+                drawingElement.setColor('#000');
+                scope.eraser = true;
+              }
+            }
 
             //var onPlay = scope.onPlay;
             //$playBtn.on('swipedown',onPlay );
@@ -488,6 +566,7 @@ angular.module('starter.controllers', [])
             $('#menu-opener').bind("mousedown touch", toggleImagesAside);
             $('#rbcanvas').bind("mousedown touch", clickOnCanvas);
             $('#btn-clear').bind("mousedown touch", clearCanvas);
+            $('#btn-rub').bind("mousedown touch", eraseCanvas);
             $('#recordingName').bind("mousedown touch", scope.editRecording);
             //$('.btn-list').bind("mousedown touch", clickOnOutsideForRecordingName);
 

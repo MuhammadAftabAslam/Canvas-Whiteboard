@@ -10155,8 +10155,7 @@ th {
   clear: both; }
 
 a, .btn-holder, .aside-opener,
-.menu-opener, .record .aside-opener,
-.record .menu-opener, .btn-list, .stop .btn-list, .stop .color-holder,
+.menu-opener, .record .aside-opener, .btn-list, .stop .btn-list, .stop .color-holder,
 .stop .btn-holder, .color-holder {
   -webkit-transition: all 0.3s ease-in-out;
   transition: all 0.3s ease-in-out; }
@@ -10663,7 +10662,7 @@ a {
 .btn-clear {
   position: absolute;
   right: 10px;
-  top: 10px;
+  top: 3px;
   display: none;
   -webkit-border-radius: 35px;
   -moz-border-radius: 35px;
@@ -10695,8 +10694,7 @@ a {
   opacity: 1;
   pointer-events: all; }
 
-.record .aside-opener,
-.record .menu-opener {
+.record .aside-opener {
   visibility: hidden;
   opacity: 0;
   pointer-events: none; }

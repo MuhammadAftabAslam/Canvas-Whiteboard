@@ -12,18 +12,10 @@
           <!--<span class="input-label">Name :</span>-->
           <input type="text" placeholder="Project 1" name="description" ng-model="description" required/>
         </li>
-        <!--<li class="item item-checkbox">
-          <label class="checkbox">
-            <input type="checkbox" name="useAsDefault" ng-model="useAsDefault"/>
-          </label>
-          <span class="input-label">Use as default</span>
-        </li>-->
+
         <ion-button ng-init="saveEmpty(form)" class="button button-block button-positive" ng-click="addProject(form)">
           Add
         </ion-button>
-        <!--<ion-button ng-show="action == 'change'" class="button button-block button-positive" ng-click="editItem(form)">
-                          Edit
-                </ion-button>-->
       </ion-list>
     </form>
   </ion-content>
