@@ -1,0 +1,92 @@
+<ion-view hide-nav-bar="true" hide-back-button="true" view-title="Dashboard">
+  <ion-content scroll="false">
+
+    <!-- toolbox start -->
+        <div class="tool-box right">
+          <a href="#" class="drop-opener menu-opener"><span class="inner"></span></a>
+
+          <div class="drop">
+            <div class="holder">
+              <ul class="jcf-scrollable">
+                <li><img src="images/img1.jpg" alt="image description"></li>
+                <li><img src="images/img2.jpg" alt="image description"></li>
+                <li><img src="images/img3.jpg" alt="image description"></li>
+                <li><img src="images/img4.jpg" alt="image description"></li>
+                <li><img src="images/img1.jpg" alt="image description"></li>
+                <li><img src="images/img2.jpg" alt="image description"></li>
+                <li><img src="images/img3.jpg" alt="image description"></li>
+                <li><img src="images/img4.jpg" alt="image description"></li>
+              </ul>
+            </div>
+          </div>
+        </div>
+        <!-- toolbox end -->
+
+        <!-- toolbox start -->
+        <div class="tool-box">
+          <a href="" class="drop-opener hamburger"><span class="hamburger-inner"></span></a>
+
+          <div class="drop">
+            <div class="holder">
+              <ul>
+                <li><a class="btn-logout"><span class="icon-logout"></span></a></li>
+                <li><a class="btn-scene"><span class="icon-scene"></span></a></li>
+                <li><a class="btn-lec"><span class="icon-lec"></span></a></li>
+                <li><a class="btn-new"><span class="icon-plus"></span></a></li>
+              </ul>
+            </div>
+          </div>
+        </div>
+        <!-- toolbox end -->
+
+        <!-- color picker start -->
+        <div class="color-picker">
+          <a href="" class="color-opener icon-colorpicker"></a>
+
+          <div class="color-drop">
+            <ul class="color-list">
+              <li><a class="grayish-blue"></a></li>
+              <li><a class="black"></a></li>
+              <li><a class="vivid-cyan"></a></li>
+              <li><a class="lime-green"></a></li>
+              <li><a class="vivid-red"></a></li>
+              <li><a class="yellow"></a></li>
+            </ul>
+          </div>
+        </div>
+        <!-- color picker end -->
+
+    <!-- wrapper start -->
+    <div arbi-canvas id="wrapper">
+      <!-- header start -->
+      <header id="header">
+        <div class="btns-holder">
+          <a class="btn-undo"><span class="icon-undo"></span></a>
+          <a class="btn-redo"><span class="icon-redo"></span></a>
+        </div>
+      </header>
+      <!-- header end -->
+
+      <!-- content start -->
+      <div ng-audio-recorder audio-model='recorded' show-player="false" time-limit="timeLimit" id="content" ng-init="selectedLineWidth = 2">
+        <canvas id="rbcanvas"></canvas>
+
+
+      </div>
+      <!-- content end -->
+
+      <!-- footer start -->
+      <footer id="footer">
+        <div class="btns-holder">
+          <a class="btn-recording"><span class="icon-record"></span></a>
+          <a class="btn-pause"><span class="icon-pause"></span></a>
+          <a class="btn-stop"><span class="icon-stop"></span></a>
+          <a class="btn-play"><span class="icon-play"></span></a>
+        </div>
+      </footer>
+      <!-- footer end -->
+
+
+    </div>
+  </ion-content>
+</ion-view>

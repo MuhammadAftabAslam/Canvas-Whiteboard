@@ -1,0 +1,71 @@
+#header{
+	@extend %transition;
+	position: fixed;
+	left: 0;
+	right: 0;
+	top: 0;
+	pointer-events: none;
+	z-index: 7;
+	text-align: center;
+	letter-spacing: -6px;
+	visibility: hidden;
+	opacity: 0;
+}
+
+.btns-holder {
+	@include border-radius(0, 0, 5px, 5px);
+	@include vertical-alignment(top);
+  	background: $white;
+	border: 1px solid $light-grayish-blue;
+	border-top-width: 0;
+	overflow: hidden;
+	pointer-events: all;
+	letter-spacing: -6px;
+
+	a {
+		@include vertical-alignment(top);
+		@include v-align(100%, middle, before);
+		width: 60px;
+		height: 60px;
+		outline: 0;
+		color: $grayish-blue;
+		font-size: 11px;
+		line-height: 11px;
+
+		@include media('≥tablet') {
+			font-size: 15px;
+			line-height: 15px;
+			width: 90px;
+			height: 90px;
+		}
+		
+		&:hover,
+		&:active{color: $light-blue;}
+		
+		&.btn-stop,
+		&.btn-recording,
+		&.btn-video-stop{
+			color: $red;
+			
+			&:hover,
+			&:active{color: darken($red,5%);}
+		}
+	}
+}
+
+.record{
+	#header{
+		@extend %transition;
+		visibility: visible;
+		opacity: 1;
+	}
+}
+
+.play,
+.pause{
+	#header{
+		@extend %transition;
+		visibility: hidden;
+		opacity: 0;
+	}
+}

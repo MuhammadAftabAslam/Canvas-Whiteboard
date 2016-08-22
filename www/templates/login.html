@@ -1,0 +1,40 @@
+<ion-view hide-nav-bar="true">
+  <ion-content>
+    <div class="info-holder">
+      <div class="holder">
+        <h1>Sign In</h1>
+
+        <form ng-submit="login()" class="form" name="loginForm" custom-functions>
+          <fieldset>
+            <div class="form-group" ng-class="{ 'has-error' : loginForm.email.$invalid && !loginForm.email.$pristine }">
+              <label for="email">email</label>
+              <input type="email" id="email" name="email" class="form-control" ng-model="data.email" placeholder="Please write email">
+              <p ng-show="loginForm.email.$invalid && !loginForm.email.$pristine" class="help-block">Enter a valid email.</p>
+            </div>
+            <div class="form-group">
+              <label for="pswd">Password</label>
+              <input type="password" id="pswd" name="password" class="form-control" placeholder="Password" ng-model="data.password"
+                     ng-minlength="3">
+              <p ng-show="loginForm.password.$error.minlength" class="help-block">Please enter password.</p>
+            </div>
+            <div class="footer-box">
+              <a href="" class="forgot">Forgot</a>
+
+              <div class="check-holder">
+                <input type="checkbox" name="remember" id="remember" ng-model="data.remember" checked>
+                <label for="remember">Remember me</label>
+              </div>
+            </div>
+            <input type="submit" ng-disabled="loginForm.$invalid || !data.email || !data.password" value="Sign In" class="btn btn-primary btn-submit">
+            <span class="divider"><span class="divider-holder">or</span></span>
+            <ul class="btns-list">
+              <li><a href="" class="btn btn-facebook">Facebook</a></li>
+              <li><a href="" class="btn btn-twitter">Twitter</a></li>
+            </ul>
+            <input ui-sref="register" value="Sign up" class="btn btn-success btn-submit">
+          </fieldset>
+        </form>
+      </div>
+    </div>
+  </ion-content>
+</ion-view>

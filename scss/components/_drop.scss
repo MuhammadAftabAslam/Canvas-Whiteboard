@@ -1,0 +1,329 @@
+.tool-box{
+	@extend %transition;
+	position: absolute;
+	left: 0;
+	top: 0;
+	bottom: 0;
+	z-index: 999;
+	pointer-events: none;
+	visibility: visible;
+	opacity: 1;
+	overflow: visible;
+	
+	&.right{
+		left: auto;
+		right: 0;
+		
+		.drop-opener{
+			margin: 20px 10px 0 0;
+			
+			@include media('≥tablet') {margin: 25px 25px 0 0;}
+		}
+	}
+}
+
+.drop-opener{
+	font-size: 30px;
+	line-height: 30px;
+	margin: 30px 0 0 30px;
+	float: left;
+	pointer-events: all;
+	@include transition($val:all , $duration:0.2s , $type:ease-in-out);
+}
+
+.tool-box{
+	&.right{
+		.drop{
+			left: auto;
+			right: -60px;
+			
+			@include media('≥tablet') {
+				left: auto;
+				right: -85px;
+			}
+			
+			.holder{
+				border-left-width: 1px;
+				border-right-width: 0;
+				@include border-radius(5px, 0, 0, 5px);
+			}
+		}
+	}
+}
+
+.drop{
+	@include transition($val:all , $duration:0.2s , $type:ease-in-out);
+	@include v-align(100%, middle, before);
+	position: absolute;
+	left: -60px;
+	width: 60px;
+	top: 0;
+	bottom: 0;
+	z-index: 9999;
+	
+	@include media('≥tablet') {
+		width: 85px;
+		left: -85px;
+	}
+	
+	.holder{
+		@include border-radius(0, 5px, 5px, 0);
+		border: 1px solid $grayish-blue;
+		border-left-width: 0;
+		margin: 0 0 0 -4px;
+		pointer-events: all;
+		overflow: hidden;
+		background: $white;
+	}
+	
+	.jcf-scrollable{
+		height: 240px;
+		width: 100% !important;
+		
+		@include media('≥tablet') {height: 360px;}
+		
+		li{
+			@include border-radius(5px, 5px, 5px, 5px);
+			border: 1px solid $light-gray2;
+			margin: 5px;
+		}
+	}
+	
+	ul{
+		@extend %listreset;
+		overflow: hidden;
+		
+		li{overflow: hidden;}
+		
+		a {
+			display: block;
+			@include v-align(100%, middle, before);
+			width: 60px;
+			height: 60px;
+			outline: 0;
+			color: $grayish-blue;
+			font-size: 20px;
+			line-height: 20px;
+
+			@include media('≥tablet') {
+				font-size: 35px;
+				line-height: 35px;
+				width: 85px;
+				height: 90px;
+			}
+
+			&:hover,
+			&:active{color: $light-blue;}
+
+			&.btn-stop,
+			&.btn-recording{
+				color: $red;
+
+				&:hover,
+				&:active{color: darken($red,5%);}
+			}
+		}
+	}
+}
+
+.drop-active{
+	&.tool-box{
+		&.right{
+			.drop{
+				left: auto;
+				right: 0;
+			}
+		}
+	}
+	
+	.drop{
+		@include transition($val:all , $duration:0.2s , $type:ease-in-out);
+		left: 0;
+	}
+	
+	.drop-opener{
+		color: $light-blue;
+		@include rotate (180);
+		@include transition($val:all , $duration:0.2s , $type:ease-in-out);
+	}
+	
+	.hamburger {
+		@include rotate (0);
+		@include media('<tablet') {@include scale(0.7);}
+		.hamburger-inner{
+			background: $light-blue;
+			&:before {
+				background: $light-blue;
+				-webkit-transform: translate3d(-8px, 0, 0) rotate(-45deg) scaleX(.7);
+				transform: translate3d(-8px, 0, 0) rotate(-45deg) scaleX(.7);
+			}
+			&:after {
+				background: $light-blue;
+				-webkit-transform: translate3d(-8px, 0, 0) rotate(45deg) scaleX(.7);
+				transform: translate3d(-8px, 0, 0) rotate(45deg) scaleX(.7);
+			}
+		}
+	}
+	
+	.menu-opener {
+		@include rotate (0);
+		@include media('<tablet') {@include scale(0.7);}
+		.inner{
+			background: $light-blue;
+			&:before {
+				background: $light-blue;
+				-webkit-transform: translate3d(9px, 0, 0) rotate(45deg) scaleX(.7);
+				transform: translate3d(9px, 0, 0) rotate(45deg) scaleX(.7);
+			}
+			&:after {
+				background: $light-blue;
+				-webkit-transform: translate3d(9px, 0, 0) rotate(-45deg) scaleX(.7);
+				transform: translate3d(9px, 0, 0) rotate(-45deg) scaleX(.7);
+			}
+		}
+	}
+}
+
+.hamburger {
+	font: inherit;
+	float: left;
+	position: relative;
+	overflow: visible;
+	margin: 20px 0 0 10px;
+	padding: 10px 0;
+	width: 40px;
+	cursor: pointer;
+	transition-timing-function: linear;
+	transition-duration: .15s;
+	transition-property: opacity, -webkit-filter;
+	transition-property: opacity, filter;
+	transition-property: opacity, filter, -webkit-filter;
+	text-transform: none;
+	color: inherit;
+	border: 0;
+	cursor: pointer;
+	background-color: transparent;
+	
+	@include media('<tablet') {@include scale(0.7);}
+	
+	@include media('≥tablet') {margin: 25px 0 0 25px;}
+	
+	&:hover,
+	&:active{
+		.hamburger-inner {
+			background: $light-blue;
+			&:after,
+			&:before {background: $light-blue;}
+		}
+	}
+	
+	.hamburger-inner {
+		@include border-radius(5px, 5px, 5px, 5px);
+		display: block;
+		position: relative;
+		width: 40px;
+		height: 4px;
+		transition-timing-function: ease;
+		transition-duration: .15s;
+		transition-property: -webkit-transform;
+		transition-property: transform;
+		transition-property: transform, -webkit-transform;
+		background-color: $grayish-blue;
+		cursor: pointer;
+		
+		&:after,
+		&:before {
+			@include border-radius(5px, 5px, 5px, 5px);
+			cursor: pointer;
+			position: absolute;
+			width: 40px;
+			height: 4px;
+			transition-timing-function: ease;
+			transition-duration: .15s;
+			transition-property: -webkit-transform;
+			transition-property: transform;
+			transition-property: transform, -webkit-transform;
+			background-color: $grayish-blue;
+			display: block;
+			content: '';
+		}
+		
+		&:before {top: -10px;}
+		&:after {bottom: -10px;}
+	}
+}
+
+
+.menu-opener {
+	font: inherit;
+	float: left;
+	position: relative;
+	overflow: visible;
+	padding: 10px 0;
+	width: 40px;
+	cursor: pointer;
+	transition-timing-function: linear;
+	transition-duration: .15s;
+	transition-property: opacity, -webkit-filter;
+	transition-property: opacity, filter;
+	transition-property: opacity, filter, -webkit-filter;
+	text-transform: none;
+	color: inherit;
+	border: 0;
+	cursor: pointer;
+	background-color: transparent;
+	
+	@include media('<tablet') {@include scale(0.7);}
+	
+	&:hover,
+	&:active{
+		.inner {
+			background: $light-blue;
+			&:after,
+			&:before {background: $light-blue;}
+		}
+	}
+	
+	.inner {
+		@include border-radius(5px, 5px, 5px, 5px);
+		display: block;
+		position: relative;
+		width: 40px;
+		height: 4px;
+		transition-timing-function: ease;
+		transition-duration: .15s;
+		transition-property: -webkit-transform;
+		transition-property: transform;
+		transition-property: transform, -webkit-transform;
+		background-color: $grayish-blue;
+		cursor: pointer;
+		
+		&:after,
+		&:before {
+			@include border-radius(5px, 5px, 5px, 5px);
+			cursor: pointer;
+			position: absolute;
+			width: 40px;
+			height: 4px;
+			transition-timing-function: ease;
+			transition-duration: .15s;
+			transition-property: -webkit-transform;
+			transition-property: transform;
+			transition-property: transform, -webkit-transform;
+			background-color: $grayish-blue;
+			display: block;
+			content: '';
+		}
+		
+		&:before {
+			top: -10px;
+			-webkit-transform: translate3d(-8px, 0, 0) rotate(-45deg) scaleX(.7);
+			transform: translate3d(-8px, 0, 0) rotate(-45deg) scaleX(.7);
+		}
+		&:after {
+			bottom: -10px;
+			-webkit-transform: translate3d(-8px, 0, 0) rotate(45deg) scaleX(.7);
+			transform: translate3d(-8px, 0, 0) rotate(45deg) scaleX(.7);
+		}
+	}
+}

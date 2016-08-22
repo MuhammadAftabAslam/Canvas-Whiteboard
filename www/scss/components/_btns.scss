@@ -1,0 +1,121 @@
+.btn {
+	@extend %transition;
+	@include vertical-alignment(top);
+	@include border-radius(4px, 4px, 4px, 4px);
+	padding: 10px 12px;
+	text-align: center;
+	-ms-touch-action: manipulation;
+	touch-action: manipulation;
+	cursor: pointer;
+	-webkit-user-select: none;
+	-moz-user-select: none;
+	-ms-user-select: none;
+	user-select: none;
+	border: 1px solid transparent;
+	text-transform: uppercase;
+	font-weight: 700;
+	letter-spacing: 1px;
+	
+	&:hover,
+	&:active{@extend %transition;}
+	
+	&.btn-default {
+		color: $dark-gray4;
+		background: $white;
+		border-color: $light-gray2;
+		
+		&:hover,
+		&:active{
+			background: lighten($dark-gray4,70%);
+			color: $dark-gray4;
+		}
+	}
+	
+	&.btn-primary {
+		color: $white;
+		background: $light-blue;
+		border-color: $light-blue;
+		
+		&:hover,
+		&:active{
+			color: $white;
+			background: darken($light-blue,5%);
+		}
+	}
+	
+	&.btn-success {
+		color: $white;
+		background: $green;
+		border-color: $green;
+		
+		&:hover,
+		&:active{
+			color: $white;
+			background: darken($green,5%);
+		}
+	}
+	
+	&.btn-info {
+		color: $white;
+		background: $soft-cyan;
+		border-color: $soft-cyan;
+		
+		&:hover,
+		&:active{
+			color: $white;
+			background: darken($soft-cyan,5%);
+		}
+	}
+	
+	&.btn-warning {
+		color: $white;
+		background: $soft-orange;
+		border-color: $soft-orange;
+		
+		&:hover,
+		&:active{
+			color: $white;
+			background: darken($soft-orange,5%);
+		}
+	}
+	
+	&.btn-danger {
+		color: $white;
+		background: $red;
+		border-color: $red;
+		
+		&:hover,
+		&:active{
+			color: $white;
+			background: darken($red,5%);
+		}
+	}
+	
+	&.btn-facebook{
+		font-size: 12px;
+		line-height: 18px;
+		color: $white;
+		background: $moderate-blue;
+		border-color: $moderate-blue;
+		
+		&:hover,
+		&:active{
+			color: $white;
+			background: darken($moderate-blue,5%);
+		}
+	}
+	
+	&.btn-twitter{
+		font-size: 12px;
+		line-height: 18px;
+		color: $white;
+		background: $pure-blue;
+		border-color: $pure-blue;
+		
+		&:hover,
+		&:active{
+			color: $white;
+			background: darken($pure-blue,5%);
+		}
+	}
+}

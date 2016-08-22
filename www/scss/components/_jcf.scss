@@ -1,13 +1,67 @@
-/* custom scrollbars styles */
+/* custom checkbox styles */
+.jcf-checkbox {
+	@include vertical-alignment(middle);
+	@include border-radius(5px, 5px, 5px, 5px);
+	position: relative;
+	overflow: hidden;
+	cursor: default;
+	background: $vivid-blue;
+	border: 1px solid $vivid-blue;
+	margin: 0 9px 0 0;
+	height: 21px;
+	width: 21px;
+	
+	span{
+		position:absolute;
+		z-index: 5;
+		opacity: 0;
+		visibility: hidden;
+		font-size: 10px;
+		line-height: 10px;
+		color: $white;
+		cursor: default;
+		top:50%;
+		left:50%;
+		margin: -5px 0 0 -6px;
+		@extend %transition;
+		
+		&:before{
+			display: block;
+			font-family: $icon-font;
+			content: '\e80f';
+		}
+	}
+	
+	&.jcf-checked{
+		span{
+			visibility: visible;
+			opacity: 1;
+			@extend %transition;
+		}
+	}
+	
+	input[type="checkbox"] {
+		position: absolute;
+		width: 100%;
+		height: 100%;
+		border: 0;
+		margin: 0;
+		left: 0;
+		top: 0;
+	}
+}
+
 .jcf-scrollable-wrapper {
 	box-sizing: content-box;
 	position: relative;
 }
+.jcf-scrollbar-vertical .jcf-scrollbar-handle{min-height: 50px !important;}
+.jcf-scrollbar-horizontal .jcf-scrollbar-handle{min-width: 50px !important;}
 .jcf-scrollbar-vertical {
 	position: absolute;
 	cursor: default;
 	background: none;
-	width: 7px;
+	width: 8px;
 	bottom: 0;
 	right: 0;
 	top: 0;
@@ -15,8 +69,8 @@
 .jcf-scrollbar-vertical .jcf-scrollbar-dec,
 .jcf-scrollbar-vertical .jcf-scrollbar-inc {
 	background: none;
-	height: 5px;
-	width: 5px;
+	height: 8px;
+	width: 8px;
 	left: 0;
 	top: 0;
 }
@@ -25,10 +79,10 @@
 	bottom: 0;
 }
 .jcf-scrollbar-vertical .jcf-scrollbar-handle {
-	background: rgba($black,0.2);
+	background: rgba($black,0.1);
 	height: 1px;
-	width: 5px;
-  @include border-radius(5px);
+	width: 8px;
+	@include border-radius(5px, 5px, 5px, 5px);
 }
 .jcf-scrollbar-horizontal {
 	position: absolute;
@@ -36,9 +90,11 @@
 	right: auto;
 	top: auto;
 	left: 0;
-	bottom: 0;
+	bottom: 70px;
 	width: 1px;
-	height: 7px;
+	height: 8px;
+	
+	@include media('≥tablet') {bottom: 100px;}
 }
 .jcf-scrollbar-horizontal .jcf-scrollbar-dec,
 .jcf-scrollbar-horizontal .jcf-scrollbar-inc {
@@ -46,8 +102,8 @@
 	vertical-align: top;
 	overflow: hidden;
 	background: none;
-	height: 5px;
-	width: 5px;
+	height: 8px;
+	width: 8px;
 }
 .jcf-scrollbar-horizontal .jcf-scrollbar-inc {
 	left: auto;
@@ -56,16 +112,90 @@
 .jcf-scrollbar-horizontal .jcf-scrollbar-slider {
 	display: inline-block;
 	position: relative;
-	height: 14px;
+	height: 8px;
 }
 .jcf-scrollbar-horizontal .jcf-scrollbar-handle {
 	position: absolute;
-	background: rgba($black,0.2);
-	height: 5px;
+	background: rgba($black,0.1);
+	height: 8px;
+	@include border-radius(5px, 5px, 5px, 5px);
 }
-.jcf-scrollbar.jcf-inactive .jcf-scrollbar-handle {visibility: hidden;}
+.jcf-scrollbar.jcf-inactive .jcf-scrollbar-handle {
+	visibility: hidden;
+}
 .jcf-scrollbar.jcf-inactive .jcf-scrollbar-dec, 
 .jcf-scrollbar.jcf-inactive .jcf-scrollbar-inc {background: none;}
-/* common custom form elements styles */
-.jcf-disabled {background: #ddd !important;}
-.jcf-focus, .jcf-focus * {border-color: #f00 !important;}
+
+
+/* custom file input styles */
+.jcf-file {
+	display: inline-block;
+	white-space: nowrap;
+	position: relative;
+	overflow: hidden;
+	
+	&:hover,
+	&:active{
+		.jcf-upload-button {
+			@extend %transition;
+			color: $white;
+			background: darken($green,5%);
+		}
+	}
+}
+.jcf-file .jcf-real-element {
+	position: absolute;
+	font-size: 200px;
+	height: 200px;
+	margin: 0;
+	right: 0;
+	top: 0;
+}
+.jcf-file .jcf-fake-input {
+	display: inline-block;
+	text-overflow:ellipsis;
+	white-space: nowrap;
+	vertical-align: top;
+	overflow: hidden;
+	border: 1px solid #777;
+	padding: 0 8px;
+	font-size: 13px;
+	line-height: 28px;
+	height: 28px;
+	width: 125px;
+}
+.jcf-file .jcf-upload-button {
+	@extend %transition;
+	display: block;
+	padding: 10px 12px;
+	text-align: center;
+	-ms-touch-action: manipulation;
+	touch-action: manipulation;
+	cursor: pointer;
+	-webkit-user-select: none;
+	-moz-user-select: none;
+	-ms-user-select: none;
+	user-select: none;
+	border: 1px solid transparent;
+	text-transform: capitalize;
+	letter-spacing: 1px;
+	color: $white;
+	background: $green;
+	border-color: $green;
+	
+	&:hover,
+	&:active{
+		@extend %transition;
+		color: $white;
+		background: darken($green,5%);
+	}
+	
+	&:before{
+		@include vertical-alignment(middle);
+		font-family: $icon-font;
+		content: '\e811';
+		font-size: 16px;
+		line-height: 16px;
+		margin: 0 10px 0 0;
+	}
+}

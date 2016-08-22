@@ -1,0 +1,126 @@
+/* custom checkbox styles */
+.jcf-checkbox {
+	@include vertical-alignment(middle);
+	@include border-radius(5px, 5px, 5px, 5px);
+	position: relative;
+	overflow: hidden;
+	cursor: default;
+	background: $vivid-blue;
+	border: 1px solid $vivid-blue;
+	margin: 0 9px 0 0;
+	height: 21px;
+	width: 21px;
+	
+	span{
+		position:absolute;
+		z-index: 5;
+		opacity: 0;
+		visibility: hidden;
+		font-size: 10px;
+		line-height: 10px;
+		color: $white;
+		cursor: default;
+		top:50%;
+		left:50%;
+		margin: -5px 0 0 -6px;
+		@extend %transition;
+		
+		&:before{
+			display: block;
+			font-family: $icon-font;
+			content: '\e80f';
+		}
+	}
+	
+	&.jcf-checked{
+		span{
+			visibility: visible;
+			opacity: 1;
+			@extend %transition;
+		}
+	}
+	
+	input[type="checkbox"] {
+		position: absolute;
+		width: 100%;
+		height: 100%;
+		border: 0;
+		margin: 0;
+		left: 0;
+		top: 0;
+	}
+}
+
+.jcf-scrollable-wrapper {
+	box-sizing: content-box;
+	position: relative;
+}
+.jcf-scrollbar-handle{min-width: 100px !important;}
+.jcf-scrollbar-vertical {
+	position: absolute;
+	cursor: default;
+	background: none;
+	width: 8px;
+	bottom: 0;
+	right: 0;
+	top: 0;
+}
+.jcf-scrollbar-vertical .jcf-scrollbar-dec,
+.jcf-scrollbar-vertical .jcf-scrollbar-inc {
+	background: none;
+	height: 8px;
+	width: 8px;
+	left: 0;
+	top: 0;
+}
+.jcf-scrollbar-vertical .jcf-scrollbar-inc {
+	top: auto;
+	bottom: 0;
+}
+.jcf-scrollbar-vertical .jcf-scrollbar-handle {
+	background: rgba($black,0.1);
+	height: 1px;
+	width: 8px;
+	@include border-radius(5px, 5px, 5px, 5px);
+}
+.jcf-scrollbar-horizontal {
+	position: absolute;
+	background: none;
+	right: auto;
+	top: auto;
+	left: 0;
+	bottom: 70px;
+	width: 1px;
+	height: 8px;
+	
+	@include media('≥tablet') {bottom: 100px;}
+}
+.jcf-scrollbar-horizontal .jcf-scrollbar-dec,
+.jcf-scrollbar-horizontal .jcf-scrollbar-inc {
+	display: inline-block;
+	vertical-align: top;
+	overflow: hidden;
+	background: none;
+	height: 8px;
+	width: 8px;
+}
+.jcf-scrollbar-horizontal .jcf-scrollbar-inc {
+	left: auto;
+	right: 0;
+}
+.jcf-scrollbar-horizontal .jcf-scrollbar-slider {
+	display: inline-block;
+	position: relative;
+	height: 8px;
+}
+.jcf-scrollbar-horizontal .jcf-scrollbar-handle {
+	position: absolute;
+	background: rgba($black,0.1);
+	height: 8px;
+	@include border-radius(5px, 5px, 5px, 5px);
+}
+.jcf-scrollbar.jcf-inactive .jcf-scrollbar-handle {
+	visibility: hidden;
+}
+.jcf-scrollbar.jcf-inactive .jcf-scrollbar-dec, 
+.jcf-scrollbar.jcf-inactive .jcf-scrollbar-inc {background: none;}

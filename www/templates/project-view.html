@@ -1,18 +1,28 @@
 <ion-modal-view>
-  <ion-header-bar class="bar bar-header bar-positive">
-    <div class="buttons">
-      <button class="button button-icon ion-ios-plus-outline" ng-click="createProject(newUser)"> New Project</button>
+  <div class="info-block">
+    <ion-header-bar class="bar bar-header bar-positive">
+      <div class="buttons">
+        <button class="button button-icon ion-ios-plus-outline" ng-click="createProject()"> New Lecture</button>
+      </div>
+      <h1 class="title">Lectures</h1>
+
+      <div class="buttons">
+        <button class="button button-icon  ion-close-round" ng-click="modal.hide()"></button>
+      </div>
+    </ion-header-bar>
+    <div class="jcf-scrollable" custom-form>
+      <ul class="info-list">
+        <li id="{{ project._id }}" ng-repeat="project in allProjects" ng-click="loadProject(project._id)">
+          <div class="box">
+            <a class="btn-upload"><span class="icon-upload"></span></a>
+            <a class="info-box">
+              <span class="info">{{ project.project_name }}</span>
+              <span class="caption"><span class="by">by</span> <span class="name">{{ user.username }}</span></span>
+            </a>
+            <a class="btn-delete"><span class="icon-delete"></span></a>
+          </div>
+        </li>
+      </ul>
     </div>
-    <h1 class="title">Projects</h1>
-    <div class="buttons">
-      <button class="button button-icon  ion-close-round" ng-click="modal.hide()"></button>
-    </div>
-  </ion-header-bar>
-  <ion-content class="padding">
-    <ion-list can-swipe="true" class="jcf-scrollable list">
-						<ion-item class="item-remove-animate" id="{{ project._id }}" ng-repeat="project in allProjects" ng-click="loadProject(project._id)">
-              <div>{{ project.project_name }}</div>
-						</ion-item>
-					</ion-list>
-  </ion-content>
+  </div>
 </ion-modal-view>
