@@ -2,10 +2,11 @@
 	overflow: hidden;
   	position: relative;
 	z-index: 99;
-	padding: 30px 50px;
+	padding: 50px;
+	min-height: 100%;
 	
-	@include media('≥tablet') {padding: 50px 60px;}
-	@include media('≥widescreen') {padding: 80px 90px;}
+	@include media('≥tablet') {padding: 70px;}
+	@include media('≥widescreen') {padding: 90px;}
 	
 	.jcf-scrollable-wrapper,
 	.jcf-scrollable{
@@ -100,20 +101,44 @@
 }
 
 .info-box{
-	@include v-align(100%, middle, before);
 	display: block;
-	height: 140px;
 	width: 100%;
 	position: relative;
-	padding: 20px 10px 30px 10px;
+	z-index: 999;
 	background: $light-blue;
-	color: $white;
 	font-family: $primary-font;
-	font-size: 25px;
-	line-height: 25px;
-	font-weight: 100;
 	text-shadow: 0 0 10px rgba($black,.5);
 	text-align: left;
+	
+	.link{
+		display: block;
+		background: $light-blue;
+		color: $white;
+		height: 140px;
+		padding: 20px 10px 30px 10px;
+		font-size: 25px;
+		line-height: 25px;
+		font-weight: 100;
+		@include v-align(100%, middle, before);
+		
+		&:hover,
+		&:active{
+			color: $white;
+			background: darken($light-blue, 5%);
+		}
+		
+		@include media('≥tablet') {
+			height: 168px;
+			padding: 30px 20px 40px 20px;
+			font-size: 35px;
+			line-height: 35px;
+		}
+
+		@include media('≥widescreen') {
+			font-size: 45px;
+			line-height: 45px;
+		}
+	}
 	
 	> .info{
 		max-width: inherit;
@@ -124,23 +149,7 @@
 		overflow: hidden;
 	}
 	
-	@include media('≥tablet') {
-		height: 168px;
-		padding: 30px 20px 40px 20px;
-		font-size: 35px;
-		line-height: 35px;
-	}
 	
-	@include media('≥widescreen') {
-		font-size: 45px;
-		line-height: 45px;
-	}
-	
-	&:hover,
-	&:active{
-		color: $white;
-		background: darken($light-blue, 5%);
-	}
 	
 	.caption{
 		text-align: left;

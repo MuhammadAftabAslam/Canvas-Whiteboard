@@ -59,6 +59,11 @@ angular.module('starter', ['ionic', 'ngCordova', 'starter.controllers', 'starter
         templateUrl: 'templates/login.html',
         controller: 'LoginCtrl'
       })
+	.state('video', {
+        url: '/video',
+        templateUrl: 'templates/video.html',
+        controller: 'VideoCtrl'
+      })
       .state('register', {
         url: '/register',
         templateUrl: 'templates/register.html',

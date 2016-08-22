@@ -11,10 +11,21 @@
         <li id="{{ recording._id }}" ng-repeat="recording in recordings">
           <div class="box">
             <a class="btn-edit"><span class="icon-edit"></span></a>
-            <a class="info-box" ng-click="savedPlaying(recording)" data-drag="true" data-jqyoui-options="{revert: 'invalid',containment:'#{{ recording._id }}',axis:'y'}" jqyoui-draggable="{animate:true,onStop:'checkPosition(recording)'}" >
-              <span class="info">{{ recording.name }}</span>
+            <div class="info-box" ng-click="savedPlaying(recording)" data-drag="true" data-jqyoui-options="{revert: 'invalid',containment:'#{{ recording._id }}',axis:'y'}" jqyoui-draggable="{animate:true,onStop:'checkPosition(recording)'}">
+              <a class="link">
+              	<span class="info">{{ recording.name }}</span>
               <span class="caption"><span class="by">by</span> <span class="name">{{ user.username }}</span></span>
-            </a>
+              </a>
+              <div class="block-drop">
+              	<a href="#" class="opener icon-ellipsis-vert"></a>
+             	<div class="dropdown">
+					<button class="btn-close"><span class="icon-cancel"></span></button>
+              		<ul>
+              			<li><a>Rename</a></li>
+              		</ul>
+              	</div>
+              </div>
+            </div>
             <a class="btn-delete"><span class="icon-delete"></span></a>
           </div>
         </li>

@@ -55,6 +55,7 @@ label{
 }
 
 .view-container .form-control,
+.modal-wrapper .form-control,
 #wrapper .form-control,
 .form-control {
 	@include border-radius(3px, 3px, 3px, 3px);

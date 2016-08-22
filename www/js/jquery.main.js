@@ -26,6 +26,12 @@ function initMobileNav() {
 		menuOpener: '.drop-opener',
 		menuDrop: '.drop'
 	});
+	jQuery('.block-drop').mobileNav({
+		hideOnClickOutside: true,
+		menuActiveClass: 'active',
+		menuOpener: '.opener',
+		menuDrop: '.dropdown'
+	});
 }
 
 // add classes on hover/touch

@@ -1,29 +1,31 @@
 <ion-modal-view>
   <div class="info-block">
-    <ion-header-bar class="bar bar-header bar-positive">
-      <div class="buttons">
-        <button class="button button-icon ion-ios-plus-outline" ng-click="createProject()"> New Lecture</button>
-      </div>
-      <h1 class="title">Lectures</h1>
-
-      <div class="buttons">
-        <button class="button button-icon  ion-close-round" ng-click="modal.hide()"></button>
-      </div>
-    </ion-header-bar>
+    <button class="button btn-close" ng-click="modal.hide()"><span class="icon-cancel"></span></button>
     <div class="jcf-scrollable" custom-form>
       <ul class="info-list">
         <li id="{{ project._id }}" ng-repeat="project in allProjects" ng-click="loadProject(project._id)">
           <div class="box">
             <a class="btn-upload"><span class="icon-upload"></span></a>
-            <a class="info-box">
-              <span class="info">{{ project.project_name }}</span>
-              <span class="caption"><span class="by">by</span> <span class="name">{{ user.username }}</span></span>
-              
-            </a>
+            <div class="info-box">
+              <a class="link">
+              	<span class="info">{{ project.project_name }}</span>
+              	<span class="caption"><span class="by">by</span> <span class="name">{{ user.username }}</span></span>
+              </a>
+              <div class="block-drop">
+              	<a href="#" class="opener icon-ellipsis-vert"></a>
+             	<div class="dropdown">
+					<button class="btn-close"><span class="icon-cancel"></span></button>
+              		<ul>
+              			<li><a>Rename</a></li>
+              		</ul>
+              	</div>
+              </div>
+            </div>
             <a class="btn-delete"><span class="icon-delete"></span></a>
           </div>
         </li>
       </ul>
     </div>
+    <button class="button btn-add" ng-click="createProject()"><span class="icon-plus"></span></button>
   </div>
 </ion-modal-view>

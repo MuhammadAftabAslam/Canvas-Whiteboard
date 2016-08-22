@@ -1,14 +1,128 @@
-.modal-wrapper{
-  .modal{
-    @include border-radius(5px, 5px, 5px, 5px);
-    -webkit-box-shadow: 0 0 40px rgba($black,.24);
-	-moz-box-shadow: 0 0 40px rgba($black,.24);
-	box-shadow: 0 0 40px rgba($black,.24);
+.modal-wrapper {
+	.modal {
+		@include border-radius(5px, 5px, 5px, 5px);
+		-webkit-box-shadow: 0 0 40px rgba($black, .24);
+		-moz-box-shadow: 0 0 40px rgba($black, .24);
+		box-shadow: 0 0 40px rgba($black, .24);
+		
+		@include media('≥small-tablet') {
+			width: 80%;
+			left: 10%;
+			right: 10%;
+		}
+	}
+	
+	.list{
+		overflow: hidden;
+		padding: 30px 10px;
+		
+		.item{
+			padding: 0 0 10px;
+			border: 0;
+		}
+		
+		.btn-primary{
+			padding: 15px;
+			min-width: 100px;
+			text-align: center;
+			margin: 0 0 20px;
+		}
+	}
+	.bar-header{
+		display: block;
+		text-align: center;
+		padding-left: 30px;
+		padding-right: 30px;
+	}
+	.btn-back{
+		position: absolute;
+		left: 5px;
+		top: 50%;
+		font-size: 20px;
+		line-height: 20px;
+		padding: 0;
+		border: 0;
+		outline: none;
+		min-width: inherit;
+		min-height: inherit;
+		margin-top: -10px;
+	}
+}
 
-    @include media('≥small-tablet') {
-      width: 80%;
-      left: 10%;
-      right: 10%;
-    }
-  }
+.btn-close {
+	@extend %transition;
+	@include border-radius(0, 0, 0, 0);
+	cursor: pointer;
+	position: absolute;
+	right: 15px;
+	top: 15px;
+	padding: 2px;
+	border: 0;
+	font-size: 30px;
+	line-height: 30px;
+	outline: none;
+	color: $gary2;
+	background: none;
+	min-width: inherit;
+	min-height: auto;
+	
+	&:after {display: none;}
+	
+	&:hover,
+	&:active {
+		@extend %transition;
+		color: $black;
+	}
+	
+	@include media('≥tablet') {
+		right: 20px;
+		top: 20px;
+	}
+}
+
+.btn-add {
+	@include border-radius(50%, 50%, 50%, 50%);
+	@include v-align(100%, middle, before);
+	@extend %transition;
+	position: absolute;
+	right: 15px;
+	bottom: 15px;
+	width: 30px;
+	height: 30px;
+	font-size: 15px;
+	line-height: 15px;
+	outline: none;
+	color: $white;
+	cursor: pointer;
+	background: $green;
+	min-width: inherit;
+	min-height: auto;
+	-webkit-box-shadow: 0 4px 8px rgba($black, .24);
+	-moz-box-shadow: 0 4px 8px rgba($black, .24);
+	box-shadow: 0 4px 8px rgba($black, .24);
+	
+	&:after {display: none;}
+	
+	&:hover,
+	&:active {
+		@extend %transition;
+		background: darken($green, 5%);
+		color: $white;
+	}
+	
+	@include media('≥tablet') {
+		width: 50px;
+		height: 50px;
+		font-size: 20px;
+		line-height: 20px;
+	}
+	
+	@include media('≥widescreen') {
+		width: 70px;
+		height: 70px;
+		font-size: 25px;
+		line-height: 25px;
+		right: 20px;
+		bottom: 20px;
+	}
 }

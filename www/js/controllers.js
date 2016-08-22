@@ -1,11 +1,10 @@
 angular.module('starter.controllers', [])
-  .controller('DashCtrl', ['$scope', '$ionicModal', 'UserService', '$state','$rootScope', function ($scope, $ionicModal, UserService, $state, $rootScope) {
+  .controller('DashCtrl', ['$scope', '$ionicModal', 'UserService', '$state', '$rootScope', function ($scope, $ionicModal, UserService, $state, $rootScope) {
     UserService.authenticate().then(function (auth) {
       if (!auth) {
         $state.go('login');
-      }
-      else{
-        $rootScope.$emit('user:loggedin',auth);
+      } else {
+        $rootScope.$emit('user:loggedin', auth);
       }
     })
   }])
@@ -14,16 +13,23 @@ angular.module('starter.controllers', [])
       $ionicSideMenuDelegate.toggleLeft();
     };
   })
+  .controller('VideoCtrl', function ($scope, $ionicSideMenuDelegate) {
+    $scope.showMenu = function () {
+
+    };
+  })
   .controller('LoginCtrl', function ($scope, UserService, $ionicPopup, $state, $rootScope) {
     $scope.data = {};
     $scope.login = function () {
-      UserService.login({username: $scope.data.username, password: $scope.data.password},$scope.data.remember).then(function (data) {
+      UserService.login({
+        username: $scope.data.username,
+        password: $scope.data.password
+      }, $scope.data.remember).then(function (data) {
         if (data) {
           $state.go('tab.dash');
-          $rootScope.$emit('user:loggedin',data);
+          $rootScope.$emit('user:loggedin', data);
           $scope.data = {};
-        }
-        else {
+        } else {
           var alertPopup = $ionicPopup.alert({
             title: 'Login failed!',
             template: 'Please check your credentials!'
@@ -41,8 +47,7 @@ angular.module('starter.controllers', [])
         if (data) {
           $state.go('tab.dash');
           $scope.data = {};
-        }
-        else {
+        } else {
           var alertPopup = $ionicPopup.alert({
             title: 'Registration failed!',
             template: 'Email already exist!'
@@ -53,8 +58,8 @@ angular.module('starter.controllers', [])
 
   })
 
-  // Main directive for the canvas recordings
-  .directive('arbiCanvas', ['$ionicPlatform', '$cordovaMedia', '$cordovaCapture', 'recorderService', '$ionicListDelegate', '$ionicPopup',
+// Main directive for the canvas recordings
+.directive('arbiCanvas', ['$ionicPlatform', '$cordovaMedia', '$cordovaCapture', 'recorderService', '$ionicListDelegate', '$ionicPopup',
     '$ionicModal', 'DrawingService', 'UserService', '$state', '$rootScope',
     function ($ionicPlatform, $cordovaMedia, $cordovaCapture, recorderService, $ionicListDelegate, $ionicPopup, $ionicModal, DrawingService, UserService, $state, $rootScope) {
 
@@ -75,8 +80,7 @@ angular.module('starter.controllers', [])
                   scope.recordings = res ? res.scenes : '';
                 });
                 getAllProjects();
-              }
-              else {
+              } else {
                 DrawingService.getInitialProject(project_id).then(function (res) {
                   scope.project = res;
                   scope.recordings = res.scenes;
@@ -100,7 +104,7 @@ angular.module('starter.controllers', [])
             };
 
 
-            $rootScope.$on('user:loggedin', function (event,user) {
+            $rootScope.$on('user:loggedin', function (event, user) {
               scope.user = user;
               init();
             });
@@ -165,14 +169,14 @@ angular.module('starter.controllers', [])
             }
 
             media.onConversionComplete = function (locals) {
-              //console.log('onConversionComplete callback: ======= >', locals);
-              // onSave();
-            }
-            /*
-             media.onConversionStart = function (locals) {
-             console.log('onConversionStart callback  : ======= >', locals);
-             }
-             */
+                //console.log('onConversionComplete callback: ======= >', locals);
+                // onSave();
+              }
+              /*
+               media.onConversionStart = function (locals) {
+               console.log('onConversionStart callback  : ======= >', locals);
+               }
+               */
 
             media.onPlaybackComplete = function (s) {
               playbackInterruptCommand = "stop";
@@ -191,17 +195,16 @@ angular.module('starter.controllers', [])
 
             media.onRecordComplete = function (locals) {
               console.log('onRecordComplete callback: ======= >', locals);
-              if(scope.isRecording == 2){
-                media.save('audio', function (res,bloburl,blob) {
-                  pausedAudios.push(blob);//pausedAudios.push({data : res,blob:blob});
+              if (scope.isRecording == 2) {
+                media.save('audio', function (res, bloburl, blob) {
+                  pausedAudios.push(blob); //pausedAudios.push({data : res,blob:blob});
 
                 });
-              }
-              else{
-                media.save('audio', function (res,bloburl,blob) {
+              } else {
+                media.save('audio', function (res, bloburl, blob) {
                   pausedAudios.push(blob);
-                  ConcatenateBlobs(pausedAudios, 'audio/wav', function(resultingBlob) {
-                    blobToDataURL(resultingBlob,function(allData){
+                  ConcatenateBlobs(pausedAudios, 'audio/wav', function (resultingBlob) {
+                    blobToDataURL(resultingBlob, function (allData) {
                       onSave(allData);
                     })
 
@@ -220,7 +223,7 @@ angular.module('starter.controllers', [])
 
 
             var c = document.getElementById("rbcanvas");
-            c.width = $('#wrapper').innerWidth();//options.width;
+            c.width = $('#wrapper').innerWidth(); //options.width;
             c.height = $(window).innerHeight();
             var ctx = c.getContext("2d");
             //ctx.fillRect(0, 0, c.width, c.height);
@@ -273,8 +276,7 @@ angular.module('starter.controllers', [])
                 currentRecording.drawing_data = JSON.stringify(currentRecording.drawing_data);
                 currentRecording.audio_data = JSON.stringify(currentRecording.audio_data);
                 scope.savedPlaying(currentRecording);
-              }
-              else {
+              } else {
                 alert('Sorry, System do not have any recording yet. Please select from the right bar.');
               }
             }
@@ -290,8 +292,7 @@ angular.module('starter.controllers', [])
               }
               if (scope.recordings) {
                 obj.name = 'scene : ' + (scope.recordings.length + 1);
-              }
-              else {
+              } else {
                 obj.name = 'scene :  1';
               }
               currentRecording = obj;
@@ -301,7 +302,7 @@ angular.module('starter.controllers', [])
             }
 
             scope.savedPlaying = function (obj) {
-              if(scope.modal){
+              if (scope.modal) {
                 scope.modal.hide();
               }
               var result = deserializeDrawing(JSON.parse(obj.drawing_data));
@@ -309,8 +310,7 @@ angular.module('starter.controllers', [])
                 result = "Error : Unknown error in deserializing the data";
               if (result instanceof Array == false) {
                 return;
-              }
-              else {
+              } else {
                 currentRecording = obj;
                 drawingElement.recordings = result;
                 //set drawing property of each recording
@@ -411,8 +411,7 @@ angular.module('starter.controllers', [])
                   })
                 }
                 $('#recordingName').removeClass('form-active');
-              }
-              else {
+              } else {
                 $('#recordingName').addClass('form-active');
                 $($('#recording-text')[0]).text(currentRecording.name);
                 $($('#edit-recording-text')[0]).val(currentRecording.name);
@@ -464,8 +463,8 @@ angular.module('starter.controllers', [])
               })
             }
 
-            scope.drawImageOnCanvas = function (url,id) {
-              drawingElement.setImage(url,id);
+            scope.drawImageOnCanvas = function (url, id) {
+              drawingElement.setImage(url, id);
             }
 
             // Execute action on hide modal
@@ -504,11 +503,10 @@ angular.module('starter.controllers', [])
 
             scope.onclickRecord = function () {
               $wrapper.addClass('record').removeClass('pause').removeClass('play').removeClass('stop');
-              if(scope.isRecording == 2){ // pause to record
+              if (scope.isRecording == 2) { // pause to record
                 drawingElement.resumeRecording();
                 media.startRecord();
-              }
-              else{ //first time record
+              } else { //first time record
                 onclick();
               }
               scope.isRecording = 1;
@@ -526,12 +524,11 @@ angular.module('starter.controllers', [])
 
             scope.onclickStop = function () {
               $wrapper.addClass('stop').removeClass('pause').removeClass('play').removeClass('record');
-              if(scope.isRecording == 2) { //pause and then stop
+              if (scope.isRecording == 2) { //pause and then stop
                 drawingElement.stopRecording();
                 media.startRecord();
                 media.stopRecord();
-              }
-              else{
+              } else {
                 drawingElement.stopRecording();
                 media.stopRecord();
               }
@@ -543,25 +540,15 @@ angular.module('starter.controllers', [])
               console.log('event, ui : ', event, ui, obj);
               var direction = (ui.originalPosition.top > ui.position.top) ? 1 : 0;
               console.log('has moved ' + direction);
-              if(scope.modal){
+              if (scope.modal) {
                 scope.modal.hide();
               }
               if (direction == 1) {
                 scope.onRetake(obj);
-              }
-              else {
+              } else {
                 scope.itemDelete(obj);
               }
             }
-
-
-
-
-
-
-
-
-
 
 
 
@@ -579,8 +566,7 @@ angular.module('starter.controllers', [])
 
 
                 media.playbackResume();
-              }
-              else {
+              } else {
                 // play video first time
                 scope.onPlay();
               }
@@ -598,7 +584,7 @@ angular.module('starter.controllers', [])
 
             $(".color-drop > ul > li").click(function () {
               var txtClass = $(this).attr("class");
-              console.log("Class Name : " , $(this));
+              console.log("Class Name : ", $(this));
             });
 
 
@@ -616,7 +602,7 @@ angular.module('starter.controllers', [])
 
         }
       };
-		
+
     }])
   .directive('customFunctions', ['$timeout',
     function ($timeout) {
@@ -631,27 +617,27 @@ angular.module('starter.controllers', [])
         }
       }
     }])
-	.directive('customColor', ['$timeout',
+  .directive('customColor', ['$timeout',
     function ($timeout) {
 
       return {
         restrict: "AE",
         scope: false,
         link: function (scope, element) {
-			var link =$('.color-list li a'),
-			holder = $('.color-picker');
+          var link = $('.color-list li a'),
+            holder = $('.color-picker');
 
-			link.each(function(){
-				var item = $(this);
-				item.on('click touch', changeColor);
+          link.each(function () {
+            var item = $(this);
+            item.on('click touch', changeColor);
 
-				function changeColor(){
-					console.log('inside script');
-					var linkClassName = item.attr('class');
-					holder.removeAttr('class');
-					holder.addClass('color-picker').addClass(linkClassName);
-				}
-			});
+            function changeColor() {
+              console.log('inside script');
+              var linkClassName = item.attr('class');
+              holder.removeAttr('class');
+              holder.addClass('color-picker').addClass(linkClassName);
+            }
+          });
         }
       }
     }])
