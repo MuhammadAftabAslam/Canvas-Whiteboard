@@ -1,0 +1,24 @@
+<ion-modal-view>
+  <div class="info-block">
+    <ion-header-bar class="bar bar-header bar-positive">
+      <h1 class="title">{{ project.project_name }}</h1>
+      <div class="buttons">
+        <button class="button button-icon  ion-close-round" ng-click="modal.hide()"></button>
+      </div>
+    </ion-header-bar>
+    <div class="jcf-scrollable" custom-form>
+      <ul class="info-list">
+        <li id="{{ recording._id }}" ng-repeat="recording in recordings">
+          <div class="box">
+            <a class="btn-edit"><span class="icon-edit"></span></a>
+            <a class="info-box" ng-click="savedPlaying(recording)" data-drag="true" data-jqyoui-options="{revert: 'invalid',containment:'#{{ recording._id }}',axis:'y'}" jqyoui-draggable="{animate:true,onStop:'checkPosition(recording)'}" >
+              <span class="info">{{ recording.name }}</span>
+              <span class="caption"><span class="by">by</span> <span class="name">{{ user.username }}</span></span>
+            </a>
+            <a class="btn-delete"><span class="icon-delete"></span></a>
+          </div>
+        </li>
+      </ul>
+    </div>
+  </div>
+</ion-modal-view>

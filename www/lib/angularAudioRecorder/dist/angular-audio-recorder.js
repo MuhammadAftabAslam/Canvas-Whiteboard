@@ -361,10 +361,10 @@ var RecorderController = function (element, service, recorderUtils, $scope, $tim
   };
 
   control.playbackPause = function () {
-    if (!status.isPlaying || !service.isAvailable() || status.isRecording || !control.audioModel) {
+    if (!status.isPlaying || !service.isAvailable() || status.isRecording) {
+      debugger;
       return false;
     }
-
     control.getAudioPlayer().pause();
     if (service.isCordova) {
       playbackOnPause();
@@ -372,7 +372,8 @@ var RecorderController = function (element, service, recorderUtils, $scope, $tim
   };
 
   control.playbackResume = function () {
-    if (status.isPlaying || !service.isAvailable() || status.isRecording || !control.audioModel) {
+    if (status.isPlaying || !service.isAvailable() || status.isRecording) {
+      debugger;
       return false;
     }
 
@@ -390,7 +391,6 @@ var RecorderController = function (element, service, recorderUtils, $scope, $tim
 
 
   control.save = function (fileName,fn) {
-    console.log('cordovaMedia.url : ',cordovaMedia.url);
 
     if (service.isCordova) {
       fn(cordovaMedia.url);
@@ -400,8 +400,8 @@ var RecorderController = function (element, service, recorderUtils, $scope, $tim
 
       if (control.audioModel) {
       blobToDataURL(control.audioModel, function (url) {
-        //console.log('embed player fun after yahoooooooo: ',url)
-         fn(url);
+        var blobUrl = window.URL.createObjectURL(control.audioModel);
+         fn(url,blobUrl,control.audioModel);
       });
     }
 

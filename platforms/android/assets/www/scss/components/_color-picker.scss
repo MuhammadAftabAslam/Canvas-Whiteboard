@@ -1,0 +1,25 @@
+.color-holder {
+	position: absolute;
+	visibility: visible;
+	opacity: 1;
+	@extend %transition;
+	pointer-events: none;
+	left: 0;
+	right: 0;
+	top: 0;
+	bottom: 0;
+}
+
+.color-picker#colorPicker {
+	position: absolute;
+	right: 50px;
+	bottom: 35px;
+	width: 50px;
+	height: 50px;
+	padding: 10px;
+	pointer-events: all;
+	@include media("≥tablet") {
+		right: 70px;
+		bottom: 70px;
+	}
+}

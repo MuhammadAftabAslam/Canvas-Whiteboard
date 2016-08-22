@@ -141,13 +141,14 @@ angular.module('starter.services')
 
   .factory('UserService', function ($q, $socket) {
 
-    var login = function (data) {
+    var login = function (data,rememberFlag) {
       var deferred = $q.defer();
       $socket.emit('req:login', data)
         .on('res:login', function (alldata) {
           console.log('res:login socket: ', alldata);
           if (alldata) {
-            localStorage.user = JSON.stringify(alldata);
+            if(rememberFlag)
+              localStorage.user = JSON.stringify(alldata);
             deferred.resolve(alldata);
           }
           else {
@@ -175,6 +176,9 @@ angular.module('starter.services')
             delete alldata.password;
             localStorage.user = JSON.stringify(alldata);
             deferred.resolve(alldata);
+          }
+          else{
+            deferred.resolve(false);
           }
         });
       return deferred.promise;
@@ -210,8 +214,8 @@ angular.module('starter.services')
     };
   })
   .factory('$socket', function () {
-    //var socket = io.connect('http://localhost:8080');
-    var socket = io.connect('http://192.168.0.41:8080');
+    var socket = io.connect('http://localhost:8080');
+    //var socket = io.connect('http://192.168.0.41:8080');
     return socket;
   });
 

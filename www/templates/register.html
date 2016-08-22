@@ -1,0 +1,31 @@
+<ion-view hide-nav-bar="true">
+  <ion-content>
+    <div class="info-holder" custom-functions>
+      <div ng-controller="LoginCtrl" class="holder">
+        <h1>Sign up</h1>
+
+        <form class="form" name="registerForm" ng-submit="register()" novalidate>
+          <fieldset>
+            <div class="form-group" ng-class="{ 'has-error' : registerForm.username.$invalid && !registerForm.username.$pristine }">
+              <label>Username</label>
+              <input type="text" name="username" class="form-control" ng-model="data.usernamereg" ng-minlength="3" ng-maxlength="15" placeholder="Username">
+              <p ng-show="registerForm.username.$error.minlength" class="help-block">Username is too short.</p>
+              <p ng-show="registerForm.username.$error.maxlength" class="help-block">Username is too long.</p>
+            </div>
+            <div class="form-group" ng-class="{ 'has-error' : registerForm.email.$invalid && !registerForm.email.$pristine }">
+              <label>Email</label>
+              <input type="email" name="email" class="form-control" ng-model="data.emailreg" placeholder="Email">
+              <p ng-show="registerForm.email.$invalid && !registerForm.email.$pristine" class="help-block">Enter a valid email.</p>
+            </div>
+            <div class="form-group" ng-class="{ 'has-error' : registerForm.password.$invalid && !registerForm.password.$pristine }">
+              <label for="password">Password</label>
+              <input type="password" name="password" ng-model="data.passwordreg" class="form-control" ng-minlength="8" placeholder="Password">
+              <p ng-show="registerForm.password.$error.minlength" class="help-block">Password must be more than 8 characters.</p>
+            </div>
+            <input type="submit" ng-disabled="registerForm.$invalid || !data.usernamereg || !data.emailreg || !data.passwordreg" value="Sign Up" class="btn btn-success btn-submit">
+          </fieldset>
+        </form>
+      </div>
+    </div>
+  </ion-content>
+</ion-view>
