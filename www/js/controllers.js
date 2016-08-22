@@ -596,6 +596,37 @@ angular.module('starter.controllers', [])
               //playbackInterruptCommand = "stop";
               media.playbackPause();
             };
+            
+            
+
+              var link = $('.color-list li a'),
+                holder = $('.color-picker');
+
+                link.each(function () {
+                  var item = $(this);
+                  item.on('click touch', changeColor);
+                  
+                  function rgb2hex(orig){
+                   var rgb = orig.replace(/\s/g,'').match(/^rgba?\((\d+),(\d+),(\d+)/i);
+                   return (rgb && rgb.length === 4) ? "#" +
+                    ("0" + parseInt(rgb[1],10).toString(16)).slice(-2) +
+                    ("0" + parseInt(rgb[2],10).toString(16)).slice(-2) +
+                    ("0" + parseInt(rgb[3],10).toString(16)).slice(-2) : orig;
+                  }
+
+                  function changeColor() {
+                    var linkClassName = item.attr('class');
+                    console.log('Item color is ' + rgb2hex(item.css('backgroundColor')));
+                    holder.removeAttr('class');
+                    holder.addClass('color-picker').addClass(linkClassName);
+                  }
+                  
+                  
+                  
+
+
+              });
+
 
 
           })
@@ -614,30 +645,6 @@ angular.module('starter.controllers', [])
           window.initMobileNav();
           window.initCustomHover();
           $('input, textarea').placeholder();
-        }
-      }
-    }])
-  .directive('customColor', ['$timeout',
-    function ($timeout) {
-
-      return {
-        restrict: "AE",
-        scope: false,
-        link: function (scope, element) {
-          var link = $('.color-list li a'),
-            holder = $('.color-picker');
-
-          link.each(function () {
-            var item = $(this);
-            item.on('click touch', changeColor);
-
-            function changeColor() {
-              console.log('inside script');
-              var linkClassName = item.attr('class');
-              holder.removeAttr('class');
-              holder.addClass('color-picker').addClass(linkClassName);
-            }
-          });
         }
       }
     }])
