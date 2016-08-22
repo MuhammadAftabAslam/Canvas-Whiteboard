@@ -616,7 +616,7 @@ angular.module('starter.controllers', [])
 
         }
       };
-
+		
     }])
   .directive('customFunctions', ['$timeout',
     function ($timeout) {
@@ -628,6 +628,30 @@ angular.module('starter.controllers', [])
           window.initMobileNav();
           window.initCustomHover();
           $('input, textarea').placeholder();
+        }
+      }
+    }])
+	.directive('customColor', ['$timeout',
+    function ($timeout) {
+
+      return {
+        restrict: "AE",
+        scope: false,
+        link: function (scope, element) {
+			var link =$('.color-list li a'),
+			holder = $('.color-picker');
+
+			link.each(function(){
+				var item = $(this);
+				item.on('click touch', changeColor);
+
+				function changeColor(){
+					console.log('inside script');
+					var linkClassName = item.attr('class');
+					holder.removeAttr('class');
+					holder.addClass('color-picker').addClass(linkClassName);
+				}
+			});
         }
       }
     }])

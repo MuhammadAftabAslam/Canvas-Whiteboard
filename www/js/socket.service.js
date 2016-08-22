@@ -214,8 +214,9 @@ angular.module('starter.services')
     };
   })
   .factory('$socket', function () {
-    var socket = io.connect('http://localhost:8080');
+    //var socket = io.connect('http://localhost:8080');
     //var socket = io.connect('http://192.168.0.41:8080');
+    var socket = io.connect('http://172.16.11.202:8080');
     return socket;
   });
 

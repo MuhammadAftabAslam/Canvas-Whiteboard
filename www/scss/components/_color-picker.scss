@@ -8,25 +8,226 @@
 		right: 30px;
 		bottom: 30px;
 	}
+	
+	&.grayish-blue{
+		.color-opener{
+			#colorPicker{
+				g{
+					&:first-child{
+						path{fill: $grayish-blue;}
+					}
+				}
+			}
+			&:hover,
+			&:active{
+				#colorPicker{
+					g{
+						&:first-child{
+							path{fill: $grayish-blue;}
+						}
+					}
+				}
+			}
+		}
+		&.color-active{
+			.color-opener{
+				#colorPicker{
+					g{
+						&:first-child{
+							path{fill: $grayish-blue;}
+						}
+					}
+				}
+			}
+		}
+	}
+	&.black{
+		.color-opener{
+			#colorPicker{
+				g{
+					&:first-child{
+						path{fill: $black;}
+					}
+				}
+			}
+			&:hover,
+			&:active{
+				#colorPicker{
+					g{
+						&:first-child{
+							path{fill: $black;}
+						}
+					}
+				}
+			}
+		}
+		&.color-active{
+			.color-opener{
+				#colorPicker{
+					g{
+						&:first-child{
+							path{fill: $black;}
+						}
+					}
+				}
+			}
+		}
+	}
+	&.vivid-cyan{
+		.color-opener{
+			#colorPicker{
+				g{
+					&:first-child{
+						path{fill: $vivid-cyan;}
+					}
+				}
+			}
+			&:hover,
+			&:active{
+				#colorPicker{
+					g{
+						&:first-child{
+							path{fill: $vivid-cyan;}
+						}
+					}
+				}
+			}
+		}
+		&.color-active{
+			.color-opener{
+				#colorPicker{
+					g{
+						&:first-child{
+							path{fill: $vivid-cyan;}
+						}
+					}
+				}
+			}
+		}
+	}
+	&.lime-green{
+		.color-opener{
+			#colorPicker{
+				g{
+					&:first-child{
+						path{fill: $lime-green;}
+					}
+				}
+			}
+			&:hover,
+			&:active{
+				#colorPicker{
+					g{
+						&:first-child{
+							path{fill: $lime-green;}
+						}
+					}
+				}
+			}
+		}
+		&.color-active{
+			.color-opener{
+				#colorPicker{
+					g{
+						&:first-child{
+							path{fill: $lime-green;}
+						}
+					}
+				}
+			}
+		}
+	}
+	&.vivid-red{
+		.color-opener{
+			#colorPicker{
+				g{
+					&:first-child{
+						path{fill: $vivid-red;}
+					}
+				}
+			}
+			&:hover,
+			&:active{
+				#colorPicker{
+					g{
+						&:first-child{
+							path{fill: $vivid-red;}
+						}
+					}
+				}
+			}
+		}
+		&.color-active{
+			.color-opener{
+				#colorPicker{
+					g{
+						&:first-child{
+							path{fill: $vivid-red;}
+						}
+					}
+				}
+			}
+		}
+	}
+	&.yellow{
+		.color-opener{
+			#colorPicker{
+				g{
+					&:first-child{
+						path{fill: $yellow;}
+					}
+				}
+			}
+			&:hover,
+			&:active{
+				#colorPicker{
+					g{
+						&:first-child{
+							path{fill: $yellow;}
+						}
+					}
+				}
+			}
+		}
+		&.color-active{
+			.color-opener{
+				#colorPicker{
+					g{
+						&:first-child{
+							path{fill: $yellow;}
+						}
+					}
+				}
+			}
+		}
+	}
 }
 
 .color-opener{
 	@include vertical-alignment(top);
 	color: $light-blue;
-	font-size: 40px;
-	line-height: 40px;
+	font-size: 0;
+	line-height: 0;
+	
+	#colorPicker{
+		display: block;
+		path{fill: $light-blue;}
+	}
 	
 	&:hover,
-	&:active{color: $black;}
-	
-	@include media('≥tablet') {
-		font-size: 56px;
-		line-height: 56px;
+	&:active{
+		#colorPicker{
+			path{fill: $black;}
+		}
 	}
 }
 
 .color-active{
-	.color-opener{color: $black;}
+	.color-opener{
+		#colorPicker{
+			path{fill: $black;}
+		}
+	}
 	.color-drop{
 		@include translate (0, 0);
 		@include transition($val:all , $duration:0.2s , $type:ease-in-out);

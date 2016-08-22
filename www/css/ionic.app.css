@@ -10730,23 +10730,59 @@ label {
     .color-picker {
       right: 30px;
       bottom: 30px; } }
+  .color-picker.grayish-blue .color-opener #colorPicker g:first-child path {
+    fill: #b0bec5; }
+  .color-picker.grayish-blue .color-opener:hover #colorPicker g:first-child path, .color-picker.grayish-blue .color-opener:active #colorPicker g:first-child path {
+    fill: #b0bec5; }
+  .color-picker.grayish-blue.color-active .color-opener #colorPicker g:first-child path {
+    fill: #b0bec5; }
+  .color-picker.black .color-opener #colorPicker g:first-child path {
+    fill: #000; }
+  .color-picker.black .color-opener:hover #colorPicker g:first-child path, .color-picker.black .color-opener:active #colorPicker g:first-child path {
+    fill: #000; }
+  .color-picker.black.color-active .color-opener #colorPicker g:first-child path {
+    fill: #000; }
+  .color-picker.vivid-cyan .color-opener #colorPicker g:first-child path {
+    fill: #15b7e0; }
+  .color-picker.vivid-cyan .color-opener:hover #colorPicker g:first-child path, .color-picker.vivid-cyan .color-opener:active #colorPicker g:first-child path {
+    fill: #15b7e0; }
+  .color-picker.vivid-cyan.color-active .color-opener #colorPicker g:first-child path {
+    fill: #15b7e0; }
+  .color-picker.lime-green .color-opener #colorPicker g:first-child path {
+    fill: #70d389; }
+  .color-picker.lime-green .color-opener:hover #colorPicker g:first-child path, .color-picker.lime-green .color-opener:active #colorPicker g:first-child path {
+    fill: #70d389; }
+  .color-picker.lime-green.color-active .color-opener #colorPicker g:first-child path {
+    fill: #70d389; }
+  .color-picker.vivid-red .color-opener #colorPicker g:first-child path {
+    fill: #e01515; }
+  .color-picker.vivid-red .color-opener:hover #colorPicker g:first-child path, .color-picker.vivid-red .color-opener:active #colorPicker g:first-child path {
+    fill: #e01515; }
+  .color-picker.vivid-red.color-active .color-opener #colorPicker g:first-child path {
+    fill: #e01515; }
+  .color-picker.yellow .color-opener #colorPicker g:first-child path {
+    fill: #f3ce00; }
+  .color-picker.yellow .color-opener:hover #colorPicker g:first-child path, .color-picker.yellow .color-opener:active #colorPicker g:first-child path {
+    fill: #f3ce00; }
+  .color-picker.yellow.color-active .color-opener #colorPicker g:first-child path {
+    fill: #f3ce00; }
 
 .color-opener {
   display: inline-block;
   vertical-align: top;
   letter-spacing: 0;
   color: #0ca4f0;
-  font-size: 40px;
-  line-height: 40px; }
-  .color-opener:hover, .color-opener:active {
-    color: #000; }
-  @media (min-width: 768px) {
-    .color-opener {
-      font-size: 56px;
-      line-height: 56px; } }
+  font-size: 0;
+  line-height: 0; }
+  .color-opener #colorPicker {
+    display: block; }
+    .color-opener #colorPicker path {
+      fill: #0ca4f0; }
+  .color-opener:hover #colorPicker path, .color-opener:active #colorPicker path {
+    fill: #000; }
 
-.color-active .color-opener {
-  color: #000; }
+.color-active .color-opener #colorPicker path {
+  fill: #000; }
 
 .color-active .color-drop {
   -moz-transform: translate(0, 0);
