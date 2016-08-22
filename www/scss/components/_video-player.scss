@@ -1,0 +1,72 @@
+.video-holder{
+  position: relative;
+  overflow: hidden;
+  
+  .btn-play{
+    @include transition($val:all , $duration:0.2s , $type:ease-in-out);
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    padding: 10px 25px;
+    font-size: 20px;
+    line-height: 20px;
+    margin: -21px 0 0 -34px;
+    cursor: pointer;
+    visibility: visible;
+    opacity: 1;
+    
+    @include media('≥tablet') {
+      font-size: 25px;
+      line-height: 25px;
+      margin: -24px 0 0 -36px;
+    }
+    
+    span{cursor: pointer;}
+  }
+  
+  &.play{
+    .btn-play{
+      @include transition($val:all , $duration:0.2s , $type:ease-in-out);
+      visibility: hidden;
+      opacity: 0;
+      pointer-events: none;
+    }
+    .control-bar{
+      @include transition($val:all , $duration:0.2s , $type:ease-in-out);
+      visibility: visible;
+      opacity: 1;
+      @include translate (0, 0);
+    }
+  }
+  &.pause{
+    .btn-play{
+      @include transition($val:all , $duration:0.2s , $type:ease-in-out);
+      visibility: hidden;
+      opacity: 0;
+      pointer-events: none;
+    }
+    .control-bar{
+      @include transition($val:all , $duration:0.2s , $type:ease-in-out);
+      visibility: visible;
+      opacity: 1;
+      @include translate (0, 0);
+    }
+  }
+  .control-bar{
+    @include transition($val:all , $duration:0.2s , $type:ease-in-out);
+    @include translate (0, 20px);
+    visibility: hidden;
+    opacity: 0;
+    position: absolute;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    border-top: 1px solid rgba($black,0.5);
+    
+    audio{
+      display: block;
+      width: 100%;
+    }
+  }
+}
+
