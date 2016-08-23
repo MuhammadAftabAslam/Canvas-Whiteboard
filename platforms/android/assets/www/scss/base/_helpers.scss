@@ -1,44 +1,46 @@
 // list reset
 %listreset {
-  margin: 0;
-  padding: 0;
-  list-style: none;
+	margin: 0;
+	padding: 0;
+	list-style: none;
 }
 
 // clearfix
 %clearfix {
- &:after {
-    content: '';
-    display: block;
-    clear: both;
-  }
+	&:after {
+		content: '';
+		display: block;
+		clear: both;
+	}
 }
 
 .clearfix {
-  @extend %clearfix;
+	@extend %clearfix;
 }
 
 
 // transition
 %transition {
- -webkit-transition: all 0.3s ease-in-out;
- transition: all 0.3s ease-in-out;
+	-moz-transition: all 0.25s linear;
+	-webkit-transition: all 0.25s linear;
+	-o-transition: all 0.25s linear;
+	transition: all 0.25s linear;
 }
 
 // justify nav
 %justify {
- text-align: justify;
- > * {
-  display: inline-block;
-  vertical-align: top;
-  text-align: left;
- }
- &:after {
-  content: '';
-  width: 100%;
-  display: inline-block;
-  vertical-align: top;
- }
+	text-align: justify;
+	> * {
+		display: inline-block;
+		vertical-align: top;
+		text-align: left;
+	}
+	&:after {
+		content: '';
+		width: 100%;
+		display: inline-block;
+		vertical-align: top;
+	}
 }
 
 
@@ -49,8 +51,8 @@
 /// * 2. Add ellipsis at the end of the line.
 
 .ellipsis {
-  white-space: nowrap; /* 1 */
-  text-overflow: ellipsis; /* 2 */
-  overflow: hidden;
+	white-space: nowrap; /* 1 */
+	text-overflow: ellipsis; /* 2 */
+	overflow: hidden;
 }
 

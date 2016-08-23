@@ -1,20 +1,20 @@
 <ion-modal-view>
   <ion-header-bar class="bar bar-header bar-positive">
     <div class="bar bar-header bar-dark">
-      <ion-button class="button icon-left ion-chevron-left button-clear" ng-click="newModal.hide()"></ion-button>
-      <h1 class="title">Add New Project</h1>
+      <ion-button class="btn-back" ng-click="newModal.hide()"><span class="icon-left-arrow"></span></ion-button>
+      <h3>Add New Lecture</h3>
     </div>
   </ion-header-bar>
-  <ion-content has-header="true">
+  <ion-content>
     <form name="form" ng-model="form">
       <ion-list>
-        <li class="item item-input item-stacked-label">
-          <!--<span class="input-label">Name :</span>-->
-          <input type="text" placeholder="Project 1" name="description" ng-model="description" required/>
-        </li>
+        <div class="item item-input item-stacked-label">
+          <label for="lec-name">Lecture Name :</label>
+          <input type="text" id="lec-name" class="form-control" placeholder="Lecture 1" name="description" ng-model="description" required/>
+        </div>
 
-        <ion-button ng-init="saveEmpty(form)" class="button button-block button-positive" ng-click="addProject(form)">
-          Add
+        <ion-button ng-init="saveEmpty(form)" class="btn btn-primary" ng-click="addProject(form)">
+          Add <span class="icon-plus"></span>
         </ion-button>
       </ion-list>
     </form>

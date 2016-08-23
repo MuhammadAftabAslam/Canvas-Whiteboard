@@ -1,10 +1,15 @@
-<div class="video-holder">
-  <a href="#" class="btn btn-danger btn-play"><span class="icon-play"></span></a>
-  <div class="control-bar">
-     <audio controls>
-        <source src="abc.ogg" type="audio/ogg">
-        <source src="abc.ogg" type="audio/mpeg">
-        Your browser does not support the audio element.
-      </audio> 
-  </div>
-</div>
+<ion-view hide-nav-bar="true">
+  <ion-content>
+    <div class="video-holder">
+      <canvas id="videocanvas"></canvas>
+      <a class="btn btn-danger btn-play"><span class="icon-play"></span></a>
+      <div class="control-bar">
+        <audio id="videoplayer" controls>
+          <source id="oggSource" src="" type="audio/ogg">
+          <source id="mp3Source" type="audio/mp3">
+          Your browser does not support the audio element.
+        </audio>
+      </div>
+    </div>
+  </ion-content>
+</ion-view>

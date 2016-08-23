@@ -11,9 +11,9 @@ RecordableDrawing = function (canvasId)
 	this.currentRecording = null; //instance of Recording
 	this.recordings = new Array(); //array of Recording objects
 	this.lastMouseX = this.lastMouseY = -1;
-	this.bgColor = "rgb(0,0,0)";
+	this.bgColor = "rgb(255,255,255)";
 	this.currentLineWidth = 5;
-	this.drawingColor = "rgb(255,255,255)";
+	this.drawingColor = "rgb(0,0,0)";
 	var pauseInfo = null;
 
 
@@ -102,7 +102,7 @@ RecordableDrawing = function (canvasId)
 			obj.draggingImage = obj.draggingResizer < 0 && hitImage(startX, startY);
 		}
 		else {
-			console.log('mosue down on canvas for point');
+			//console.log('mosue down on canvas for point');
 			var currAction = new Point(x, y, 0);
 			self.drawAction(currAction, true);
 			if (self.currentRecording != null)
@@ -330,19 +330,23 @@ RecordableDrawing = function (canvasId)
 			self.currentRecording.addAction(colorAction);
 	}
 
-  this.setImage = function (url,id) {
-    //self.drawingColor = color;
-    //var img = new Image();
-    //img.src = url;
-    var imageAction = new SetImage(url, self.lastMouseX, self.lastMouseY, false, id);
+	this.setImage = function (url, id) {
+		//self.drawingColor = color;
+		var img = new Image();
+		img.src = url;
+		img.onload = function () {
+			var imageAction = new SetImage(url, self.lastMouseX, self.lastMouseY, false, id, img.width, img.height);
+			//debugger;
+			self.drawAction(imageAction, true);
+			var copy = $.extend(true, {}, imageAction);
+			//self.actions.push(imageAction);
+			self.drawingObjects.push(imageAction);
+			if (self.currentRecording != null)
+				self.currentRecording.addAction(copy);
+		}
 
-    self.drawAction(imageAction, true);
-		var copy = $.extend(true, {}, imageAction);
-    //self.actions.push(imageAction);
-		self.drawingObjects.push(imageAction);
-    if (self.currentRecording != null)
-      self.currentRecording.addAction(copy);
-  }
+
+	}
 
 	this.setStokeSize = function (sizeArg)
 	{
@@ -533,7 +537,6 @@ RecordableDrawing = function (canvasId)
 		}
 
 		if (!playingVideo && reDraw && actionArg.actionType == 4) {
-			//debugger;
 			reDrawCanvas();
 		}
 	}
@@ -546,19 +549,14 @@ RecordableDrawing = function (canvasId)
 		self.ctx.shadowColor = self.drawingColor;
 		switch (actionArg.type) {
 			case 0: //moveto
-				console.log('action type : ',0);
-				console.log('action point : ',actionArg );
 				self.ctx.beginPath();
 				self.ctx.moveTo(x, y);
 				self.ctx.strokeStyle = self.drawingColor;
 				self.ctx.lineWidth = self.currentLineWidth;
 				break;
 			case 1: //lineto
-				console.log('action type : ',1);
-				console.log('action point : ',actionArg);
-				var midPoint = midPointBtw(actionArg.bezier,{x:x,y:y});
-				//self.ctx.lineTo(x, y);
 
+				var midPoint = midPointBtw(actionArg.bezier,{x:x,y:y});
 				self.ctx.quadraticCurveTo(actionArg.bezier.x,actionArg.bezier.y,midPoint.x, midPoint.y);
 				self.ctx.stroke();
 				break;
@@ -944,18 +942,18 @@ SetStokeSize = function (sizeArg)
 }
 SetStokeSize.prototype = new Action();
 
-SetImage = function (url,argX,argY,typeArg,elementId) //typeArg is for dragging to a new point or not
+SetImage = function (url,argX,argY,typeArg,elementId,w,h) //typeArg is for dragging to a new point or not
 {
 	var self = this;
 	this.img = new Image();
-		self.img.src = url;
+	self.img.src = url;
 	self.img.onload = function () {
-		console.log('************************************************************************************************************************************')
+		//console.log('************************************************************************************************************************************')
 	}
 	this.url = url;
 	this.id = elementId;
-	this.imageWidth = self.img.width * 0.50;
-	this.imageHeight = self.img.height * 0.50;
+	this.imageWidth = w * 0.50 || self.img.width * 0.50;
+	this.imageHeight = h * 0.50 || self.img.height * 0.50;
 	this.imageX = 100;
 	this.imageY = 100;
 	this.imageRight = this.imageX + this.imageWidth;

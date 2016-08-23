@@ -79,6 +79,16 @@ angular.module('starter.services')
       return deferred.promise;
     }
 
+    var getProjectVideo = function (project_id) {
+      var deferred = $q.defer();
+      $socket.emit('req:project:video', {project_id : project_id})
+        .on('res:project:video', function (alldata) {
+          $socket.removeListener('res:project:video');
+          deferred.resolve(alldata);
+        });
+      return deferred.promise;
+    }
+
     var saveSound = function (sound_obj, project_id) {
       var deferred = $q.defer();
       sound_obj.project_id = project_id;
@@ -127,6 +137,7 @@ angular.module('starter.services')
     return {
       get: getSounds,
       getInitialProject: getInitialProject,
+      getProjectVideo: getProjectVideo,
       addProject: addProject,
       save: saveSound,
       delete: deleteSound,
@@ -139,15 +150,15 @@ angular.module('starter.services')
   })
 
 
-  .factory('UserService', function ($q, $socket) {
+  .factory('UserService', function ($q, $socket, $url, $http) {
 
-    var login = function (data,rememberFlag) {
+    var login = function (data, rememberFlag) {
       var deferred = $q.defer();
       $socket.emit('req:login', data)
         .on('res:login', function (alldata) {
           console.log('res:login socket: ', alldata);
           if (alldata) {
-            if(rememberFlag)
+            if (rememberFlag)
               localStorage.user = JSON.stringify(alldata);
             deferred.resolve(alldata);
           }
@@ -177,7 +188,7 @@ angular.module('starter.services')
             localStorage.user = JSON.stringify(alldata);
             deferred.resolve(alldata);
           }
-          else{
+          else {
             deferred.resolve(false);
           }
         });
@@ -206,18 +217,55 @@ angular.module('starter.services')
     }
 
 
+    var uploadImage = function (data) {
+      var deferred = $q.defer();
+      if (data) {
+        var fd = new FormData();
+        fd.append('file', data);
+        $http.post($url+'/upload', fd, {
+          transformRequest: angular.identity,
+          headers: {'Content-Type': undefined}
+        }).success(function (res) {
+          console.log('res success',res);
+          //debugger;
+          deferred.resolve(res);
+        }).error(function () {
+          //debugger;
+          deferred.resolve(false);
+        });
+      }
+      else {
+        deferred.resolve(false);
+      }
+      return deferred.promise;
+    }
+
+
     return {
       login: login,
       logout: logout,
       register: register,
-      authenticate: authenticate
+      authenticate: authenticate,
+      uploadImage: uploadImage
     };
   })
-  .factory('$socket', function () {
-    //var socket = io.connect('http://localhost:8080');
-    //var socket = io.connect('http://192.168.0.41:8080');
-    var socket = io.connect('http://172.16.11.202:8080');
+  .factory('$socket', ['$url', function ($url) {
+    var socket = io.connect($url);
     return socket;
+  }])
+  .factory('$url', function () {
+    //var url = 'http://localhost:8080';
+    //var url = 'http://192.168.0.41:8080';
+    var url = 'http://172.16.10.228:8080';
+    //var url = 'http://172.16.11.202:8080';
+    return url;
+  })
+  .factory('$serverurl', function () {
+    //var url = 'http://localhost:8080/';
+    //var url = 'http://192.168.0.41:8080/';
+    var url = 'http://172.16.10.228:8080/';
+    //var url = 'http://172.16.11.202:8080/';
+    return url;
   });
 
 

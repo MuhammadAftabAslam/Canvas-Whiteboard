@@ -13,11 +13,57 @@ angular.module('starter.controllers', [])
       $ionicSideMenuDelegate.toggleLeft();
     };
   })
-  .controller('VideoCtrl', function ($scope, $ionicSideMenuDelegate) {
-    $scope.showMenu = function () {
+  .controller('VideoCtrl', function ($scope, $stateParams, DrawingService) {
+    var drawingElement = new RecordableDrawing("videocanvas");
+    var c = document.getElementById("videocanvas");
+    c.width = $(window).innerWidth(); //options.width;
+    c.height = $(window).innerHeight();
+    var ctx = c.getContext("2d");
 
-    };
+    var playRecording = function () {
+      drawingElement.playRecording(function () {
+        playbackInterruptCommand = "";
+      }, function () {
+      }, function () {
+        console.log('drawing playback paused');
+      }, function () {
+        return playbackInterruptCommand;
+      });
+    }
+
+    DrawingService.getProjectVideo($stateParams.key).then(function (res) {
+      if (res.length > 0) {
+        var result = deserializeDrawing(JSON.parse(res[0].drawing_data));
+        if (result == null)
+          result = "Error : Unknown error in deserializing the data";
+        if (result instanceof Array == false) {
+          return;
+        } else {
+          drawingElement.recordings = result;
+          //set drawing property of each recording
+          for (var i = 0; i < result.length; i++) {
+            result[i].drawing = drawingElement;
+          }
+          playRecording();
+          console.log('$stateParams : ', $stateParams.key);
+          var audio = document.getElementById('videoplayer');
+
+          var source = document.getElementById('oggSource');
+          source.src = JSON.parse(res[0].audio_data);
+          audio.load(); //call this to just preload the audio without playing
+          audio.play();
+        }
+      }
+      else{
+        alert('Create atleast one scene before making this lecture into video.')
+      }
+    })
   })
+
+
+
+
+
   .controller('LoginCtrl', function ($scope, UserService, $ionicPopup, $state, $rootScope) {
     $scope.data = {};
     $scope.login = function () {
@@ -29,7 +75,8 @@ angular.module('starter.controllers', [])
           $state.go('tab.dash');
           $rootScope.$emit('user:loggedin', data);
           $scope.data = {};
-        } else {
+        }
+        else {
           var alertPopup = $ionicPopup.alert({
             title: 'Login failed!',
             template: 'Please check your credentials!'
@@ -58,10 +105,10 @@ angular.module('starter.controllers', [])
 
   })
 
-// Main directive for the canvas recordings
-.directive('arbiCanvas', ['$ionicPlatform', '$cordovaMedia', '$cordovaCapture', 'recorderService', '$ionicListDelegate', '$ionicPopup',
-    '$ionicModal', 'DrawingService', 'UserService', '$state', '$rootScope',
-    function ($ionicPlatform, $cordovaMedia, $cordovaCapture, recorderService, $ionicListDelegate, $ionicPopup, $ionicModal, DrawingService, UserService, $state, $rootScope) {
+  // Main directive for the canvas recordings
+  .directive('arbiCanvas', ['$ionicPlatform', '$cordovaMedia', '$cordovaCapture', 'recorderService', '$ionicListDelegate', '$ionicPopup',
+    '$ionicModal', 'DrawingService', 'UserService', '$state', '$rootScope', '$serverurl',
+    function ($ionicPlatform, $cordovaMedia, $cordovaCapture, recorderService, $ionicListDelegate, $ionicPopup, $ionicModal, DrawingService, UserService, $state, $rootScope, $serverurl) {
 
       return {
         restrict: "AE",
@@ -74,6 +121,7 @@ angular.module('starter.controllers', [])
 
           $ionicPlatform.ready(function () {
             var init = function (project_id) {
+              scope.isloading = true;
               if (!project_id) {
                 DrawingService.getInitialProject().then(function (res) {
                   scope.project = res;
@@ -84,6 +132,7 @@ angular.module('starter.controllers', [])
                 DrawingService.getInitialProject(project_id).then(function (res) {
                   scope.project = res;
                   scope.recordings = res.scenes;
+                  scope.isloading = false;
                 });
               }
             }
@@ -92,6 +141,7 @@ angular.module('starter.controllers', [])
               DrawingService.get().then(function (res) {
                 console.log('loading end');
                 scope.allProjects = res;
+                scope.isloading = false;
               });
             }
 
@@ -143,9 +193,9 @@ angular.module('starter.controllers', [])
             var pausedAudios = [];
 
             /*$tinyColor.bind("change", function () {
-              console.log('change color : ', $('#hidden-color').val());
-              drawingElement.setColor($('#hidden-color').val());
-            });*/
+             console.log('change color : ', $('#hidden-color').val());
+             drawingElement.setColor($('#hidden-color').val());
+             });*/
 
             media.onRecordStart = function (s) {
               //console.log('onRecordStart callback: ======= >', s);
@@ -169,14 +219,14 @@ angular.module('starter.controllers', [])
             }
 
             media.onConversionComplete = function (locals) {
-                //console.log('onConversionComplete callback: ======= >', locals);
-                // onSave();
-              }
-              /*
-               media.onConversionStart = function (locals) {
-               console.log('onConversionStart callback  : ======= >', locals);
-               }
-               */
+              //console.log('onConversionComplete callback: ======= >', locals);
+              // onSave();
+            }
+            /*
+             media.onConversionStart = function (locals) {
+             console.log('onConversionStart callback  : ======= >', locals);
+             }
+             */
 
             media.onPlaybackComplete = function (s) {
               playbackInterruptCommand = "stop";
@@ -283,6 +333,7 @@ angular.module('starter.controllers', [])
 
 
             var onSave = function (res) {
+              scope.isloading = true;
               var serializedData = serializeDrawing(drawingElement);
 
               var obj = {
@@ -298,6 +349,7 @@ angular.module('starter.controllers', [])
               currentRecording = obj;
               DrawingService.save(obj, scope.project._id).then(function () {
                 init(scope.project._id);
+                scope.isloading = false;
               })
             }
 
@@ -330,15 +382,16 @@ angular.module('starter.controllers', [])
               });
               confirmPopup.then(function (res) {
                 if (res) {
+                  scope.isloading = true;
                   DrawingService.delete(obj._id, scope.project._id).then(function () {
                     init(scope.project._id);
+                    scope.isloading = false;
                   });
                 } else {
                   //console.log('You are not sure');
                 }
               });
             }
-
 
 
             scope.onRetake = function (obj) {
@@ -371,10 +424,12 @@ angular.module('starter.controllers', [])
                 if (res) {
                   drawingElement.clearCanvas();
                   if (!$.isEmptyObject(currentRecording)) {
+                    scope.isloading = true;
                     DrawingService.delete(currentRecording._id, scope.project._id).then(function () {
                       init(scope.project._id);
                       $wrapper.removeClass('record');
                       currentRecording = {};
+                      scope.isloading = false;
                     });
 
                   }
@@ -386,8 +441,8 @@ angular.module('starter.controllers', [])
 
             scope.onNewRecording = function () {
               currentRecording = {};
-              $wrapper.removeClass('stop').removeClass('record');
-              $wrapper.removeClass('aside-active');
+              $wrapper.removeClass('play').removeClass('pause').removeClass('stop').removeClass('record').removeClass('video-pause');
+              clearCanvas();
             }
 
             var clickOnCanvas = function () {
@@ -401,12 +456,14 @@ angular.module('starter.controllers', [])
             }
 
             scope.editRecordingName = function () {
+              scope.isloading = true;
               $wrapper.removeClass('aside-active');
               if ($('#recordingName').hasClass('form-active')) {
                 if ($($('#edit-recording-text')[0]).val() != $($('#recording-text')[0]).text()) {
                   currentRecording.name = $($('#edit-recording-text')[0]).val();
                   DrawingService.save(currentRecording, scope.project._id).then(function () {
                     init(scope.project._id);
+                    scope.isloading = false;
                     $($('#recording-text')[0]).text(currentRecording.name);
                   })
                 }
@@ -432,7 +489,10 @@ angular.module('starter.controllers', [])
             scope.openProjectModal = function () {
               console.log('open modal directive');
               $ionicModal.fromTemplateUrl('templates/project-view.html', {
-                scope: scope
+                scope: scope,
+                //animation: 'slide-in-up',
+                //backdropClickToClose: false,
+                //hardwareBackButtonClose: false
               }).then(function (modal) {
                 console.log('open modal directive hode');
                 scope.modal = modal;
@@ -464,8 +524,31 @@ angular.module('starter.controllers', [])
             }
 
             scope.drawImageOnCanvas = function (url, id) {
-              drawingElement.setImage(url, id);
+              //drawingElement.setImage(url,id);
             }
+
+            $('img').click(function (event) {
+              var xhr = new XMLHttpRequest();
+              xhr.open("GET", event.target.src);
+              xhr.responseType = "blob";
+
+              function analyze_data(blob) {
+                var reader = new FileReader();
+                reader.readAsDataURL(blob)
+                var reader = new FileReader();
+                reader.onload = imageIsLoaded;
+                UserService.uploadImage(new File([blob], '.png')).then(function (data) {
+                  console.log('blobl : ', blob, $serverurl + data.data.path, data.data.filename)
+                  drawingElement.setImage($serverurl + data.data.path, data.data.filename);
+                })
+              }
+
+              xhr.onload = function () {
+                analyze_data(xhr.response);
+              }
+              xhr.send();
+            });
+
 
             // Execute action on hide modal
             scope.$on('modal.hidden', function () {
@@ -513,7 +596,6 @@ angular.module('starter.controllers', [])
             };
 
 
-
             scope.onclickPause = function () {
               $wrapper.addClass('pause').removeClass('stop').removeClass('play').removeClass('record');
               drawingElement.pauseRecording();
@@ -548,18 +630,46 @@ angular.module('starter.controllers', [])
               } else {
                 scope.itemDelete(obj);
               }
+              event.preventDefault();
+              event.stopPropagation();
+            }
+
+            scope.checkProjectPosition = function (event, ui, obj) {
+              console.log('event, ui : ', event, ui, obj);
+              var direction = (ui.originalPosition.top > ui.position.top) ? 1 : 0;
+              console.log('has moved ' + direction);
+              if (scope.modal) {
+                scope.modal.hide();
+              }
+              if (direction == 1) {
+                $state.go('video', {"key": obj._id});
+              } else {
+
+              }
+              event.preventDefault();
+              event.stopPropagation();
             }
 
 
+            $(":file").change(function () {
+              if (this.files && this.files[0]) {
+                var reader = new FileReader();
+                reader.onload = imageIsLoaded;
+                reader.readAsDataURL(this.files[0]);
+                console.log('this.files[0] : ', this.files[0]);
+                UserService.uploadImage(this.files[0]).then(function (data) {
+                  drawingElement.setImage($serverurl + data.data.path, data.data.filename);
+                })
+              }
+            });
 
 
-
-
-
+            function imageIsLoaded(e) {
+              console.log('image is loaded')
+            };
 
 
             scope.onclickPlay = function () {
-              //debugger;
               $wrapper.addClass('play').removeClass('pause').removeClass('stop').removeClass('record').removeClass('video-pause');
               if (scope.isRecording == 4) {
                 // resume video
@@ -596,38 +706,30 @@ angular.module('starter.controllers', [])
               //playbackInterruptCommand = "stop";
               media.playbackPause();
             };
-            
-            
-
-              var link = $('.color-list li a'),
-                holder = $('.color-picker');
-
-                link.each(function () {
-                  var item = $(this);
-                  item.on('click touch', changeColor);
-                  
-                  function rgb2hex(orig){
-                   var rgb = orig.replace(/\s/g,'').match(/^rgba?\((\d+),(\d+),(\d+)/i);
-                   return (rgb && rgb.length === 4) ? "#" +
-                    ("0" + parseInt(rgb[1],10).toString(16)).slice(-2) +
-                    ("0" + parseInt(rgb[2],10).toString(16)).slice(-2) +
-                    ("0" + parseInt(rgb[3],10).toString(16)).slice(-2) : orig;
-                  }
-
-                  function changeColor() {
-                    var linkClassName = item.attr('class');
-                    console.log('Item color is ' + rgb2hex(item.css('backgroundColor')));
-                    holder.removeAttr('class');
-                    holder.addClass('color-picker').addClass(linkClassName);
-                  }
-                  
-                  
-                  
 
 
-              });
+            var link = $('.color-list li a'),
+              holder = $('.color-picker');
 
+            link.each(function () {
+              var item = $(this);
+              item.on('click touch', changeColor);
 
+              function rgb2hex(orig) {
+                var rgb = orig.replace(/\s/g, '').match(/^rgba?\((\d+),(\d+),(\d+)/i);
+                return (rgb && rgb.length === 4) ? "#" +
+                ("0" + parseInt(rgb[1], 10).toString(16)).slice(-2) +
+                ("0" + parseInt(rgb[2], 10).toString(16)).slice(-2) +
+                ("0" + parseInt(rgb[3], 10).toString(16)).slice(-2) : orig;
+              }
+
+              function changeColor() {
+                var linkClassName = item.attr('class');
+                drawingElement.setColor(rgb2hex(item.css('backgroundColor')));
+                holder.removeAttr('class').addClass('color-picker').addClass(linkClassName);
+              }
+
+            });
 
           })
 

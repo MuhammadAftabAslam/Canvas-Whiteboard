@@ -60,7 +60,7 @@ angular.module('starter', ['ionic', 'ngCordova', 'starter.controllers', 'starter
         controller: 'LoginCtrl'
       })
 	.state('video', {
-        url: '/video',
+        url: '/video/:key',
         templateUrl: 'templates/video.html',
         controller: 'VideoCtrl'
       })

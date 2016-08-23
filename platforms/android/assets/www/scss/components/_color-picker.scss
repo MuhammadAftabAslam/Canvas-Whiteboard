@@ -1,25 +1,321 @@
-.color-holder {
+.color-picker{
 	position: absolute;
-	visibility: visible;
-	opacity: 1;
-	@extend %transition;
-	pointer-events: none;
-	left: 0;
-	right: 0;
-	top: 0;
-	bottom: 0;
+	right: 20px;
+	bottom: 20px;
+	z-index: 10;
+	
+	@include media('≥tablet') {
+		right: 30px;
+		bottom: 30px;
+	}
+	
+	&.grayish-blue{
+		.color-opener{
+			#colorPicker{
+				g{
+					&:first-child{
+						path{fill: $grayish-blue;}
+					}
+				}
+			}
+			&:hover,
+			&:active{
+				#colorPicker{
+					g{
+						&:first-child{
+							path{fill: $grayish-blue;}
+						}
+					}
+				}
+			}
+		}
+		&.color-active{
+			.color-opener{
+				#colorPicker{
+					g{
+						&:first-child{
+							path{fill: $grayish-blue;}
+						}
+					}
+				}
+			}
+		}
+	}
+	&.black{
+		.color-opener{
+			#colorPicker{
+				g{
+					&:first-child{
+						path{fill: $black;}
+					}
+				}
+			}
+			&:hover,
+			&:active{
+				#colorPicker{
+					g{
+						&:first-child{
+							path{fill: $black;}
+						}
+					}
+				}
+			}
+		}
+		&.color-active{
+			.color-opener{
+				#colorPicker{
+					g{
+						&:first-child{
+							path{fill: $black;}
+						}
+					}
+				}
+			}
+		}
+	}
+	&.vivid-cyan{
+		.color-opener{
+			#colorPicker{
+				g{
+					&:first-child{
+						path{fill: $vivid-cyan;}
+					}
+				}
+			}
+			&:hover,
+			&:active{
+				#colorPicker{
+					g{
+						&:first-child{
+							path{fill: $vivid-cyan;}
+						}
+					}
+				}
+			}
+		}
+		&.color-active{
+			.color-opener{
+				#colorPicker{
+					g{
+						&:first-child{
+							path{fill: $vivid-cyan;}
+						}
+					}
+				}
+			}
+		}
+	}
+	&.lime-green{
+		.color-opener{
+			#colorPicker{
+				g{
+					&:first-child{
+						path{fill: $lime-green;}
+					}
+				}
+			}
+			&:hover,
+			&:active{
+				#colorPicker{
+					g{
+						&:first-child{
+							path{fill: $lime-green;}
+						}
+					}
+				}
+			}
+		}
+		&.color-active{
+			.color-opener{
+				#colorPicker{
+					g{
+						&:first-child{
+							path{fill: $lime-green;}
+						}
+					}
+				}
+			}
+		}
+	}
+	&.vivid-red{
+		.color-opener{
+			#colorPicker{
+				g{
+					&:first-child{
+						path{fill: $vivid-red;}
+					}
+				}
+			}
+			&:hover,
+			&:active{
+				#colorPicker{
+					g{
+						&:first-child{
+							path{fill: $vivid-red;}
+						}
+					}
+				}
+			}
+		}
+		&.color-active{
+			.color-opener{
+				#colorPicker{
+					g{
+						&:first-child{
+							path{fill: $vivid-red;}
+						}
+					}
+				}
+			}
+		}
+	}
+	&.yellow{
+		.color-opener{
+			#colorPicker{
+				g{
+					&:first-child{
+						path{fill: $yellow;}
+					}
+				}
+			}
+			&:hover,
+			&:active{
+				#colorPicker{
+					g{
+						&:first-child{
+							path{fill: $yellow;}
+						}
+					}
+				}
+			}
+		}
+		&.color-active{
+			.color-opener{
+				#colorPicker{
+					g{
+						&:first-child{
+							path{fill: $yellow;}
+						}
+					}
+				}
+			}
+		}
+	}
 }
 
-.color-picker#colorPicker {
+.color-opener{
+	@include vertical-alignment(top);
+	color: $light-blue;
+	font-size: 0;
+	line-height: 0;
+	
+	#colorPicker{
+		display: block;
+		path{fill: $light-blue;}
+	}
+	
+	&:hover,
+	&:active{
+		#colorPicker{
+			path{fill: $black;}
+		}
+	}
+}
+
+.color-active{
+	.color-opener{
+		#colorPicker{
+			path{fill: $black;}
+		}
+	}
+	.color-drop{
+		@include translate (0, 0);
+		@include transition($val:all , $duration:0.2s , $type:ease-in-out);
+		visibility: visible;
+		opacity: 1;
+		pointer-events: all;
+	}
+}
+
+.color-drop{
+	@include border-radius(5px, 5px, 5px, 5px);
+	@include translate (0, -15px);
+	@include transition($val:all , $duration:0.2s , $type:ease-in-out);
 	position: absolute;
-	right: 50px;
-	bottom: 35px;
-	width: 50px;
-	height: 50px;
-	padding: 10px;
-	pointer-events: all;
-	@include media("≥tablet") {
-		right: 70px;
-		bottom: 70px;
+	right: 0;
+	bottom: 100%;
+	width: 170px;
+	visibility: hidden;
+	opacity: 0;
+	border: 1px solid $light-grayish-blue;
+	background: $white;
+	pointer-events: none;
+	margin: 0 0 20px;
+	
+	@include media('≥tablet') {
+		margin: 0 0 25px;
+		width: 222px;
+	}
+	
+	&:after,
+	&:before {
+		top: 100%;
+		right: 15px;
+		border: solid transparent;
+		content: " ";
+		height: 0;
+		width: 0;
+		position: absolute;
+		pointer-events: none;
+		
+		@include media('≥tablet') {right: 25px;}
+	}
+
+	&:after {
+		border-color: rgba($white, 0);
+		border-top-color: $white;
+		border-width: 10px;
+		margin-right: -1px;
+	}
+	&:before {
+		border-color: rgba($light-grayish-blue, 0);
+		border-top-color: $light-grayish-blue;
+		border-width: 12px;
+		margin-right: -3px;
+	}
+	
+	ul{
+		@extend %listreset;
+		overflow: hidden;
+		padding: 10px;
+		letter-spacing: -6px;
+		
+		@include media('≥tablet') {padding: 10px 15px;}
+		
+		li{
+			@include vertical-alignment(top);
+			padding: 5px;
+			
+			@include media('≥tablet') {padding: 10px 7px;}
+		}
+		
+		a{
+			display: block;
+			@include border-radius(5px, 5px, 5px, 5px);
+			width: 39px;
+			height: 34px;
+			
+			@include media('≥tablet') {
+				width: 49px;
+				height: 44px;
+			}
+			
+			&.grayish-blue{background: $grayish-blue;}
+			&.black{background: $black;}
+			&.vivid-cyan{background: $vivid-cyan;}
+			&.lime-green{background: $lime-green;}
+			&.vivid-red{background: $vivid-red;}
+			&.yellow{background: $yellow;}
+		}
 	}
 }

@@ -103,8 +103,8 @@ function serializeDrawImage (img)
 	imageWrp.startX = img.startX;
 	imageWrp.created = img.created;
 	imageWrp.startY = img.startY;
-	imageWrp.withAnchors = img.withAnchors;
-	imageWrp.withBorders = img.withBorders;
+	imageWrp.withAnchors = false;
+	imageWrp.withBorders = false;
 
 	//imageWrp.img.onload = function () {
 	  return imageWrp;
@@ -231,8 +231,8 @@ function deserializeDrawImage (img)
 	imageWrp.startX = img.startX;
 	imageWrp.created = img.created;
 	imageWrp.startY = img.startY;
-	imageWrp.withAnchors = img.withAnchors;
-	imageWrp.withBorders = img.withBorders;
+	imageWrp.withAnchors = false;
+	imageWrp.withBorders = false;
 	//imageWrp.img.onload = function () {
 	  return imageWrp;
 	//}
