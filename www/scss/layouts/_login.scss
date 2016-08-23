@@ -1,3 +1,7 @@
+.form-block{
+  @include v-align(100%, middle, before);
+}
+
 .info-holder{
 	height: inherit;
 	min-height: 100%;

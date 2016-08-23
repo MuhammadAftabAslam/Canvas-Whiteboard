@@ -220,6 +220,8 @@
 			path{fill: $black;}
 		}
 	}
+  
+    @include media('<tablet') {@include scale(0.8);}
 }
 
 .color-active{

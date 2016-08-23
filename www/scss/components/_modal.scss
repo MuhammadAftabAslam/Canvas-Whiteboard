@@ -31,21 +31,23 @@
 	.bar-header{
 		display: block;
 		text-align: center;
-		padding-left: 30px;
-		padding-right: 30px;
+        padding: 10px 30px;
+      
+        h3{margin: 0;}
 	}
 	.btn-back{
 		position: absolute;
-		left: 5px;
+		left: 10px;
 		top: 50%;
-		font-size: 20px;
-		line-height: 20px;
+		font-size: 15px;
+		line-height: 15px;
 		padding: 0;
 		border: 0;
 		outline: none;
 		min-width: inherit;
 		min-height: inherit;
-		margin-top: -10px;
+		margin-top: -8px;
+        cursor: pointer;
 	}
 }
 
@@ -72,6 +74,7 @@
 	&:active {
 		@extend %transition;
 		color: $black;
+        background: none;
 	}
 	
 	@include media('≥tablet') {

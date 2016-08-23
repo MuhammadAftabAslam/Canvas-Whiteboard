@@ -1,11 +1,6 @@
 <ion-modal-view>
   <div class="info-block">
-    <ion-header-bar class="bar bar-header bar-positive">
-      <h1 class="title">{{ project.project_name }}</h1>
-      <div class="buttons">
-        <button class="button button-icon  ion-close-round" ng-click="modal.hide()"></button>
-      </div>
-    </ion-header-bar>
+    <button class="button btn-close" ng-click="modal.hide()"><span class="icon-cancel"></span></button>
     <div class="jcf-scrollable" custom-form>
       <ul class="info-list">
         <li id="{{ recording._id }}" ng-repeat="recording in recordings">
