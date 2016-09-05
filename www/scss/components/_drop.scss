@@ -143,8 +143,8 @@
 			padding: 0 5px 5px;
 			width: 100%;
 
-			@include media('≥phone') {width: 50%;}
-			@include media('≥desktop') {width: 33.33%;}
+			@include media('≥phone') {width: 48%;}
+			@include media('≥desktop') {width: 32%;}
 
 			img{
 				display: block;

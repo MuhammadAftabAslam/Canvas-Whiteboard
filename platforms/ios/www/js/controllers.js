@@ -1,52 +1,181 @@
 angular.module('starter.controllers', [])
-  .controller('DashCtrl', ['$scope', 'Sounds', function ($scope, Sounds) {
+  .controller('DashCtrl', ['$scope', '$ionicModal', 'UserService', '$state', '$rootScope', function ($scope, $ionicModal, UserService, $state, $rootScope) {
+    UserService.authenticate().then(function (auth) {
+      if (!auth) {
+        $state.go('login');
+      } else {
+        $rootScope.$emit('user:loggedin', auth);
+      }
+    })
   }])
   .controller('NavCtrl', function ($scope, $ionicSideMenuDelegate) {
     $scope.showMenu = function () {
       $ionicSideMenuDelegate.toggleLeft();
     };
+  })
+  .controller('VideoCtrl', function ($scope, $stateParams, DrawingService, $state, $rootScope) {
+    var drawingElement = new RecordableDrawing("videocanvas");
+    var c = document.getElementById("videocanvas");
+    c.width = $(window).innerWidth(); //options.width;
+    c.height = $(window).innerHeight();
+    if ($stateParams.key) {
 
-    $scope.dragOptions = {
-      start: function (e) {
-        console.log("STARTING");
-      },
-      drag: function (e) {
-        console.log("DRAGGING");
-      },
-      stop: function (e) {
-        console.log("STOPPING");
-      },
-      container: 'color-holder'
+
+      var ctx = c.getContext("2d");
+
+      var playRecording = function () {
+        drawingElement.playRecording(function () {
+          playbackInterruptCommand = "";
+        }, function () {
+          $state.go('tab.dash');
+          $rootScope.$emit('user:loggedin', data);
+        }, function () {
+          console.log('drawing playback paused');
+        }, function () {
+          return playbackInterruptCommand;
+        });
+      }
+
+      DrawingService.getProjectVideo($stateParams.key).then(function (res) {
+        //debugger;
+        if (res.length > 0) {
+          var result = deserializeDrawing(JSON.parse(res[res.length - 1].drawing_data));
+          if (result == null)
+            result = "Error : Unknown error in deserializing the data";
+          if (result instanceof Array == false) {
+            return;
+          } else {
+            drawingElement.recordings = result;
+            //set drawing property of each recording
+            for (var i = 0; i < result.length; i++) {
+              result[i].drawing = drawingElement;
+            }
+            playRecording();
+            console.log('$stateParams : ', $stateParams.key);
+            var audio = document.getElementById('videoplayer');
+
+            var source = document.getElementById('oggSource');
+            source.src = JSON.parse(res[res.length - 1].audio_data);
+            audio.load(); //call this to just preload the audio without playing
+            audio.play();
+            $('.video-holder').addClass('play');
+          }
+        }
+        else {
+          alert('Create atleast one scene before making this lecture into video.')
+          $('.video-holder').removeClass('play');
+          $state.go('tab.dash');
+          //$rootScope.$emit('user:loggedin', data);
+        }
+      })
+    }
+    else{
+      //$state.go('tab.dash');
     }
   })
 
 
+
+
+
+  .controller('LoginCtrl', function ($scope, UserService, $ionicPopup, $state, $rootScope) {
+    $scope.data = {};
+    $scope.login = function () {
+      UserService.login({
+        username: $scope.data.username,
+        password: $scope.data.password
+      }, $scope.data.remember).then(function (data) {
+        if (data) {
+          $state.go('tab.dash');
+          $rootScope.$emit('user:loggedin', data);
+          $scope.data = {};
+        }
+        else {
+          var alertPopup = $ionicPopup.alert({
+            title: 'Login failed!',
+            template: 'Please check your credentials!'
+          });
+        }
+      });
+    }
+
+    $scope.register = function () {
+      UserService.register({
+        username: $scope.data.usernamereg,
+        email: $scope.data.emailreg,
+        password: $scope.data.passwordreg
+      }).then(function (data) {
+        if (data) {
+          $state.go('tab.dash');
+          $scope.data = {};
+        } else {
+          var alertPopup = $ionicPopup.alert({
+            title: 'Registration failed!',
+            template: 'Email already exist!'
+          });
+        }
+      });
+    }
+
+  })
+
   // Main directive for the canvas recordings
-  .directive('arbiCanvas', ['$ionicPlatform', '$cordovaMedia', '$cordovaCapture', 'Sounds', 'recorderService', '$ionicListDelegate', '$ionicPopup',
-    function ($ionicPlatform, $cordovaMedia, $cordovaCapture, Sounds, recorderService, $ionicListDelegate, $ionicPopup) {
+  .directive('arbiCanvas', ['$ionicPlatform', '$cordovaMedia', '$cordovaCapture', 'recorderService', '$ionicListDelegate', '$ionicPopup',
+    '$ionicModal', 'DrawingService', 'UserService', '$state', '$rootScope', '$serverurl', '$cordovaFile',
+    function ($ionicPlatform, $cordovaMedia, $cordovaCapture, recorderService, $ionicListDelegate, $ionicPopup, $ionicModal, DrawingService, UserService, $state, $rootScope, $serverurl, $cordovaFile) {
 
       return {
-        restrict: "A",
+        restrict: "AE",
+        scope: false,
         link: function (scope, element) {
+          scope.isRecording = 0;
           $ionicListDelegate.showReorder(true);
           scope.shouldShowDelete = true;
 
+
           $ionicPlatform.ready(function () {
-            var init = function () {
-              Sounds.get().then(function (res) {
-                scope.recordings = res;
-              })
+            var init = function (project_id) {
+              scope.isloading = true;
+              if (!project_id) {
+                DrawingService.getInitialProject().then(function (res) {
+                  scope.project = res;
+                  scope.recordings = res ? res.scenes : '';
+                });
+                getAllProjects();
+              } else {
+                DrawingService.getInitialProject(project_id).then(function (res) {
+                  scope.project = res;
+                  scope.recordings = res.scenes;
+                  scope.isloading = false;
+                });
+              }
+            }
+
+            var getAllProjects = function () {
+              DrawingService.get().then(function (res) {
+                console.log('loading end');
+                scope.allProjects = res;
+                scope.isloading = false;
+              });
             }
 
             scope.moveItem = function (item, fromIndex, toIndex) {
               scope.recordings.splice(fromIndex, 1);
               scope.recordings.splice(toIndex, 0, item);
-              Sounds.swap(scope.recordings).then(function () {
-                init();
+              DrawingService.swap(scope.recordings, scope.project._id).then(function () {
+                init(scope.project._id);
               })
             };
 
+
+            $rootScope.$on('user:loggedin', function (event, user) {
+              scope.user = user;
+              init();
+            });
+
             init();
+            //window.initAccordion();
+            //window.initLightbox();
 
 
             /*recorderService.isReady = true;
@@ -67,32 +196,44 @@ angular.module('starter.controllers', [])
 
 
             var media = recorderService.controller('content');
-            media.timeLimit = 100;
+            media.timeLimit = 1000;
             var $mainBtn = $('#main-btn');
             var $playBtn = $('#play-btn');
             var $saveBtn = $('#save-btn');
             var $wrapper = $('#wrapper');
             var $retakeBtn = $('#retake-btn');
-            var $tinyColor = $("#colorPicker").tinycolorpicker();
             var drawingElement = new RecordableDrawing("rbcanvas");
             var currentRecording = {};
+            var pausedAudios = [];
 
-            $tinyColor.bind("change", function () {
-              drawingElement.setColor($('#hidden-color').val());
-            });
+            /*$tinyColor.bind("change", function () {
+             console.log('change color : ', $('#hidden-color').val());
+             drawingElement.setColor($('#hidden-color').val());
+             });*/
 
             media.onRecordStart = function (s) {
-              console.log('onRecordStart callback: ======= >', s);
+              //console.log('onRecordStart callback: ======= >', s);
             }
 
-
             media.onPlaybackStart = function (s) {
-              console.log('onPlaybackStart callback: ======= >', s);
-              toggleMenu(false);
+              $wrapper.addClass('play').removeClass('pause').removeClass('stop').removeClass('record').removeClass('video-pause');
+              //console.log('onPlaybackStart callback: ======= >', s);
+              //toggleMenu(false);
+            }
+
+            media.onPlaybackPause = function (s) {
+              playbackInterruptCommand = "pause";
+            }
+
+            media.onPlaybackResume = function (s) {
+              playbackInterruptCommand = "";
+              drawingElement.resumePlayback(function () {
+                console.log('drawing play back resume');
+              });
             }
 
             media.onConversionComplete = function (locals) {
-              console.log('onConversionComplete callback: ======= >', locals);
+              //console.log('onConversionComplete callback: ======= >', locals);
               // onSave();
             }
             /*
@@ -102,197 +243,342 @@ angular.module('starter.controllers', [])
              */
 
             media.onPlaybackComplete = function (s) {
-              console.log('onPlaybackComplete callback: ======= >', s);
+              playbackInterruptCommand = "stop";
               drawingElement.clearCanvas();
-              $wrapper.removeClass('record').addClass('stop');
-              toggleMenu(true);
+              $wrapper.removeClass('play').removeClass('pause').removeClass('stop').removeClass('record').removeClass('video-pause');
+
+              /*window.resolveLocalFileSystemURL(cordova.file.externalDataDirectory, function (dir) {
+                dir.getFile('test.mp3', {create: false}, function (fileEntry) {
+                  fileEntry.remove(function () {
+                    console.log('removed file');
+                    // The file has been removed succesfully
+                  }, function (error) {
+                    console.log('removed file error',error);
+                    // Error deleting the file
+                  }, function () {
+                    console.log('file does not exist');
+                    // The file doesn't exist
+                  });
+                });
+              });*/
+
+            }
+
+            var blobToDataURL = function (blob, callback) {
+              var a = new FileReader();
+              a.onload = function (e) {
+                callback(e.target.result);
+              };
+              a.readAsDataURL(blob);
+            };
+
+
+            media.onConversionComplete = function (locals) {
+              console.log('onConversionComplete callback: ======= >', locals);
+              if (scope.isRecording == 2) {
+                media.save('audio', function (res, bloburl, blob) {
+                  console.log('mp3  : pausedAudios',res, bloburl, blob);
+                  pausedAudios.push(blob); //pausedAudios.push({data : res,blob:blob});
+                });
+              } else {
+                media.save('audio', function (res, bloburl, blob) {
+                  debugger;
+                  pausedAudios.push(blob);
+                  console.log('mp3 completeAudios',pausedAudios);
+                  ConcatenateBlobs(pausedAudios, 'audio/mp3', function (resultingBlob) {
+                    blobToDataURL(resultingBlob, function (allData) {
+                      onSave(allData);
+                    })
+                  })
+                });
+              }
+            }
+
+
+            function base64toBlob(b64Data, contentType, sliceSize) {
+              contentType = contentType || '';
+              sliceSize = sliceSize || 512;
+
+              var byteCharacters = atob(b64Data);
+              var byteArrays = [];
+
+              for (var offset = 0; offset < byteCharacters.length; offset += sliceSize) {
+                var slice = byteCharacters.slice(offset, offset + sliceSize);
+
+                var byteNumbers = new Array(slice.length);
+                for (var i = 0; i < slice.length; i++) {
+                  byteNumbers[i] = slice.charCodeAt(i);
+                }
+
+                var byteArray = new Uint8Array(byteNumbers);
+                byteArrays.push(byteArray);
+              }
+
+              return new Blob(byteArrays, {type: contentType});
+            }
+
+            var getBlob = function (str) {
+              var base64Data = str.split(',')[1];
+              return base64toBlob(base64Data, 'mpeg');
             }
 
 
             media.onRecordComplete = function (locals) {
-              console.log('onRecordComplete callback: ======= >', locals);
-              $wrapper.removeClass('record');
-              $wrapper.addClass('stop');
-              drawingElement.stopRecording();
-              media.stopRecord();
-              console.log('isConverting : ', media.status.isConverting);
-              console.log('isRecording : ', media.status.isRecording);
-              console.log('isPlaying : ', media.status.isPlaying);
-              console.log('playback : ', media.status.playback);
-              onSave();
-              console.log('recorderService.getHandler(); : ', recorderService.getHandler());
+              var audio = document.getElementById('videoplayer');
+              var source = document.getElementById('mp3Source');
+              console.log('onRecordComplete callback: ======= >');
+              if (scope.isRecording == 2) {
+                debugger;
+                media.save('audio', function (res, blobObj) {
+                  console.log('wave  : pausedAudios', res, blobObj);
+                  blobToDataURL(blobObj, function (respond) {
+                    //var abc = getBlob(respond)
+                    pausedAudios.push(respond);//abc)
+                    console.log('resultingBlob : ', resultingBlob);
+                    //blobToDataURL(resultingBlob, function (concateBlob) {
+                    //source.src = concateBlob;//content; //'http://www.stephaniequinn.com/Music/Commercial%20DEMO%20-%2013.mp3'; 
+                    //audio.load(); //call this to just preload the audio without playing 
+                    //audio.play();
+                    //});
+                  })
+                  console.log('pausedAudios : ', pausedAudios);
+                });
+              } else {
+
+                console.log('audio is recording and then stop');
+                media.save('audio', function (res, blobObj) {
+                  console.log('res : ', res, blobObj);
+                  debugger;
+                  blobToDataURL(blobObj, function (respond) {
+                    console.log('resultingBlob : ', respond);
+                    pausedAudios.push(respond);//abc)
+                    onSave(pausedAudios[pausedAudios.length - 1]);
+
+                    //source.src = concateBlob;//content; //'http://www.stephaniequinn.com/Music/Commercial%20DEMO%20-%2013.mp3'; 
+                    //audio.load(); //call this to just preload the audio without playing 
+                    //audio.play();
+                    //});
+                  })
+
+                });
+              }
             }
 
+            function writeFileUsingCordova(filename, data, cb) {
+              console.log('writeFileUsingCordova : ', filename, data);
+              $cordovaFile.writeFile(cordova.file.externalDataDirectory, filename.toString()+'.mp3', getBlob(data), true)
+                .then(function (success) {
+                  console.log('success : ', success);
+                  cb(success.target.localURL);
+                  //var audio = document.getElementById('videoplayer');
+                  //var source = document.getElementById('mp3Source');
+                  //source.src = allData;
+                  //audio.load();
+                  //audio.play();
+
+                }, function (error) {
+                  console.log('err in file writing : ', error);
+                });
+            }
+
+            function onErrorCreateFile(err) {
+              console.log('onErrorCreateFile : ',err);
+            }
+
+            function onErrorLoadFs(err) {
+              console.log('onErrorLoadFs : ', err);
+            }
+            function writeFile(fileEntry, dataObj) {
+              // Create a FileWriter object for our FileEntry (log.txt).
+              fileEntry.createWriter(function (fileWriter) {
+
+                fileWriter.onwriteend = function () {
+                  console.log("Successful file write...",fileEntry);
+                  media.playbackRecording(fileEntry.nativeURL);
+                };
+
+                fileWriter.onerror = function (e) {
+                  console.log("Failed file write: " + e.toString());
+                };
+
+                // If data object is not passed in,
+                // create a new Blob instead.
+                if (!dataObj) {
+                  dataObj = new Blob(['some file data'], {type: 'text/plain'});
+                }
+
+                fileWriter.write(dataObj);
+              });
+            }
 
             var c = document.getElementById("rbcanvas");
-            c.width = $('#wrapper').innerWidth();//options.width;
+            c.width = $('#wrapper').innerWidth(); //options.width;
             c.height = $(window).innerHeight();
             var ctx = c.getContext("2d");
-            ctx.fillRect(0, 0, c.width, c.height);
-            ctx.lineWidth = 2;
-            playbackInterruptCommand = "";
+            //ctx.fillRect(0, 0, c.width, c.height);
+            var playbackInterruptCommand = "";
 
             var playRecording = function () {
               drawingElement.playRecording(function () {
                 playbackInterruptCommand = "";
               }, function () {
-                //if ($('#hidden-color').val())
-                //drawingElement.setColor('#fff');
+                //console.log('change color : ', $('#hidden-color').val(), '====', $('#hidden-color').value);
+                /*if ($('#hidden-color').value){
+                 drawingElement.setColor($('#hidden-color').value);
+                 }*/
                 //drawingElement.setStokeSize(2);
+                //drawingElement.setColor('#000');
               }, function () {
+                console.log('drawing playback paused');
               }, function () {
                 return playbackInterruptCommand;
               });
             }
 
             var onclick = function () {
-              $wrapper.removeClass('aside-active');
-              if ($wrapper.hasClass('record')) {
-                $wrapper.removeClass('record');
-                $wrapper.addClass('stop');
-                drawingElement.stopRecording();
-                media.stopRecord();
-                //onSave();
+              if (!scope.project) {
+                var confirmPopup = $ionicPopup.confirm({
+                  title: 'Create a project?',
+                  template: 'Please create a project first. It seems that you do not create any project yet.'
+                });
+                confirmPopup.then(function (res) {
+                  if (res) {
+                    scope.openProjectModal();
+                    return;
+                  } else {
+                    //console.log('You are not sure');
+                    return;
+                  }
+                });
+                return;
               }
-              else if ($wrapper.hasClass('stop')) {
-                $wrapper.removeClass('stop');
-              }
-              else {
-                console.log('start recording on onclick fun');
-                $wrapper.addClass('record');
-                drawingElement.clearCanvas();
-                drawingElement.startRecording();
-                media.startRecord();
-              }
+              drawingElement.startRecording();
+              media.startRecord();
+              //drawingElement.clearCanvas();
+              //drawingElement.setColor($('#hidden-color').value);
+              //drawingElement.setStokeSize(2);
             }
 
 
-            var onPlay = function () {
-              /*console.log('on play : ');
-               $wrapper.removeClass('stop').removeClass('record').removeClass('aside-active');
-               if (drawingElement.recordings.length == 0) {
-               console.log('no recording exist ');
-               }
-               else {
-               playRecording();
-               media.playbackRecording();
-               }*/
-              if (!$.isEmptyObject(currentRecording)) {
+            scope.onPlay = function () {
+              if (currentRecording) {
+                currentRecording.drawing_data = JSON.stringify(currentRecording.drawing_data);
+                currentRecording.audio_data = JSON.stringify(currentRecording.audio_data);
+                console.log('onplay : ');
                 scope.savedPlaying(currentRecording);
-              }
-              else {
+              } else {
                 alert('Sorry, System do not have any recording yet. Please select from the right bar.');
               }
             }
 
 
-            var onSave = function () {
-              //$wrapper.removeClass('stop').removeClass('record');
+            var onSave = function (res) {
+              scope.isloading = true;
               var serializedData = serializeDrawing(drawingElement);
-              media.save('shh', function (res) {
-                var obj = {
-                  canvas: serializedData,
-                  voice: res,
-                  id: (!$.isEmptyObject(currentRecording)) ? currentRecording.id : (new Date()).getTime()
-                }
-                currentRecording = obj;
-                Sounds.save(obj).then(function () {
-                  init();
-                })
-              });
+
+              var obj = {
+                drawing_data: serializedData,
+                audio_data: res,
+                id: (!$.isEmptyObject(currentRecording)) ? currentRecording.id : (new Date()).getTime()
+              }
+              console.log('onsave  : ',obj);
+              if (scope.recordings) {
+                obj.name = 'scene : ' + (scope.recordings.length + 1);
+              } else {
+                obj.name = 'scene :  1';
+              }
+              currentRecording = obj;
+              DrawingService.save(obj, scope.project._id).then(function () {
+                init(scope.project._id);
+                scope.isloading = false;
+              })
+            }
+
+            function isJSON(data) {
+              var ret = true;
+              try {
+                JSON.parse(data);
+              } catch (e) {
+                ret = false;
+              }
+              return ret;
             }
 
             scope.savedPlaying = function (obj) {
-              $wrapper.removeClass('stop').removeClass('record');
-              var result = deserializeDrawing(obj.canvas);
+              console.log('savedplaying',obj);
+              if (scope.modal) {
+                scope.modal.hide();
+              }
+              if(!isJSON(obj.drawing_data)){
+                obj.drawing_data = obj.drawing_data;
+                obj.audio_data = obj.audio_data
+              }
+              else{
+                obj.drawing_data = JSON.parse(obj.drawing_data)
+                obj.audio_data = JSON.parse(obj.audio_data)
+              }
+              var result = deserializeDrawing(obj.drawing_data);
               if (result == null)
                 result = "Error : Unknown error in deserializing the data";
               if (result instanceof Array == false) {
                 return;
-              }
-              else {
+              } else {
                 currentRecording = obj;
                 drawingElement.recordings = result;
                 //set drawing property of each recording
                 for (var i = 0; i < result.length; i++) {
                   result[i].drawing = drawingElement;
                 }
-                $wrapper.removeClass('aside-active');
-                playRecording();
-                media.playbackRecording(obj.voice);
+
+                writeFileUsingCordova(obj.id || obj._id, obj.audio_data, function (url) {
+                  playRecording();
+                  media.playbackRecording(url);
+                });
               }
             }
 
             scope.itemDelete = function (obj, flag) {
-              console.log('delete in controller :');
+              //console.log('delete in controller :');
               var confirmPopup = $ionicPopup.confirm({
                 title: 'Are you sure?',
                 template: 'Are you sure to delete this recording?'
               });
               confirmPopup.then(function (res) {
                 if (res) {
-                  Sounds.delete(obj.id).then(function () {
-                    init();
+                  scope.isloading = true;
+                  DrawingService.delete(obj._id, scope.project._id).then(function () {
+                    init(scope.project._id);
+                    scope.isloading = false;
                   });
                 } else {
-                  console.log('You are not sure');
+                  //console.log('You are not sure');
                 }
               });
             }
 
-            var toggleSideBar = function () {
-              $wrapper.toggleClass('aside-active');
-            }
 
-            var clearLocalStorage = function () {
-              var confirmPopup = $ionicPopup.confirm({
-                title: 'Are you sure?',
-                template: 'Are you sure to delete all recordings?'
-              });
-              confirmPopup.then(function (res) {
-                if (res) {
-                  Sounds.deleteAll().then(function () {
-                    init();
-                  })
-                } else {
-                  console.log('You are not sure');
-                }
-              });
-            }
-
-            var toggleMenu = function (flag) {
-              if (flag) {
-                $mainBtn.show();
-                $('#aside-opener').show();
-              }
-              else {
-                $mainBtn.hide();
-                $('#aside-opener').hide();
-              }
-            }
-
-            var onRetake = function () {
+            scope.onRetake = function (obj) {
+              currentRecording = obj;
               $wrapper.removeClass('aside-active');
               var confirmPopup = $ionicPopup.confirm({
-                title: 'Are you sure?',
-                template: 'Are you sure for retake this recording?'
+                title: 'Retake this scene?',
+                template: 'Re-taking will delete previous recording of this scene, are you sure?'
               });
               confirmPopup.then(function (res) {
                 if (res) {
                   drawingElement.clearCanvas();
                   if (!$.isEmptyObject(currentRecording)) {
-                    $wrapper.removeClass('stop').removeClass('record');
-                    onclick();
+
+                    //onclick();
                   }
                 } else {
-                  alert('select recording first');
+                  //alert('select recording first');
                   console.log('You are not sure');
                 }
               });
             }
 
-            var deleteRecording = function () {
-              $wrapper.removeClass('aside-active');
+            scope.deleteRecording = function () {
               var confirmPopup = $ionicPopup.confirm({
                 title: 'Are you sure?',
                 template: 'Are you sure to delete current recording?'
@@ -301,10 +587,12 @@ angular.module('starter.controllers', [])
                 if (res) {
                   drawingElement.clearCanvas();
                   if (!$.isEmptyObject(currentRecording)) {
-                    Sounds.delete(currentRecording.id).then(function () {
-                      init();
+                    scope.isloading = true;
+                    DrawingService.delete(currentRecording._id, scope.project._id).then(function () {
+                      init(scope.project._id);
                       $wrapper.removeClass('record');
                       currentRecording = {};
+                      scope.isloading = false;
                     });
 
                   }
@@ -314,27 +602,346 @@ angular.module('starter.controllers', [])
               });
             }
 
-            var onNewRecording = function () {
+            scope.onNewRecording = function () {
               currentRecording = {};
-              alert('Are you really want to make a new recording');
-              drawingElement.clearCanvas();
-              $wrapper.removeClass('stop').removeClass('record');
-              $wrapper.removeClass('aside-active');
-              onclick();
-            }
-            var closeSideBar = function () {
-              $wrapper.removeClass('aside-active');
+              clickOnCanvas();
+              $wrapper.removeClass('play').removeClass('pause').removeClass('stop').removeClass('record').removeClass('video-pause');
+              clearCanvas();
             }
 
-            $mainBtn.bind("mousedown touch", onclick);
-            $playBtn.bind("mousedown touch", onPlay);
-            //$saveBtn.bind("mousedown touch", onSave);
-            $('#newfile-btn').bind("mousedown touch", onNewRecording);
-            $retakeBtn.bind("mousedown touch", onRetake);
-            $('#delete-btn').bind("mousedown touch", clearLocalStorage);
-            $('#delete-recording').bind("mousedown touch", deleteRecording);
-            $('#aside-opener').bind("mousedown touch", toggleSideBar);
-            $('#rbcanvas').bind("mousedown touch", closeSideBar);
+            var clickOnCanvas = function () {
+              //$wrapper.removeClass('aside-active');
+              //$wrapper.removeClass('menu-active');
+            }
+
+            var clearCanvas = function () {
+              //$wrapper.removeClass('aside-active');
+              drawingElement.clearCanvas();
+            }
+
+            scope.editRecordingName = function () {
+              scope.isloading = true;
+              $wrapper.removeClass('aside-active');
+              if ($('#recordingName').hasClass('form-active')) {
+                if ($($('#edit-recording-text')[0]).val() != $($('#recording-text')[0]).text()) {
+                  currentRecording.name = $($('#edit-recording-text')[0]).val();
+                  DrawingService.save(currentRecording, scope.project._id).then(function () {
+                    init(scope.project._id);
+                    scope.isloading = false;
+                    $($('#recording-text')[0]).text(currentRecording.name);
+                  })
+                }
+                $('#recordingName').removeClass('form-active');
+              } else {
+                $('#recordingName').addClass('form-active');
+                $($('#recording-text')[0]).text(currentRecording.name);
+                $($('#edit-recording-text')[0]).val(currentRecording.name);
+                $($('#edit-recording-text')[0]).focus();
+              }
+            }
+
+            $($('#edit-recording-text')[0]).keydown(function (event) {
+              console.log("Handler for .keydown() called.", event);
+              if (event.keyCode == 13) {
+                if (cordova) {
+                  cordova.plugins.Keyboard.close();
+                }
+                scope.editRecordingName();
+              }
+            });
+
+            scope.openProjectModal = function () {
+              console.log('open modal directive');
+              $ionicModal.fromTemplateUrl('templates/project-view.html', {
+                scope: scope,
+                //animation: 'slide-in-up',
+                //backdropClickToClose: false,
+                //hardwareBackButtonClose: false
+              }).then(function (modal) {
+                console.log('open modal directive hode');
+                scope.modal = modal;
+                scope.modal.show();
+              });
+            }
+
+            scope.openSceneModal = function () {
+              console.log('open scene-view modal');
+              $ionicModal.fromTemplateUrl('templates/scene-view.html', {
+                scope: scope
+              }).then(function (modal) {
+                //window.initCustomForms();
+                console.log('open scene view');
+                scope.modal = modal;
+                scope.modal.show();
+              });
+            }
+
+            scope.logout = function () {
+              console.log('logout');
+              UserService.logout().then(function () {
+                DrawingService.ClearUserData().then(function () {
+                  drawingElement.clearCanvas();
+                  $state.go('login');
+                });
+              })
+            }
+
+            scope.drawImageOnCanvas = function (url, id) {
+              //drawingElement.setImage(url,id);
+            }
+            var getFileBlob = function (url, cb) {
+              var xhr = new XMLHttpRequest();
+              xhr.open("GET", url);
+              xhr.responseType = "blob";
+              //xhr.onreadystatechange = function () {
+              //  if (xhr.readyState === 4) {
+              //    if (xhr.status === 200 || xhr.status == 0) {
+              //      xhr.responseText
+              //      console.log('xhr.responseText :',xhr.responseText);
+              //    }
+              //  }
+              //}
+
+
+              xhr.addEventListener('load', function () {
+                cb(xhr.response);
+              });
+              xhr.send();
+            };
+
+            var blobToFile = function (blob, name) {
+              blob.lastModifiedDate = new Date();
+              blob.name = name;
+              return blob;
+            };
+
+            var getFileObject = function (filePathOrUrl, cb) {
+              getFileBlob(filePathOrUrl, function (blob) {
+                cb(blobToFile(blob, 'test.jpg'));
+              });
+            };
+
+            $('img').click(function (event) {
+              getFileObject(event.target.src, function (fileObject) {
+                console.log('file object : ', fileObject);
+                UserService.uploadImage(fileObject).then(function (data) {
+                  drawingElement.setImage($serverurl + data.data.path, data.data.filename);
+                })
+              });
+              /*var xhr = new XMLHttpRequest();
+               xhr.open("GET", event.target.src);
+               xhr.responseType = "blob";
+
+               function analyze_data(blob) {
+               var reader = new FileReader();
+               reader.readAsDataURL(blob)
+               reader.onload = imageIsLoaded;
+               UserService.uploadImage(new File([blob], 'anything.png',{type: "image/png", lastModified: new Date()})).then(function (data) {
+               console.log('blobl : ', blob, $serverurl + data.data.path, data.data.filename)
+               drawingElement.setImage($serverurl + data.data.path, data.data.filename);
+               })
+               }
+
+               xhr.onload = function () {
+               analyze_data(xhr.response);
+               }
+               xhr.send();*/
+            });
+
+
+            // Execute action on hide modal
+            scope.$on('modal.hidden', function () {
+              if (scope.newModal && !scope.project) {
+                // when there is no project
+                init();
+              }
+            });
+
+            scope.createProject = function () {
+              console.log('open modal createProject');
+              $ionicModal.fromTemplateUrl('templates/new-project.html', {
+                scope: scope
+              }).then(function (modal) {
+                scope.newModal = modal;
+                scope.newModal.show();
+              });
+            }
+
+            scope.addProject = function (form) {
+              //console.log('open modal addProject', form.description.$modelValue, form.useAsDefault.$modelValue);
+              DrawingService.addProject({
+                project_name: form.description.$modelValue || "abc",
+              }, '').then(function (data) {
+                scope.newModal.hide();
+                getAllProjects();
+              })
+            }
+
+            scope.loadProject = function (project_id) {
+              init(project_id);
+              scope.modal.hide();
+            };
+
+
+            scope.onclickRecord = function () {
+              console.log('onclickrecord');
+              $wrapper.addClass('record').removeClass('pause').removeClass('play').removeClass('stop');
+              if (scope.isRecording == 2) { // pause to record
+                drawingElement.resumeRecording();
+                media.startRecord();
+              } else { //first time record
+                onclick();
+              }
+              scope.isRecording = 1;
+            };
+
+
+            scope.onclickPause = function () {
+              console.log('pause');
+              $wrapper.addClass('pause').removeClass('stop').removeClass('play').removeClass('record');
+              drawingElement.pauseRecording();
+              media.stopRecord();
+              scope.isRecording = 2;
+            };
+
+
+            scope.onclickStop = function () {
+              console.log('stop');
+              $wrapper.addClass('stop').removeClass('pause').removeClass('play').removeClass('record');
+              if (scope.isRecording == 2) { //pause and then stop
+                drawingElement.stopRecording();
+                media.startRecord();
+                media.stopRecord();
+              } else {
+                drawingElement.stopRecording();
+                media.stopRecord();
+              }
+              scope.isRecording = 0;
+            };
+
+            scope.startDragging = function (event, ui) {
+              console.log('startDragging');
+            }
+
+
+            scope.checkPosition = function (event, ui, obj) {
+              console.log('event, ui : ', event, ui, obj);
+              var direction = (ui.originalPosition.top > ui.position.top) ? 1 : 0;
+              console.log('has moved ' + direction);
+              if (scope.modal) {
+                scope.modal.hide();
+              }
+              if (direction == 1) {
+                scope.onRetake(obj);
+              } else {
+                scope.itemDelete(obj);
+              }
+              event.preventDefault();
+              event.stopPropagation();
+            }
+
+            scope.checkProjectPosition = function (event, ui, obj) {
+              console.log('event, ui : ', event, ui, obj);
+              var direction = (ui.originalPosition.top > ui.position.top) ? 1 : 0;
+              console.log('has moved project' , direction);
+              if (scope.modal) {
+                scope.modal.hide();
+              }
+              if (direction == 1) {
+                console.log('please open browser')
+                //$state.go('video', {"key": "57c6b905280db28a0fc14561"});//obj._id});
+                window.open('http://172.16.10.228:8100/#/video/'+'57c6b905280db28a0fc14561', '_system');
+              } else {
+
+              }
+              event.preventDefault();
+              event.stopPropagation();
+            }
+
+
+            $(":file").change(function () {
+              if (this.files && this.files[0]) {
+                var reader = new FileReader();
+                reader.onload = imageIsLoaded;
+                reader.readAsDataURL(this.files[0]);
+                console.log('this.files[0] : ', this.files[0]);
+                UserService.uploadImage(this.files[0]).then(function (data) {
+                  drawingElement.setImage($serverurl + data.data.path, data.data.filename);
+                })
+              }
+            });
+
+
+            function imageIsLoaded(e) {
+              console.log('image is loaded')
+            };
+
+
+            scope.onclickPlay = function () {
+              $wrapper.addClass('play').removeClass('pause').removeClass('stop').removeClass('record').removeClass('video-pause');
+              if (scope.isRecording == 4) {
+                // resume video
+
+
+                media.playbackResume();
+              } else {
+                // play video first time
+                scope.onPlay();
+              }
+              scope.isRecording = 3;
+            };
+
+            scope.onclickVideoPause = function () {
+              console.log('video pause');
+              $wrapper.addClass('video-pause').removeClass('pause').removeClass('stop').removeClass('record').removeClass('play');
+
+
+              media.playbackPause();
+              scope.isRecording = 4;
+            };
+
+            $(".color-drop > ul > li").click(function () {
+              var txtClass = $(this).attr("class");
+              console.log("Class Name : ", $(this));
+            });
+
+
+            scope.onclickVideoStop = function () {
+              console.log('video stop');
+              $wrapper.removeClass('play').removeClass('pause').removeClass('stop').removeClass('record').removeClass('video-pause');
+              scope.isRecording = 0;
+
+              //playbackInterruptCommand = "stop";
+              media.playbackPause();
+            };
+
+
+            var link = $('.color-list li a'),
+              holder = $('.color-picker');
+
+            link.each(function () {
+              var item = $(this);
+              item.on('click touch', changeColor);
+
+              function rgb2hex(orig) {
+                var rgb = orig.replace(/\s/g, '').match(/^rgba?\((\d+),(\d+),(\d+)/i);
+                return (rgb && rgb.length === 4) ? "#" +
+                ("0" + parseInt(rgb[1], 10).toString(16)).slice(-2) +
+                ("0" + parseInt(rgb[2], 10).toString(16)).slice(-2) +
+                ("0" + parseInt(rgb[3], 10).toString(16)).slice(-2) : orig;
+              }
+
+              function changeColor() {
+                var linkClassName = item.attr('class');
+                drawingElement.setColor(rgb2hex(item.css('backgroundColor')));
+                holder.removeAttr('class').addClass('color-picker').addClass(linkClassName);
+              }
+
+            });
+            var clickOnCanvas = function () {
+              $('.tool-box').removeClass('drop-active');
+            }
+            $('#rbcanvas').bind("mousedown touch", clickOnCanvas);
 
           })
 
@@ -342,78 +949,29 @@ angular.module('starter.controllers', [])
       };
 
     }])
-  .directive('ngDraggable', function ($document) {
-    return {
-      restrict: 'A',
-      scope: {
-        dragOptions: '=ngDraggable'
-      },
-      link: function (scope, elem, attr) {
-        var startX, startY, x = 0, y = 0,
-          start, stop, drag, container;
+  .directive('customFunctions', ['$timeout',
+    function ($timeout) {
 
-        var width = elem[0].offsetWidth,
-          height = elem[0].offsetHeight;
-
-        // Obtain drag options
-        if (scope.dragOptions) {
-          start = scope.dragOptions.start;
-          drag = scope.dragOptions.drag;
-          stop = scope.dragOptions.stop;
-          var id = scope.dragOptions.container;
-          if (id) {
-            container = document.getElementById(id).getBoundingClientRect();
-          }
+      return {
+        restrict: "AE",
+        scope: false,
+        link: function (scope, element) {
+          window.initMobileNav();
+          window.initCustomHover();
+          $('input, textarea').placeholder();
         }
+      }
+    }])
+  .directive('customForm', ['$timeout',
+    function ($timeout) {
 
-        // Bind mousedown event
-        elem.on('mousedown', function (e) {
-          e.preventDefault();
-          startX = e.clientX - elem[0].offsetLeft;
-          startY = e.clientY - elem[0].offsetTop;
-          $document.on('mousemove', mousemove);
-          $document.on('mouseup', mouseup);
-          if (start) start(e);
-        });
-
-        // Handle drag event
-        function mousemove(e) {
-          y = e.clientY - startY;
-          x = e.clientX - startX;
-          setPosition();
-          if (drag) drag(e);
-        }
-
-        // Unbind drag events
-        function mouseup(e) {
-          $document.unbind('mousemove', mousemove);
-          $document.unbind('mouseup', mouseup);
-          if (stop) stop(e);
-        }
-
-        // Move element, within container if provided
-        function setPosition() {
-          if (container) {
-            console.log('x : ', x);
-            if (x < container.left) {
-              x = container.left;
-            } else if (x > container.right - width) {
-              x = container.right - width;
-            }
-            console.log('y : ', y);
-            if (y < container.top) {
-              y = container.top;
-            } else if (y > container.bottom - height) {
-              y = container.bottom - height;
-            }
-          }
-
-          elem.css({
-            top: y + 'px',
-            left: x + 'px'
+      return {
+        restrict: "AE",
+        scope: false,
+        link: function (scope, element) {
+          $timeout(function () {
+            window.initCustomForms();
           });
         }
       }
-    }
-
-  });
+    }]);

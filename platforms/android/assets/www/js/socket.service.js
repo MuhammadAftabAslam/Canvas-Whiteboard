@@ -122,6 +122,18 @@ angular.module('starter.services')
       return deferred.promise;
     }
 
+
+
+    var concatenatefiles = function (files) {
+      var deferred = $q.defer();
+      $socket.emit('req:audio:concatenate', files)
+        .on('res:audio:concatenate', function (alldata) {
+          console.log('res:audio:concatenate: ', alldata);
+          deferred.resolve(alldata);
+        });
+      return deferred.promise;
+    }
+
     var ClearUserData = function () {
       var deferred = $q.defer();
       loggedin_user = '';
@@ -143,6 +155,7 @@ angular.module('starter.services')
       delete: deleteSound,
       deleteAll: deleteAll,
       //play: playSound,
+      concatenateFiles : concatenatefiles,
       swap: swap,
       ClearUserData: ClearUserData,
       loggedInUser: loggedInUser
@@ -218,6 +231,7 @@ angular.module('starter.services')
 
 
     var uploadImage = function (data) {
+      console.log('uploadImage enter in fun : ',data)
       var deferred = $q.defer();
       if (data) {
         var fd = new FormData();
@@ -226,11 +240,10 @@ angular.module('starter.services')
           transformRequest: angular.identity,
           headers: {'Content-Type': undefined}
         }).success(function (res) {
-          console.log('res success',res);
-          //debugger;
+          console.log('uploadImage success',res);
           deferred.resolve(res);
-        }).error(function () {
-          //debugger;
+        }).error(function (err) {
+          console.log('err on upload: ',err)
           deferred.resolve(false);
         });
       }

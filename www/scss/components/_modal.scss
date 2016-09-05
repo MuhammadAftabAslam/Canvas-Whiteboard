@@ -4,11 +4,13 @@
 		-webkit-box-shadow: 0 0 40px rgba($black, .24);
 		-moz-box-shadow: 0 0 40px rgba($black, .24);
 		box-shadow: 0 0 40px rgba($black, .24);
+	  	bottom: inherit;
 		
 		@include media('≥small-tablet') {
 			width: 80%;
 			left: 10%;
 			right: 10%;
+		  	bottom: inherit;
 		}
 	}
 	

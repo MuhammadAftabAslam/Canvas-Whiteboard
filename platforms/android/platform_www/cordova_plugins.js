@@ -249,6 +249,14 @@ module.exports = [
         "clobbers": [
             "IonicDeploy"
         ]
+    },
+    {
+        "file": "plugins/cordova-plugin-inappbrowser/www/inappbrowser.js",
+        "id": "cordova-plugin-inappbrowser.inappbrowser",
+        "clobbers": [
+            "cordova.InAppBrowser.open",
+            "window.open"
+        ]
     }
 ];
 module.exports.metadata = 
@@ -264,7 +272,8 @@ module.exports.metadata =
     "cordova-plugin-file": "4.2.0",
     "cordova-plugin-media-capture": "1.3.0",
     "cordova-plugin-media": "2.3.0",
-    "ionic-plugin-deploy": "0.5.4"
+    "ionic-plugin-deploy": "0.5.4",
+    "cordova-plugin-inappbrowser": "1.4.1-dev"
 };
 // BOTTOM OF METADATA
 });

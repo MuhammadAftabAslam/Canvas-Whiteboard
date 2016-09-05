@@ -1,30 +1,39 @@
 <ion-modal-view>
   <div class="info-block">
     <button class="button btn-close" ng-click="modal.hide()"><span class="icon-cancel"></span></button>
-    <div class="jcf-scrollable" custom-form>
+    <div ng-if="recordings.length" class="jcf-scrollable" custom-form>
       <ul class="info-list">
         <li id="{{ recording._id }}" ng-repeat="recording in recordings">
-          <div class="box">
+          <div class="box" ng-click="savedPlaying(recording)">
             <a class="btn-edit"><span class="icon-edit"></span></a>
-            <div class="info-box" ng-click="savedPlaying(recording)" data-drag="true" data-jqyoui-options="{revert: 'invalid',containment:'#{{ recording._id }}',axis:'y'}" jqyoui-draggable="{animate:true,onStop:'checkPosition(recording)'}">
+
+            <div class="info-box" data-drag="true"
+                 data-jqyoui-options="{revert: 'invalid',containment:'#{{ recording._id }}',axis:'y'}"
+                 jqyoui-draggable="{animate:true,onStart: 'startDragging', onStop:'checkPosition(recording)'}">
               <a class="link">
-              	<span class="info">{{ recording.name }}</span>
-              <span class="caption"><span class="by">by</span> <span class="name">{{ user.username }}</span></span>
+                <span class="info">{{ recording.name }}</span>
+                <span class="caption"><span class="by">by</span> <span class="name">{{ user.username }}</span></span>
               </a>
+
               <div class="block-drop">
-              	<a href="#" class="opener icon-ellipsis-vert"></a>
-             	<div class="dropdown">
-					<button class="btn-close"><span class="icon-cancel"></span></button>
-              		<ul>
-              			<li><a>Rename</a></li>
-              		</ul>
-              	</div>
+                <a href="#" class="opener icon-ellipsis-vert"></a>
+
+                <div class="dropdown">
+                  <button class="btn-close"><span class="icon-cancel"></span></button>
+                  <ul>
+                    <li><a>Rename</a></li>
+                  </ul>
+                </div>
               </div>
             </div>
             <a class="btn-delete"><span class="icon-delete"></span></a>
           </div>
         </li>
       </ul>
+
     </div>
+    <div ng-if="!recordings.length">
+        No scene has been created in this lecture.
+      </div>
   </div>
 </ion-modal-view>

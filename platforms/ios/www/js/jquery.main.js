@@ -1,7 +1,10 @@
 // page init
-jQuery(function(){
-	initCustomForms();
-	initMobileNav();
+$(document).ready(function(){
+	//debugger;
+	//initCustomForms();
+	//initMobileNav();
+	//initCustomHover();
+	//jQuery('input, textarea').placeholder();
 });
 
 // initialize custom form elements
@@ -11,12 +14,29 @@ function initCustomForms() {
 
 // mobile menu init
 function initMobileNav() {
-	jQuery('#wrapper').mobileNav({
+	jQuery('.color-picker').mobileNav({
 		hideOnClickOutside: true,
-		menuActiveClass: 'aside-active',
-		menuOpener: '.aside-opener',
-		menuDrop: '.slide'
+		menuActiveClass: 'color-active',
+		menuOpener: '.color-opener',
+		menuDrop: '.color-drop'
 	});
+	jQuery('.tool-box').mobileNav({
+		hideOnClickOutside: true,
+		menuActiveClass: 'drop-active',
+		menuOpener: '.drop-opener',
+		menuDrop: '.drop'
+	});
+	jQuery('.block-drop').mobileNav({
+		hideOnClickOutside: true,
+		menuActiveClass: 'active',
+		menuOpener: '.opener',
+		menuDrop: '.dropdown'
+	});
+}
+
+// add classes on hover/touch
+function initCustomHover() {
+	jQuery('.info-list .box').touchHover();
 }
 
 /*
@@ -124,6 +144,192 @@ function initMobileNav() {
 		});
 	};
 }(jQuery));
+
+/*! http://mths.be/placeholder v2.0.7 by @mathias */
+;(function(window, document, $) {
+
+	// Opera Mini v7 doesn’t support placeholder although its DOM seems to indicate so
+	var isOperaMini = Object.prototype.toString.call(window.operamini) == '[object OperaMini]';
+	var isInputSupported = 'placeholder' in document.createElement('input') && !isOperaMini;
+	var isTextareaSupported = 'placeholder' in document.createElement('textarea') && !isOperaMini;
+	var prototype = $.fn;
+	var valHooks = $.valHooks;
+	var propHooks = $.propHooks;
+	var hooks;
+	var placeholder;
+
+	if (isInputSupported && isTextareaSupported) {
+
+		placeholder = prototype.placeholder = function() {
+			return this;
+		};
+
+		placeholder.input = placeholder.textarea = true;
+
+	} else {
+
+		placeholder = prototype.placeholder = function() {
+			var $this = this;
+			$this
+				.filter((isInputSupported ? 'textarea' : ':input') + '[placeholder]')
+				.not('.placeholder')
+				.bind({
+					'focus.placeholder': clearPlaceholder,
+					'blur.placeholder': setPlaceholder
+				})
+				.data('placeholder-enabled', true)
+				.trigger('blur.placeholder');
+			return $this;
+		};
+
+		placeholder.input = isInputSupported;
+		placeholder.textarea = isTextareaSupported;
+
+		hooks = {
+			'get': function(element) {
+				var $element = $(element);
+
+				var $passwordInput = $element.data('placeholder-password');
+				if ($passwordInput) {
+					return $passwordInput[0].value;
+				}
+
+				return $element.data('placeholder-enabled') && $element.hasClass('placeholder') ? '' : element.value;
+			},
+			'set': function(element, value) {
+				var $element = $(element);
+
+				var $passwordInput = $element.data('placeholder-password');
+				if ($passwordInput) {
+					return $passwordInput[0].value = value;
+				}
+
+				if (!$element.data('placeholder-enabled')) {
+					return element.value = value;
+				}
+				if (value == '') {
+					element.value = value;
+					// Issue #56: Setting the placeholder causes problems if the element continues to have focus.
+					if (element != safeActiveElement()) {
+						// We can't use `triggerHandler` here because of dummy text/password inputs :(
+						setPlaceholder.call(element);
+					}
+				} else if ($element.hasClass('placeholder')) {
+					clearPlaceholder.call(element, true, value) || (element.value = value);
+				} else {
+					element.value = value;
+				}
+				// `set` can not return `undefined`; see http://jsapi.info/jquery/1.7.1/val#L2363
+				return $element;
+			}
+		};
+
+		if (!isInputSupported) {
+			valHooks.input = hooks;
+			propHooks.value = hooks;
+		}
+		if (!isTextareaSupported) {
+			valHooks.textarea = hooks;
+			propHooks.value = hooks;
+		}
+
+		$(function() {
+			// Look for forms
+			$(document).delegate('form', 'submit.placeholder', function() {
+				// Clear the placeholder values so they don't get submitted
+				var $inputs = $('.placeholder', this).each(clearPlaceholder);
+				setTimeout(function() {
+					$inputs.each(setPlaceholder);
+				}, 10);
+			});
+		});
+
+		// Clear placeholder values upon page reload
+		$(window).bind('beforeunload.placeholder', function() {
+			$('.placeholder').each(function() {
+				this.value = '';
+			});
+		});
+
+	}
+
+	function args(elem) {
+		// Return an object of element attributes
+		var newAttrs = {};
+		var rinlinejQuery = /^jQuery\d+$/;
+		$.each(elem.attributes, function(i, attr) {
+			if (attr.specified && !rinlinejQuery.test(attr.name)) {
+				newAttrs[attr.name] = attr.value;
+			}
+		});
+		return newAttrs;
+	}
+
+	function clearPlaceholder(event, value) {
+		var input = this;
+		var $input = $(input);
+		if (input.value == $input.attr('placeholder') && $input.hasClass('placeholder')) {
+			if ($input.data('placeholder-password')) {
+				$input = $input.hide().next().show().attr('id', $input.removeAttr('id').data('placeholder-id'));
+				// If `clearPlaceholder` was called from `$.valHooks.input.set`
+				if (event === true) {
+					return $input[0].value = value;
+				}
+				$input.focus();
+			} else {
+				input.value = '';
+				$input.removeClass('placeholder');
+				input == safeActiveElement() && input.select();
+			}
+		}
+	}
+
+	function setPlaceholder() {
+		var $replacement;
+		var input = this;
+		var $input = $(input);
+		var id = this.id;
+		if (input.value == '') {
+			if (input.type == 'password') {
+				if (!$input.data('placeholder-textinput')) {
+					try {
+						$replacement = $input.clone().attr({ 'type': 'text' });
+					} catch(e) {
+						$replacement = $('<input>').attr($.extend(args(this), { 'type': 'text' }));
+					}
+					$replacement
+						.removeAttr('name')
+						.data({
+							'placeholder-password': $input,
+							'placeholder-id': id
+						})
+						.bind('focus.placeholder', clearPlaceholder);
+					$input
+						.data({
+							'placeholder-textinput': $replacement,
+							'placeholder-id': id
+						})
+						.before($replacement);
+				}
+				$input = $input.removeAttr('id').hide().prev().attr('id', id).show();
+				// Note: `$input[0] != input` now!
+			}
+			$input.addClass('placeholder');
+			$input[0].value = $input.attr('placeholder');
+		} else {
+			$input.removeClass('placeholder');
+		}
+	}
+
+	function safeActiveElement() {
+		// Avoid IE9 `document.activeElement` of death
+		// https://github.com/mathiasbynens/jquery-placeholder/pull/99
+		try {
+			return document.activeElement;
+		} catch (err) {}
+	}
+
+}(this, document, jQuery));
 
 /*!
  * JavaScript Custom Forms
@@ -575,6 +781,300 @@ function initMobileNav() {
 
 	return api;
 }));
+
+/*!
+ * JavaScript Custom Forms : Checkbox Module
+ *
+ * Copyright 2014-2015 PSD2HTML - http://psd2html.com/jcf
+ * Released under the MIT license (LICENSE.txt)
+ *
+ * Version: 1.1.3
+ */
+;(function($) {
+	'use strict';
+
+	jcf.addModule({
+		name: 'Checkbox',
+		selector: 'input[type="checkbox"]',
+		options: {
+			wrapNative: true,
+			checkedClass: 'jcf-checked',
+			uncheckedClass: 'jcf-unchecked',
+			labelActiveClass: 'jcf-label-active',
+			fakeStructure: '<span class="jcf-checkbox"><span></span></span>'
+		},
+		matchElement: function(element) {
+			return element.is(':checkbox');
+		},
+		init: function() {
+			this.initStructure();
+			this.attachEvents();
+			this.refresh();
+		},
+		initStructure: function() {
+			// prepare structure
+			this.doc = $(document);
+			this.realElement = $(this.options.element);
+			this.fakeElement = $(this.options.fakeStructure).insertAfter(this.realElement);
+			this.labelElement = this.getLabelFor();
+
+			if (this.options.wrapNative) {
+				// wrap native checkbox inside fake block
+				this.realElement.appendTo(this.fakeElement).css({
+					position: 'absolute',
+					height: '100%',
+					width: '100%',
+					opacity: 0,
+					margin: 0
+				});
+			} else {
+				// just hide native checkbox
+				this.realElement.addClass(this.options.hiddenClass);
+			}
+		},
+		attachEvents: function() {
+			// add event handlers
+			this.realElement.on({
+				focus: this.onFocus,
+				click: this.onRealClick
+			});
+			this.fakeElement.on('click', this.onFakeClick);
+			this.fakeElement.on('jcf-pointerdown', this.onPress);
+		},
+		onRealClick: function(e) {
+			// just redraw fake element (setTimeout handles click that might be prevented)
+			var self = this;
+			this.savedEventObject = e;
+			setTimeout(function() {
+				self.refresh();
+			}, 0);
+		},
+		onFakeClick: function(e) {
+			// skip event if clicked on real element inside wrapper
+			if (this.options.wrapNative && this.realElement.is(e.target)) {
+				return;
+			}
+
+			// toggle checked class
+			if (!this.realElement.is(':disabled')) {
+				delete this.savedEventObject;
+				this.stateChecked = this.realElement.prop('checked');
+				this.realElement.prop('checked', !this.stateChecked);
+				this.fireNativeEvent(this.realElement, 'click');
+				if (this.savedEventObject && this.savedEventObject.isDefaultPrevented()) {
+					this.realElement.prop('checked', this.stateChecked);
+				} else {
+					this.fireNativeEvent(this.realElement, 'change');
+				}
+				delete this.savedEventObject;
+			}
+		},
+		onFocus: function() {
+			if (!this.pressedFlag || !this.focusedFlag) {
+				this.focusedFlag = true;
+				this.fakeElement.addClass(this.options.focusClass);
+				this.realElement.on('blur', this.onBlur);
+			}
+		},
+		onBlur: function() {
+			if (!this.pressedFlag) {
+				this.focusedFlag = false;
+				this.fakeElement.removeClass(this.options.focusClass);
+				this.realElement.off('blur', this.onBlur);
+			}
+		},
+		onPress: function(e) {
+			if (!this.focusedFlag && e.pointerType === 'mouse') {
+				this.realElement.focus();
+			}
+			this.pressedFlag = true;
+			this.fakeElement.addClass(this.options.pressedClass);
+			this.doc.on('jcf-pointerup', this.onRelease);
+		},
+		onRelease: function(e) {
+			if (this.focusedFlag && e.pointerType === 'mouse') {
+				this.realElement.focus();
+			}
+			this.pressedFlag = false;
+			this.fakeElement.removeClass(this.options.pressedClass);
+			this.doc.off('jcf-pointerup', this.onRelease);
+		},
+		getLabelFor: function() {
+			var parentLabel = this.realElement.closest('label'),
+				elementId = this.realElement.prop('id');
+
+			if (!parentLabel.length && elementId) {
+				parentLabel = $('label[for="' + elementId + '"]');
+			}
+			return parentLabel.length ? parentLabel : null;
+		},
+		refresh: function() {
+			// redraw custom checkbox
+			var isChecked = this.realElement.is(':checked'),
+				isDisabled = this.realElement.is(':disabled');
+
+			this.fakeElement.toggleClass(this.options.checkedClass, isChecked)
+							.toggleClass(this.options.uncheckedClass, !isChecked)
+							.toggleClass(this.options.disabledClass, isDisabled);
+
+			if (this.labelElement) {
+				this.labelElement.toggleClass(this.options.labelActiveClass, isChecked);
+			}
+		},
+		destroy: function() {
+			// restore structure
+			if (this.options.wrapNative) {
+				this.realElement.insertBefore(this.fakeElement).css({
+					position: '',
+					width: '',
+					height: '',
+					opacity: '',
+					margin: ''
+				});
+			} else {
+				this.realElement.removeClass(this.options.hiddenClass);
+			}
+
+			// removing element will also remove its event handlers
+			this.fakeElement.off('jcf-pointerdown', this.onPress);
+			this.fakeElement.remove();
+
+			// remove other event handlers
+			this.doc.off('jcf-pointerup', this.onRelease);
+			this.realElement.off({
+				focus: this.onFocus,
+				click: this.onRealClick
+			});
+		}
+	});
+
+}(jQuery));
+
+
+
+/*!
+ * JavaScript Custom Forms : File Module
+ *
+ * Copyright 2014-2015 PSD2HTML - http://psd2html.com/jcf
+ * Released under the MIT license (LICENSE.txt)
+ *
+ * Version: 1.1.3
+ */
+;(function($) {
+	'use strict';
+
+	jcf.addModule({
+		name: 'File',
+		selector: 'input[type="file"]',
+		options: {
+			fakeStructure: '<span class="jcf-file"><span class="jcf-fake-input"></span><span class="jcf-upload-button"><span class="jcf-button-content"></span></span></span>',
+			buttonText: 'Choose file',
+			placeholderText: 'No file chosen',
+			realElementClass: 'jcf-real-element',
+			extensionPrefixClass: 'jcf-extension-',
+			selectedFileBlock: '.jcf-fake-input',
+			buttonTextBlock: '.jcf-button-content'
+		},
+		matchElement: function(element) {
+			return element.is('input[type="file"]');
+		},
+		init: function() {
+			this.initStructure();
+			this.attachEvents();
+			this.refresh();
+		},
+		initStructure: function() {
+			this.doc = $(document);
+			this.realElement = $(this.options.element).addClass(this.options.realElementClass);
+			this.fakeElement = $(this.options.fakeStructure).insertBefore(this.realElement);
+			this.fileNameBlock = this.fakeElement.find(this.options.selectedFileBlock);
+			this.buttonTextBlock = this.fakeElement.find(this.options.buttonTextBlock).text(this.options.buttonText);
+
+			this.realElement.appendTo(this.fakeElement).css({
+				position: 'absolute',
+				opacity: 0
+			});
+		},
+		attachEvents: function() {
+			this.realElement.on({
+				'jcf-pointerdown': this.onPress,
+				change: this.onChange,
+				focus: this.onFocus
+			});
+		},
+		onChange: function() {
+			this.refresh();
+		},
+		onFocus: function() {
+			this.fakeElement.addClass(this.options.focusClass);
+			this.realElement.on('blur', this.onBlur);
+		},
+		onBlur: function() {
+			this.fakeElement.removeClass(this.options.focusClass);
+			this.realElement.off('blur', this.onBlur);
+		},
+		onPress: function() {
+			this.fakeElement.addClass(this.options.pressedClass);
+			this.doc.on('jcf-pointerup', this.onRelease);
+		},
+		onRelease: function() {
+			this.fakeElement.removeClass(this.options.pressedClass);
+			this.doc.off('jcf-pointerup', this.onRelease);
+		},
+		getFileName: function() {
+			var resultFileName = '',
+				files = this.realElement.prop('files');
+
+			if (files && files.length) {
+				$.each(files, function(index, file) {
+					resultFileName += (index > 0 ? ', ' : '') + file.name;
+				});
+			} else {
+				resultFileName = this.realElement.val().replace(/^[\s\S]*(?:\\|\/)([\s\S^\\\/]*)$/g, '$1');
+			}
+
+			return resultFileName;
+		},
+		getFileExtension: function() {
+			var fileName = this.realElement.val();
+			return fileName.lastIndexOf('.') < 0 ? '' : fileName.substring(fileName.lastIndexOf('.') + 1).toLowerCase();
+		},
+		updateExtensionClass: function() {
+			var currentExtension = this.getFileExtension(),
+				currentClassList = this.fakeElement.prop('className'),
+				cleanedClassList = currentClassList.replace(new RegExp('(\\s|^)' + this.options.extensionPrefixClass + '[^ ]+','gi'), '');
+
+			this.fakeElement.prop('className', cleanedClassList);
+			if (currentExtension) {
+				this.fakeElement.addClass(this.options.extensionPrefixClass + currentExtension);
+			}
+		},
+		refresh: function() {
+			var selectedFileName = this.getFileName() || this.options.placeholderText;
+			this.fakeElement.toggleClass(this.options.disabledClass, this.realElement.is(':disabled'));
+			this.fileNameBlock.text(selectedFileName);
+			this.updateExtensionClass();
+		},
+		destroy: function() {
+			// reset styles and restore element position
+			this.realElement.insertBefore(this.fakeElement).removeClass(this.options.realElementClass).css({
+				position: '',
+				opacity: ''
+			});
+			this.fakeElement.remove();
+
+			// remove event handlers
+			this.realElement.off({
+				'jcf-pointerdown': this.onPress,
+				change: this.onChange,
+				focus: this.onFocus,
+				blur: this.onBlur
+			});
+			this.doc.off('jcf-pointerup', this.onRelease);
+		}
+	});
+
+}(jQuery));
 
 /*!
  * JavaScript Custom Forms : Scrollbar Module
@@ -1238,3 +1738,76 @@ function initMobileNav() {
 	});
 
 }(jQuery, this));
+
+
+
+/*
+ * Mobile hover plugin
+ */
+;(function($){
+
+	// detect device type
+	var isTouchDevice = ('ontouchstart' in window) || window.DocumentTouch && document instanceof DocumentTouch,
+		isWinPhoneDevice = /Windows Phone/.test(navigator.userAgent);
+
+	// define events
+	var eventOn = (isTouchDevice && 'touchstart') || (isWinPhoneDevice && navigator.pointerEnabled && 'pointerdown') || (isWinPhoneDevice && navigator.msPointerEnabled && 'MSPointerDown') || 'mouseenter',
+		eventOff = (isTouchDevice && 'touchend') || (isWinPhoneDevice && navigator.pointerEnabled && 'pointerup') || (isWinPhoneDevice && navigator.msPointerEnabled && 'MSPointerUp') || 'mouseleave';
+
+	// event handlers
+	var toggleOn, toggleOff, preventHandler;
+	if(isTouchDevice || isWinPhoneDevice) {
+		// prevent click handler
+		preventHandler = function(e) {
+			e.preventDefault();
+		};
+
+		// touch device handlers
+		toggleOn = function(e) {
+			var options = e.data, element = $(this);
+
+			var toggleOff = function(e) {
+				var target = $(e.target);
+				if (!target.is(element) && !target.closest(element).length) {
+					element.removeClass(options.hoverClass);
+					element.off('click', preventHandler);
+					if(options.onLeave) options.onLeave(element);
+					$(document).off(eventOn, toggleOff);
+				}
+			};
+
+			if(!element.hasClass(options.hoverClass)) {
+				element.addClass(options.hoverClass);
+				element.one('click', preventHandler);
+				$(document).on(eventOn, toggleOff);
+				if(options.onHover) options.onHover(element);
+			}
+		};
+	} else {
+		// desktop browser handlers
+		toggleOn = function(e) {
+			var options = e.data, element = $(this);
+			element.addClass(options.hoverClass);
+			$(options.context).on(eventOff, options.selector, options, toggleOff);
+			if(options.onHover) options.onHover(element);
+		};
+		toggleOff = function(e) {
+			var options = e.data, element = $(this);
+			element.removeClass(options.hoverClass);
+			$(options.context).off(eventOff, options.selector, toggleOff);
+			if(options.onLeave) options.onLeave(element);
+		};
+	}
+
+	// jQuery plugin
+	$.fn.touchHover = function(opt) {
+		var options = $.extend({
+			context: this.context,
+			selector: this.selector,
+			hoverClass: 'hover'
+		}, opt);
+
+		$(this.context).on(eventOn, this.selector, options, toggleOn);
+		return this;
+	};
+}(jQuery));

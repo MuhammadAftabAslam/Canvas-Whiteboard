@@ -152,7 +152,7 @@
     <!-- wrapper start -->
     <div arbi-canvas id="wrapper" ng-class="{'loading':isloading}">
       <!-- header start -->
-      <header id="header">
+      <header id="header" class="hide">
         <div class="btns-holder">
           <a class="btn-undo"><span class="icon-undo"></span></a>
           <a class="btn-redo"><span class="icon-redo"></span></a>
@@ -182,8 +182,13 @@
       </footer>
       <!-- footer end -->
 
-
+      <audio id="videoplayer" controls style="display: none;" onerror="myFunction()">
+        <source id="oggSource" src="" type="audio/ogg">
+        <source id="mp3Source" type="audio/mpeg">
+        Your browser does not support the audio element.
+      </audio>
     </div>
+
   </ion-content>
 </ion-view>
 

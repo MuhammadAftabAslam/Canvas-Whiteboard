@@ -5,57 +5,73 @@
 // the 2nd parameter is an array of 'requires'
 // 'starter.services' is found in services.js
 // 'starter.controllers' is found in controllers.js
-angular.module('starter', ['ionic', 'ngCordova','starter.controllers', 'starter.services','LocalStorageModule','angularAudioRecorder'])
+angular.module('starter', ['ionic', 'ngCordova', 'starter.controllers', 'starter.services', 'LocalStorageModule', 'angularAudioRecorder', 'ngDragDrop'])
 
-.run(function($ionicPlatform) {
-  $ionicPlatform.ready(function() {
-    // Hide the accessory bar by default (remove this to show the accessory bar above the keyboard
-    // for form inputs)
-    if (window.cordova && window.cordova.plugins && window.cordova.plugins.Keyboard) {
-      cordova.plugins.Keyboard.hideKeyboardAccessoryBar(true);
-      cordova.plugins.Keyboard.disableScroll(true);
 
-    }
-    if (window.StatusBar) {
-      // org.apache.cordova.statusbar required
-      StatusBar.styleDefault();
-    }
-  });
-})
+  .run(function ($ionicPlatform) {
+    $ionicPlatform.ready(function () {
+      // Hide the accessory bar by default (remove this to show the accessory bar above the keyboard
+      // for form inputs)
 
-.config(function($stateProvider, $urlRouterProvider, recorderServiceProvider) {
-    recorderServiceProvider.forceSwf(false)
-      //.setSwfUrl('/lib/recorder.swf')
-      .withMp3Conversion(false)
-    ;
+      if (window.cordova && window.cordova.plugins && window.cordova.plugins.Keyboard) {
+        cordova.plugins.Keyboard.hideKeyboardAccessoryBar(true);
+        cordova.plugins.Keyboard.disableScroll(true);
 
-  // Ionic uses AngularUI Router which uses the concept of states
-  // Learn more here: https://github.com/angular-ui/ui-router
-  // Set up the various states which the app can be in.
-  // Each state's controller can be found in controllers.js
-  $stateProvider
-
-  // setup an abstract state for the tabs directive
-    .state('tab', {
-    url: '/tab',
-    abstract: true,
-    templateUrl: 'templates/tabs.html'
+      }
+      if (window.StatusBar) {
+        // org.apache.cordova.statusbar required
+        StatusBar.styleDefault();
+      }
+    });
   })
 
-  // Each tab has its own nav history stack:
+  .config(function ($stateProvider, $urlRouterProvider, recorderServiceProvider) {
+    recorderServiceProvider.forceSwf(false)
+      //.setSwfUrl('/lib/recorder.swf')
+      .withMp3Conversion(false)//true,{bitRate:32});
 
-  .state('tab.dash', {
-    url: '/dash',
-    views: {
-      'tab-dash': {
-        templateUrl: 'templates/tab-dash.html',
-        controller: 'DashCtrl'
-      }
-    }
+    // Ionic uses AngularUI Router which uses the concept of states
+    // Learn more here: https://github.com/angular-ui/ui-router
+    // Set up the various states which the app can be in.
+    // Each state's controller can be found in controllers.js
+    $stateProvider
+
+      // setup an abstract state for the tabs directive
+      .state('tab', {
+        url: '/tab',
+        abstract: true,
+        templateUrl: 'templates/tabs.html'
+      })
+
+      // Each tab has its own nav history stack:
+
+      .state('tab.dash', {
+        url: '/dash',
+        views: {
+          'tab-dash': {
+            templateUrl: 'templates/tab-dash.html',
+            controller: 'DashCtrl'
+          }
+        }
+      })
+      .state('login', {
+        url: '/login',
+        templateUrl: 'templates/login.html',
+        controller: 'LoginCtrl'
+      })
+	.state('video', {
+        url: '/video/:key',
+        templateUrl: 'templates/video.html',
+        controller: 'VideoCtrl'
+      })
+      .state('register', {
+        url: '/register',
+        templateUrl: 'templates/register.html',
+        controller: 'LoginCtrl'
+      })
+
+    // if none of the above states are matched, use this as the fallback
+    $urlRouterProvider.otherwise('/tab/dash');
+
   });
-
-  // if none of the above states are matched, use this as the fallback
-  $urlRouterProvider.otherwise('/tab/dash');
-
-});
 

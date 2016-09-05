@@ -1,152 +1,155 @@
 angular.module('starter.services', [])
+  .factory('Sounds', function ($q) {
 
-.factory('Chats', function() {
-  // Might use a resource here that returns a JSON array
+    var deleteSound = function (scene_id, project_id) {
+      console.log("calling deleteSound service ");
+      var deferred = $q.defer();
+      getSounds().then(function (sounds) {
+        for (var j = 0; j < sounds.length; j++) {
+          if (sounds[j].project_id === project_id) {
+            for (var i = 0; i < sounds[j].scenes.length; i++) {
+              if (sounds[j].scenes[i].id === scene_id) {
+                sounds[j].scenes.splice(i, 1);
+              }
+            }
+          }
+        }
+        localStorage.rbboard = JSON.stringify(sounds);
+        deferred.resolve();
+      });
+      return deferred.promise;
+    }
 
-  // Some fake testing data
-  var chats = [{
-    id: 0,
-    name: 'Ben Sparrow',
-    lastText: 'You on your way?',
-    face: 'img/ben.png'
-  }, {
-    id: 1,
-    name: 'Max Lynx',
-    lastText: 'Hey, it\'s me',
-    face: 'img/max.png'
-  }, {
-    id: 2,
-    name: 'Adam Bradleyson',
-    lastText: 'I should buy a boat',
-    face: 'img/adam.jpg'
-  }, {
-    id: 3,
-    name: 'Perry Governor',
-    lastText: 'Look at my mukluks!',
-    face: 'img/perry.png'
-  }, {
-    id: 4,
-    name: 'Mike Harrington',
-    lastText: 'This is wicked good ice cream.',
-    face: 'img/mike.png'
-  }];
+    var deleteAll = function () {
+      localStorage.clear();
+      var deferred = $q.defer();
+      deferred.resolve();
+      return deferred.promise;
+    }
 
-  return {
-    all: function() {
-      return chats;
-    },
-    remove: function(chat) {
-      chats.splice(chats.indexOf(chat), 1);
-    },
-    get: function(chatId) {
-      for (var i = 0; i < chats.length; i++) {
-        if (chats[i].id === parseInt(chatId)) {
-          return chats[i];
+    var getSounds = function () {
+      var deferred = $q.defer();
+      var sounds = [];
+      if (localStorage.rbboard) sounds = JSON.parse(localStorage.rbboard);
+      deferred.resolve(sounds);
+      return deferred.promise;
+    }
+
+    var getInitialProject = function (project_id) {
+      var deferred = $q.defer();
+      var sounds = [];
+      if (localStorage.rbboard) {
+        sounds = JSON.parse(localStorage.rbboard);
+        var project = {};
+        var default_project = localStorage.rbboardDefault || project_id;
+        for (var i = 0; i < sounds.length; i++) {
+          if (sounds[i].project_id == default_project) {
+            project = sounds[i];
+            deferred.resolve(project);
+          }
+        }
+        if (Object.keys(project).length < 1) {
+          project = sounds[0];
+          deferred.resolve(project);
         }
       }
-      return null;
+      else {
+        deferred.resolve(false);
+      }
+      return deferred.promise;
     }
-  };
-})
 
-.factory('Sounds', function($q) {
 
-		var deleteSound = function (x) {
-			console.log("calling deleteSound service ");
-			var deferred = $q.defer();
-			getSounds().then(function (sounds) {
-				//sounds.splice(x, 1);
-				//localStorage.rbboard = JSON.stringify(sounds);
+    /*var playSound = function (scene_id, project_id) {
+     getSounds().then(function (sounds) {
+     var sound = sounds[scene_id];
 
-				for (var i = 0; i < sounds.length; i++) {
-					if (sounds[i].id === x) {
-						sounds.splice(i, 1);
-					}
-				}
-				localStorage.rbboard = JSON.stringify(sounds);
-				deferred.resolve();
-			});
-			return deferred.promise;
-		}
+     /*
+     Ok, so on Android, we just work.
+     On iOS, we need to rewrite to ../Library/NoCloud/FILE'
+     */
+    /*var mediaUrl = sound.file;
+     if (device.platform.indexOf("iOS") >= 0) {
+     mediaUrl = "../Library/NoCloud/" + mediaUrl.split("/").pop();
+     }
+     var media = new Media(mediaUrl, function (e) {
+     media.release();
+     }, function (err) {
+     console.log("media err", err);
+     });
+     media.play();
+     });
+     }*/
 
-	var deleteAll = function() {
-		console.log("calling deleteALLL");
-		localStorage.clear();
-		var deferred = $q.defer();
-		deferred.resolve();
-		return deferred.promise;
-	}
+    var saveSound = function (sound_obj, project_id) {
+      console.log("calling saveSound");
+      var deferred = $q.defer();
+      getSounds().then(function (sounds) {
+        var flag = false;
+        for (var j = 0; j < sounds.length; j++) {
+          if (sounds[j].project_id === project_id) {
+            if (sounds[j].scenes) {
+              for (var i = 0; i < sounds[j].scenes.length; i++) {
+                if (sounds[j].scenes[i].id === sound_obj.id) {
+                  sounds[j].scenes[i] = sound_obj;
+                  flag = true;
+                }
+              }
+              if (!flag) {
+                //sounds[j].scenes;
+                sounds[j].scenes.push(sound_obj);
+              }
+            }
+            else {
+              sounds[j].scenes = [];
+              sounds[j].scenes.push(sound_obj);
+            }
+          }
+        }
+        localStorage.rbboard = JSON.stringify(sounds);
+        deferred.resolve();
+      });
+      return deferred.promise;
+    }
 
-	var getSounds = function() {
-		var deferred = $q.defer();
-		var sounds = [];
+    var swap = function (arr, project_id) {
+      console.log("calling swap services");
+      var deferred = $q.defer();
+      getSounds().then(function (sounds) {
+        for (var j = 0; j < sounds.length; j++) {
+          if (sounds[j].project_id === project_id) {
+            sounds[j].scenes = arr;
+          }
+        }
+        localStorage.rbboard = JSON.stringify(sounds);
+        deferred.resolve();
+      });
 
-		if(localStorage.rbboard) {
-			sounds = JSON.parse(localStorage.rbboard);
-		}
-		deferred.resolve(sounds);
+      return deferred.promise;
+    }
 
-		return deferred.promise;
-	}
+    var addProject = function (obj, defaultSettings) {
+      if (defaultSettings) {
+        localStorage.rbboardDefault = obj.project_id
+      }
+      var deferred = $q.defer();
+      getSounds().then(function (sounds) {
+        sounds.push(obj);
+        localStorage.rbboard = JSON.stringify(sounds);
+        deferred.resolve();
+      });
+      return deferred.promise;
+    }
 
-	var playSound = function(x) {
-		getSounds().then(function(sounds) {
-			var sound = sounds[x];
-
-			/*
-			Ok, so on Android, we just work.
-			On iOS, we need to rewrite to ../Library/NoCloud/FILE'
-			*/
-			var mediaUrl = sound.file;
-			if(device.platform.indexOf("iOS") >= 0) {
-				mediaUrl = "../Library/NoCloud/" + mediaUrl.split("/").pop();
-			}
-			var media = new Media(mediaUrl, function(e) {
-				media.release();
-			}, function(err) {
-				console.log("media err", err);
-			});
-			media.play();
-		});
-	}
-
-	var saveSound = function(s) {
-		console.log("calling saveSound");
-		var deferred = $q.defer();
-		getSounds().then(function(sounds) {
-			var flag = false;
-			for (var i = 0; i < sounds.length; i++) {
-					if (sounds[i].id === s.id) {
-						sounds[i] = s;
-						flag = true;
-					}
-				}
-
-			if(!flag){
-				sounds.push(s);
-			}
-			localStorage.rbboard = JSON.stringify(sounds);
-			deferred.resolve();
-		});
-
-		return deferred.promise;
-	}
-
-	var swap = function(arr) {
-		console.log("calling swap services");
-		var deferred = $q.defer();
-		localStorage.rbboard = JSON.stringify(arr);
-		deferred.resolve();
-		return deferred.promise;
-	}
-
-	return {
-		get:getSounds,
-		save:saveSound,
-		delete:deleteSound,
-		deleteAll:deleteAll,
-		play:playSound,
-		swap:swap
-	};
-});
+    return {
+      get: getSounds,
+      getInitialProject: getInitialProject,
+      addProject: addProject,
+      save: saveSound,
+      delete: deleteSound,
+      deleteAll: deleteAll,
+      //play: playSound,
+      swap: swap
+    };
+  });
 

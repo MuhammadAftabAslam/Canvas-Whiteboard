@@ -6,23 +6,23 @@
 //     or @include v-align(250px, bottom, before);
 //
 @mixin v-align($va-height: 100%, $va-direction: middle, $va-pseudo: after) {
-  white-space: nowrap;
-  text-align: center;
+	white-space: nowrap;
+	text-align: center;
 
-  &:#{$va-pseudo} {
-    content: '';
-    display: inline-block;
-    vertical-align: $va-direction;
-    width: 0;
-    min-height: $va-height;
-  }
+	&:#{$va-pseudo} {
+		content: '';
+		display: inline-block;
+		vertical-align: $va-direction;
+		width: 0;
+		min-height: $va-height;
+	}
 
-  > * {
-    white-space: normal;
-    display: inline-block;
-    vertical-align: $va-direction;
-    max-width: 99%;
-  }
+	> * {
+		white-space: normal;
+		display: inline-block;
+		vertical-align: $va-direction;
+		max-width: 99%;
+	}
 }
 
 // vertical align a pair of child el inside parent
@@ -33,17 +33,17 @@
 //     or @include v-align-pair(image, text, middle, 200px);
 //
 @mixin v-align-pair($child-name1, $child-name2, $valign: middle, $width1: auto, $width2: auto ) {
-  display: table;
-  .#{$child-name1}{
-    display: table-cell;
-    vertical-align: $valign;
-    width: $width1; 
-  }
- .#{$child-name2} {
-    display: table-cell;
-    vertical-align: $valign;
-    width: $width2;
-  }
+	display: table;
+	.#{$child-name1}{
+		display: table-cell;
+		vertical-align: $valign;
+		width: $width1; 
+	}
+	.#{$child-name2} {
+		display: table-cell;
+		vertical-align: $valign;
+		width: $width2;
+	}
 }
 
 
@@ -51,9 +51,9 @@
 // usage: @include vertical-align-el;
 //
 @mixin vertical-align-el {
-  position: relative;
-  top: 50%;
-  transform: translateY(-50%);
+	position: relative;
+	top: 50%;
+	transform: translateY(-50%);
 }
 
 /// Mixin helping defining both `width` and `height` simultaneously.
@@ -86,22 +86,22 @@
 ///   }
 ///
 @mixin size($width, $height: $width) {
-  width: $width;
-  height: $height;
+	width: $width;
+	height: $height;
 }
 
 /// font-smothing
 /// @include font-smoothing(on);
 /// @include font-smoothing(off);
 @mixin font-smoothing($value:on){
-  @if $value == on{
-    -webkit-font-smoothing:antialiased;
-    -moz-osx-font-smoothing:grayscale;
-  }
-  @else{
-    -webkit-font-smoothing:subpixel-antialiased;
-    -moz-osx-font-smoothing:auto;
-  }
+	@if $value == on{
+		-webkit-font-smoothing:antialiased;
+		-moz-osx-font-smoothing:grayscale;
+	}
+	@else{
+		-webkit-font-smoothing:subpixel-antialiased;
+		-moz-osx-font-smoothing:auto;
+	}
 }
 
 
@@ -122,9 +122,9 @@
 ///   }
 ///
 @mixin hide-text {
-  overflow: hidden;
-  text-indent: 101%;
-  white-space: nowrap;
+	overflow: hidden;
+	text-indent: 101%;
+	white-space: nowrap;
 }
 
 
@@ -143,67 +143,67 @@
 ///   @include triangle(12px 6px, gray blue, up-left);
 ///
 @mixin triangle($size, $color, $direction) {
-  $width: nth($size, 1);
-  $height: nth($size, length($size));
-  $foreground-color: nth($color, 1);
-  $background-color: if(length($color) == 2, nth($color, 2), transparent);
-  height: 0;
-  width: 0;
+	$width: nth($size, 1);
+	$height: nth($size, length($size));
+	$foreground-color: nth($color, 1);
+	$background-color: if(length($color) == 2, nth($color, 2), transparent);
+	height: 0;
+	width: 0;
 
-  @if ($direction == up) or ($direction == down) or ($direction == right) or ($direction == left) {
-    $width: $width / 2;
-    $height: if(length($size) > 1, $height, $height/2);
+	@if ($direction == up) or ($direction == down) or ($direction == right) or ($direction == left) {
+		$width: $width / 2;
+		$height: if(length($size) > 1, $height, $height/2);
 
-    @if $direction == up {
-      border-bottom: $height solid $foreground-color;
-      border-left: $width solid $background-color;
-      border-right: $width solid $background-color;
-    } @else if $direction == right {
-      border-bottom: $width solid $background-color;
-      border-left: $height solid $foreground-color;
-      border-top: $width solid $background-color;
-    } @else if $direction == down {
-      border-left: $width solid $background-color;
-      border-right: $width solid $background-color;
-      border-top: $height solid $foreground-color;
-    } @else if $direction == left {
-      border-bottom: $width solid $background-color;
-      border-right: $height solid $foreground-color;
-      border-top: $width solid $background-color;
-    }
-  } @else if ($direction == up-right) or ($direction == up-left) {
-    border-top: $height solid $foreground-color;
+		@if $direction == up {
+			border-bottom: $height solid $foreground-color;
+			border-left: $width solid $background-color;
+			border-right: $width solid $background-color;
+		} @else if $direction == right {
+			border-bottom: $width solid $background-color;
+			border-left: $height solid $foreground-color;
+			border-top: $width solid $background-color;
+		} @else if $direction == down {
+			border-left: $width solid $background-color;
+			border-right: $width solid $background-color;
+			border-top: $height solid $foreground-color;
+		} @else if $direction == left {
+			border-bottom: $width solid $background-color;
+			border-right: $height solid $foreground-color;
+			border-top: $width solid $background-color;
+		}
+	} @else if ($direction == up-right) or ($direction == up-left) {
+		border-top: $height solid $foreground-color;
 
-    @if $direction == up-right {
-      border-left:  $width solid $background-color;
-    } @else if $direction == up-left {
-      border-right: $width solid $background-color;
-    }
-  } @else if ($direction == down-right) or ($direction == down-left) {
-    border-bottom: $height solid $foreground-color;
+		@if $direction == up-right {
+			border-left:  $width solid $background-color;
+		} @else if $direction == up-left {
+			border-right: $width solid $background-color;
+		}
+	} @else if ($direction == down-right) or ($direction == down-left) {
+		border-bottom: $height solid $foreground-color;
 
-    @if $direction == down-right {
-      border-left:  $width solid $background-color;
-    } @else if $direction == down-left {
-      border-right: $width solid $background-color;
-    }
-  } @else if ($direction == inset-up) {
-    border-color: $background-color $background-color $foreground-color;
-    border-style: solid;
-    border-width: $height $width;
-  } @else if ($direction == inset-down) {
-    border-color: $foreground-color $background-color $background-color;
-    border-style: solid;
-    border-width: $height $width;
-  } @else if ($direction == inset-right) {
-    border-color: $background-color $background-color $background-color $foreground-color;
-    border-style: solid;
-    border-width: $width $height;
-  } @else if ($direction == inset-left) {
-    border-color: $background-color $foreground-color $background-color $background-color;
-    border-style: solid;
-    border-width: $width $height;
-  }
+		@if $direction == down-right {
+			border-left:  $width solid $background-color;
+		} @else if $direction == down-left {
+			border-right: $width solid $background-color;
+		}
+	} @else if ($direction == inset-up) {
+		border-color: $background-color $background-color $foreground-color;
+		border-style: solid;
+		border-width: $height $width;
+	} @else if ($direction == inset-down) {
+		border-color: $foreground-color $background-color $background-color;
+		border-style: solid;
+		border-width: $height $width;
+	} @else if ($direction == inset-right) {
+		border-color: $background-color $background-color $background-color $foreground-color;
+		border-style: solid;
+		border-width: $width $height;
+	} @else if ($direction == inset-left) {
+		border-color: $background-color $foreground-color $background-color $background-color;
+		border-style: solid;
+		border-width: $width $height;
+	}
 }
 
 
@@ -216,12 +216,12 @@
 $animation-speed: .3s !default;
 
 @mixin animate($properties, $duration: $animation-speed, $easing: ease-in-out) {
-  $list:();
-  @each $prop in $properties {
-    $str: #{$prop} #{$animation-speed} #{$easing};
-    $list: join($list, $str, comma);
-  }
-  transition: $list;
+	$list:();
+	@each $prop in $properties {
+		$str: #{$prop} #{$animation-speed} #{$easing};
+		$list: join($list, $str, comma);
+	}
+	transition: $list;
 }
 
 
@@ -240,35 +240,30 @@ $animation-speed: .3s !default;
 ///   }
 
 @mixin placeholder {
-  &::-webkit-input-placeholder {@content}
-  &::-moz-placeholder {opacity: 1; @content}
-  &:-moz-placeholder {@content}
-  &:-ms-input-placeholder {@content}
-  &.placeholder {@content}
+	&::-webkit-input-placeholder {@content}
+	&::-moz-placeholder {opacity: 1; @content}
+	&:-moz-placeholder {@content}
+	&:-ms-input-placeholder {@content}
+	&.placeholder {@content}
 }
 
-// Mixin for setting blocks vertically Middle
-// @include inline-block(top);
-// @include inline-block(bottom);
-
-@mixin inline-block($val){
-  display: inline-block;
-  vertical-align: $val;
+// @include vertical-alignment(top);
+@mixin vertical-alignment($val){
+	display: inline-block;
+	vertical-align: $val;
+	letter-spacing: 0;
 }
 
-// Mixin for setting elements radius
-// @include border-radius(5px);
-
-@mixin border-radius($val){
-  -webkit-border-radius: $val;
-  -moz-border-radius: $val;
-  -ms-border-radius: $val;
-  -o-border-radius: $val;
-  border-radius: $val;
+// @include border-radius(5px, 5px, 5px, 5px);
+@mixin border-radius($val1, $val2, $val3, $val4){
+	-webkit-border-radius: $val1 $val2 $val3 $val4;
+	-moz-border-radius: $val1 $val2 $val3 $val4;
+	-ms-border-radius: $val1 $val2 $val3 $val4;
+	-o-border-radius: $val1 $val2 $val3 $val4;
+	border-radius: $val1 $val2 $val3 $val4;
 }
 
-
-// generic transform
+// transform
 @mixin transform($transforms) {
 	   -moz-transform: $transforms;
 	     -o-transform: $transforms;
@@ -300,4 +295,11 @@ $animation-speed: .3s !default;
 	    -ms-transform-origin: $origin;
 	-webkit-transform-origin: $origin;
           transform-origin: $origin;
+}
+
+// transition
+@mixin transition($val:all , $duration:0.4s , $type:linear){
+ transition:$val $duration $type;
+ -webkit-transition:$val $duration $type;
+ -moz-transition:$val $duration $type;
 }

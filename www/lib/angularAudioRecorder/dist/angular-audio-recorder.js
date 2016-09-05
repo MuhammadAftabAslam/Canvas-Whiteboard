@@ -227,7 +227,7 @@ var RecorderController = function (element, service, recorderUtils, $scope, $tim
         cordovaMedia.url = recorderUtils.cordovaAudioUrl(control.id);
         //mobile app needs wav extension to save recording
         cordovaMedia.recorder = new Media(cordovaMedia.url, function () {
-          console.log('Media successfully played',cordovaMedia.url);
+          console.log('Media start recording : ',cordovaMedia.url);
         }, function (err) {
           console.log('Media could not be launched' + err.code, err);
         });
@@ -298,7 +298,6 @@ var RecorderController = function (element, service, recorderUtils, $scope, $tim
         embedPlayer(inputBlob);
       };
 
-      console.log('dhould mp2 : ',blob);
       if (shouldConvertToMp3) {
         doMp3Conversion(blob, finalize);
       } else {
@@ -341,8 +340,9 @@ var RecorderController = function (element, service, recorderUtils, $scope, $tim
       return false;
     }*/
     if (service.isCordova) {
-      cordovaMedia.player = new Media(s || cordovaMedia.url, playbackOnEnded, function () {
-        console.log('Playback failed');
+      console.log('library : ',s , cordovaMedia.url);
+      cordovaMedia.player = new Media(s || cordovaMedia.url, playbackOnEnded, function (err) {
+        console.log('Playback failed',err);
       });
       cordovaMedia.player.play();
       playbackOnStart();
@@ -393,7 +393,13 @@ var RecorderController = function (element, service, recorderUtils, $scope, $tim
   control.save = function (fileName,fn) {
 
     if (service.isCordova) {
-      fn(cordovaMedia.url);
+      window.resolveLocalFileSystemURL(cordovaMedia.url, function (entry) {
+        entry.file(function (blob) {
+          fn(cordovaMedia.url , blob);
+        });
+      }, function (err) {
+        console.log('Could not retrieve file, error code:', err.code);
+      });
     }
     else {
       console.log('on save  : ',control.audioModel);
@@ -1026,7 +1032,7 @@ angular.module('angularAudioRecorder.services')
               break;
 
             case 'android':
-              url += '.amr';
+              url += '.mp3';
               break;
 
             case 'wp':
@@ -1574,7 +1580,7 @@ angular.module('angularAudioRecorder.services')
 })(window);
 
 (function (win) {
-  'use strict';
+  //'use strict';
 
   var MP3ConversionWorker = function (me, params) {
     //should not reference any variable in parent scope as it will executed in its
@@ -1729,6 +1735,7 @@ angular.module('angularAudioRecorder.services')
             }
           }
         };
+        //busy = false;
       };
       busy = true;
       //console.log('file reader : ',blob);

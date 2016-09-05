@@ -88,6 +88,7 @@
 		96E3F10B3625489CA9EE6AC8 /* UNIHTTPResponse.m in Sources */ = {isa = PBXBuildFile; fileRef = A9CDEF8AFDC34C6CA3DF327C /* UNIHTTPResponse.m */; };
 		B38B8BB769CA422C8F2273B5 /* UNIHTTPStringResponse.m in Sources */ = {isa = PBXBuildFile; fileRef = 658F6ECDB4E349D6BBB48503 /* UNIHTTPStringResponse.m */; };
 		014D17FFD4224889999817AF /* UNIJsonNode.m in Sources */ = {isa = PBXBuildFile; fileRef = 3B2C3911331E400CB44196A5 /* UNIJsonNode.m */; };
+		422D28D36C74420CBA23921E /* CDVInAppBrowser.m in Sources */ = {isa = PBXBuildFile; fileRef = AE2C31A046174B89B5498F99 /* CDVInAppBrowser.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -249,6 +250,8 @@
 		629B04274B4F456193039CF3 /* UNIHTTPResponse.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = "UNIHTTPResponse.h"; path = "ionic-plugin-deploy/UNIHTTPResponse.h"; sourceTree = "<group>"; fileEncoding = 4; };
 		47B4714809EF4D84BA3ADE1D /* UNIHTTPStringResponse.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = "UNIHTTPStringResponse.h"; path = "ionic-plugin-deploy/UNIHTTPStringResponse.h"; sourceTree = "<group>"; fileEncoding = 4; };
 		65FC5110755C4D0B940AA777 /* UNIJsonNode.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = "UNIJsonNode.h"; path = "ionic-plugin-deploy/UNIJsonNode.h"; sourceTree = "<group>"; fileEncoding = 4; };
+		AE2C31A046174B89B5498F99 /* CDVInAppBrowser.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; name = "CDVInAppBrowser.m"; path = "cordova-plugin-inappbrowser/CDVInAppBrowser.m"; sourceTree = "<group>"; fileEncoding = 4; };
+		9CC41A801A6C43BF9C63CF1C /* CDVInAppBrowser.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = "CDVInAppBrowser.h"; path = "cordova-plugin-inappbrowser/CDVInAppBrowser.h"; sourceTree = "<group>"; fileEncoding = 4; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -443,6 +446,8 @@
 				629B04274B4F456193039CF3 /* UNIHTTPResponse.h */,
 				47B4714809EF4D84BA3ADE1D /* UNIHTTPStringResponse.h */,
 				65FC5110755C4D0B940AA777 /* UNIJsonNode.h */,
+				AE2C31A046174B89B5498F99 /* CDVInAppBrowser.m */,
+				9CC41A801A6C43BF9C63CF1C /* CDVInAppBrowser.h */,
 			);
 			name = Plugins;
 			path = "canvas-arbi/Plugins";
@@ -676,6 +681,7 @@
 				96E3F10B3625489CA9EE6AC8 /* UNIHTTPResponse.m in Sources */,
 				B38B8BB769CA422C8F2273B5 /* UNIHTTPStringResponse.m in Sources */,
 				014D17FFD4224889999817AF /* UNIJsonNode.m in Sources */,
+				422D28D36C74420CBA23921E /* CDVInAppBrowser.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

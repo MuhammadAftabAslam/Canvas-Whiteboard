@@ -78,13 +78,16 @@
         },
         "ionic-plugin-deploy": {
             "PACKAGE_NAME": "com.ionicframework.canvasarbi103262"
+        },
+        "cordova-plugin-file": {
+            "PACKAGE_NAME": "com.ionicframework.canvasarbi103262"
+        },
+        "cordova-plugin-inappbrowser": {
+            "PACKAGE_NAME": "com.ionicframework.canvasarbi103262"
         }
     },
     "dependent_plugins": {
         "cordova-plugin-compat": {
-            "PACKAGE_NAME": "com.ionicframework.canvasarbi103262"
-        },
-        "cordova-plugin-file": {
             "PACKAGE_NAME": "com.ionicframework.canvasarbi103262"
         }
     }

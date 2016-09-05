@@ -205,6 +205,8 @@ $media-expressions: (
 	position: relative;
 }
 
+.hide{display: none !important;}
+
 @import 'components/jcf';
 @import 'components/color-picker';
 @import 'components/btns';

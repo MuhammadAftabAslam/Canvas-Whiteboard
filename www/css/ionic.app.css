@@ -10553,6 +10553,9 @@ label {
   overflow: hidden;
   position: relative; }
 
+.hide {
+  display: none !important; }
+
 /* custom checkbox styles */
 .jcf-checkbox {
   display: inline-block;
@@ -10904,11 +10907,11 @@ label {
       -ms-border-radius: 5px 5px 5px 5px;
       -o-border-radius: 5px 5px 5px 5px;
       border-radius: 5px 5px 5px 5px;
-      width: 39px;
+      width: 36px;
       height: 34px; }
       @media (min-width: 768px) {
         .color-drop ul a {
-          width: 49px;
+          width: 46px;
           height: 44px; } }
       .color-drop ul a.grayish-blue {
         background: #b0bec5; }
@@ -11165,10 +11168,10 @@ label {
       width: 100%; }
       @media (min-width: 480px) {
         .drop .imgs li {
-          width: 50%; } }
+          width: 48%; } }
       @media (min-width: 1024px) {
         .drop .imgs li {
-          width: 33.33%; } }
+          width: 32%; } }
       .drop .imgs li img {
         display: block;
         width: 100%;
@@ -11642,12 +11645,14 @@ label {
   border-radius: 5px 5px 5px 5px;
   -webkit-box-shadow: 0 0 40px rgba(0, 0, 0, 0.24);
   -moz-box-shadow: 0 0 40px rgba(0, 0, 0, 0.24);
-  box-shadow: 0 0 40px rgba(0, 0, 0, 0.24); }
+  box-shadow: 0 0 40px rgba(0, 0, 0, 0.24);
+  bottom: inherit; }
   @media (min-width: 680px) {
     .modal-wrapper .modal {
       width: 80%;
       left: 10%;
-      right: 10%; } }
+      right: 10%;
+      bottom: inherit; } }
 
 .modal-wrapper .list {
   overflow: hidden;

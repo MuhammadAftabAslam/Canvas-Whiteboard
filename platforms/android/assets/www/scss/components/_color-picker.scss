@@ -220,6 +220,8 @@
 			path{fill: $black;}
 		}
 	}
+  
+    @include media('<tablet') {@include scale(0.8);}
 }
 
 .color-active{
@@ -302,11 +304,11 @@
 		a{
 			display: block;
 			@include border-radius(5px, 5px, 5px, 5px);
-			width: 39px;
+			width: 36px;
 			height: 34px;
 			
 			@include media('≥tablet') {
-				width: 49px;
+				width: 46px;
 				height: 44px;
 			}
 			

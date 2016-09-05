@@ -336,7 +336,7 @@ RecordableDrawing = function (canvasId)
 		img.src = url;
 		img.onload = function () {
 			var imageAction = new SetImage(url, self.lastMouseX, self.lastMouseY, false, id, img.width, img.height);
-			//debugger;
+			console.log('imageAction : ',imageAction);
 			self.drawAction(imageAction, true);
 			var copy = $.extend(true, {}, imageAction);
 			//self.actions.push(imageAction);
@@ -344,8 +344,6 @@ RecordableDrawing = function (canvasId)
 			if (self.currentRecording != null)
 				self.currentRecording.addAction(copy);
 		}
-
-
 	}
 
 	this.setStokeSize = function (sizeArg)
@@ -579,8 +577,12 @@ RecordableDrawing = function (canvasId)
 		/*var ratioX = canvas.width / image.naturalWidth;
 		 var ratioY = canvas.height / image.naturalHeight;
 		 var ratio = Math.min(ratioX, ratioY);*/
-
+		console.log('drawimag : ',img);
+		img.onload = function () {
 		self.ctx.drawImage(actionArg.img, 0, 0, img.width, img.height, actionArg.imageX, actionArg.imageY, actionArg.imageWidth, actionArg.imageHeight);
+		//console.log('************************************************************************************************************************************')
+		}
+
 		if (actionArg.withAnchors) {
 			drawDragAnchor(actionArg.imageX, actionArg.imageY, actionArg);
 			drawDragAnchor(actionArg.imageRight, actionArg.imageY, actionArg);
@@ -952,8 +954,8 @@ SetImage = function (url,argX,argY,typeArg,elementId,w,h) //typeArg is for dragg
 	}
 	this.url = url;
 	this.id = elementId;
-	this.imageWidth = w * 0.50 || self.img.width * 0.50;
-	this.imageHeight = h * 0.50 || self.img.height * 0.50;
+	this.imageWidth = w * 0.50 || self.img.width * 0.25;
+	this.imageHeight = h * 0.50 || self.img.height * 0.25;
 	this.imageX = 100;
 	this.imageY = 100;
 	this.imageRight = this.imageX + this.imageWidth;

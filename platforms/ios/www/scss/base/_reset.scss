@@ -1,43 +1,26 @@
 html {
+	height: 100%;
 	box-sizing: border-box;
-  height: 100%;
 }
-*, *:before, *:after {
-	box-sizing: inherit;
-}
-
+*,
+*:before,
+*:after {box-sizing: inherit;}
 * {max-height: 1000000px;}
 
 body {
-  height: 100%;
-  color: $base-text-color;
-  background: $base-background-color;
-  font: #{$base-font-size}/#{$base-line-height} $base-font-family;
-  min-width: $base-min-width;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  overflow: hidden;
+	height: 100%;
+	color: $base-text-color;
+	background: $base-background-color;
+	font: #{$base-font-size}/#{$base-line-height} $base-font-family;
+	min-width: $base-min-width;
+	-webkit-font-smoothing: antialiased;
+	-moz-osx-font-smoothing: grayscale;
 }
 
 // adaptive images
 img {
-  max-width: 100%;
-  height: auto;
-}
-
-a{
-  color: $base-link-color;
-  text-decoration: none;
-  @extend %transition;
-  cursor: pointer;
-  
-  &:hover,
-  &:active,
-  &:focus{
-    @extend %transition;
-    text-decoration: none;
-    color: lighten($base-link-color,20%);
-  }
+	max-width: 100%;
+	height: auto;
 }
 
 // google map fix
@@ -45,8 +28,10 @@ a{
 
 // hide tel links on desktop
 @media only screen and (min-width:1025px) {
-    a[href^=tel],a[href^=skype], a[href^=sms] {
-    cursor:default;
-    pointer-events:none;
-  }
+	a[href^=tel],
+	a[href^=skype],
+	a[href^=sms] {
+		cursor: default;
+		pointer-events: none;
+	}
 }

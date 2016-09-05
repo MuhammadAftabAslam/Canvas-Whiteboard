@@ -185,14 +185,17 @@ var RecorderController = function (element, service, recorderUtils, $scope, $tim
   var doMp3Conversion = function (blobInput, successCallback) {
     console.log('doMp3Conversion : ',blobInput);
     if (mp3Converter) {
+      console.log('mp3Converter available aftab : ');
       status.isConverting = true;
       mp3Converter.convert(blobInput, function (mp3Blob) {
         status.isConverting = false;
+        console.log('mp3blob aftab : ',mp3Blob);
         if (successCallback) {
           successCallback(mp3Blob);
         }
         scopeApply(control.onConversionComplete);
       }, function () {
+        console.log('some error');
         status.isConverting = false;
       });
       //call conversion started
@@ -227,7 +230,7 @@ var RecorderController = function (element, service, recorderUtils, $scope, $tim
         cordovaMedia.url = recorderUtils.cordovaAudioUrl(control.id);
         //mobile app needs wav extension to save recording
         cordovaMedia.recorder = new Media(cordovaMedia.url, function () {
-          console.log('Media successfully played',cordovaMedia.url);
+          console.log('Media start recording : ',cordovaMedia.url);
         }, function (err) {
           console.log('Media could not be launched' + err.code, err);
         });
@@ -298,10 +301,12 @@ var RecorderController = function (element, service, recorderUtils, $scope, $tim
         embedPlayer(inputBlob);
       };
 
-      console.log('dhould mp2 : ',blob);
+
       if (shouldConvertToMp3) {
+        console.log('dhould mp3 : ',blob);
         doMp3Conversion(blob, finalize);
       } else {
+        console.log('dhould mp3 not: ',blob);
         finalize(blob)
       }
 
@@ -312,6 +317,7 @@ var RecorderController = function (element, service, recorderUtils, $scope, $tim
     //To stop recording
     if (service.isCordova) {
       cordovaMedia.recorder.stopRecord();
+      console.log('cordovaMedia.url : ',cordovaMedia.url);
       window.resolveLocalFileSystemURL(cordovaMedia.url, function (entry) {
         entry.file(function (blob) {
           completed(blob);
@@ -329,6 +335,7 @@ var RecorderController = function (element, service, recorderUtils, $scope, $tim
         });
       });
     } else {
+      console.log('===================== >>>>>else');
       recordHandler.stopRecording(id);
       completed(recordHandler.getBlob(id));
     }
@@ -341,8 +348,9 @@ var RecorderController = function (element, service, recorderUtils, $scope, $tim
       return false;
     }*/
     if (service.isCordova) {
-      cordovaMedia.player = new Media(s || cordovaMedia.url, playbackOnEnded, function () {
-        console.log('Playback failed');
+      console.log('library : ',s , cordovaMedia.url);
+      cordovaMedia.player = new Media(s || cordovaMedia.url, playbackOnEnded, function (err) {
+        console.log('Playback failed',err);
       });
       cordovaMedia.player.play();
       playbackOnStart();
@@ -393,7 +401,13 @@ var RecorderController = function (element, service, recorderUtils, $scope, $tim
   control.save = function (fileName,fn) {
 
     if (service.isCordova) {
-      fn(cordovaMedia.url);
+      window.resolveLocalFileSystemURL(cordovaMedia.url, function (entry) {
+        entry.file(function (blob) {
+          fn(cordovaMedia.url , blob);
+        });
+      }, function (err) {
+        console.log('Could not retrieve file, error code:', err.code);
+      });
     }
     else {
       console.log('on save  : ',control.audioModel);
@@ -669,7 +683,7 @@ angular.module('angularAudioRecorder.services')
         swfUrl = scriptPath + '../lib/recorder.swf',
         utils,
         mp3Covert = false,
-        mp3Config = {bitRate: 92, lameJsUrl: scriptPath + '../lib/lame.min.js'}
+        mp3Config = {bitRate: 32, lameJsUrl: scriptPath + '../lib/lame.min.js'}
         ;
 
       var swfHandlerConfig = {
@@ -1026,7 +1040,7 @@ angular.module('angularAudioRecorder.services')
               break;
 
             case 'android':
-              url += '.amr';
+              url += '.mp3';
               break;
 
             case 'wp':
@@ -1574,7 +1588,7 @@ angular.module('angularAudioRecorder.services')
 })(window);
 
 (function (win) {
-  'use strict';
+  //'use strict';
 
   var MP3ConversionWorker = function (me, params) {
     //should not reference any variable in parent scope as it will executed in its
@@ -1669,35 +1683,44 @@ angular.module('angularAudioRecorder.services')
       var conversionId = 'conversion_' + Date.now(),
         tag = conversionId + ":"
         ;
-      console.log(tag, 'Starting conversion');
+      //console.log(tag, 'Starting conversion',arguments);
+      //console.log('busy status : ',busy);
       var preferredConfig = {}, onSuccess, onError;
       switch (typeof arguments[1]) {
         case 'object':
+          //console.log('object',arguments[1]);
           preferredConfig = arguments[1];
           break;
         case 'function':
+          //console.log('function',arguments[1]);
           onSuccess = arguments[1];
           break;
         default:
+          //console.log('throw error');
           throw "parameter 2 is expected to be an object (config) or function (success callback)"
       }
 
       if (typeof arguments[2] === 'function') {
+          //console.log('arguments[2]',arguments[2]);
         if (onSuccess) {
+          //console.log('onError',arguments[2]);
           onError = arguments[2];
         } else {
+          //console.log('onSuccess',arguments[2]);
           onSuccess = arguments[2];
         }
       }
 
       if (typeof arguments[3] === 'function' && !onError) {
+        //console.log('not on error',arguments[3]);
         onError = arguments[3];
       }
 
       if (busy) {
+        //console.log('busy poeple : ');
         throw ("Another conversion is in progress");
       }
-
+       // console.log('next phase : ');
       var initialSize = blob.size,
         fileReader = new FileReader(),
         startTime = Date.now();
@@ -1729,6 +1752,7 @@ angular.module('angularAudioRecorder.services')
             }
           }
         };
+        //busy = false;
       };
       busy = true;
       //console.log('file reader : ',blob);
