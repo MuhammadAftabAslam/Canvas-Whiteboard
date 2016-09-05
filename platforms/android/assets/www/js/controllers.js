@@ -32,7 +32,7 @@ angular.module('starter.controllers', [])
           $rootScope.$emit('user:loggedin', data);
         }, function () {
           console.log('drawing playback paused');
-        }, function () {
+        }, function () { jao
           return playbackInterruptCommand;
         });
       }

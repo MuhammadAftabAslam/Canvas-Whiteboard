@@ -185,17 +185,14 @@ var RecorderController = function (element, service, recorderUtils, $scope, $tim
   var doMp3Conversion = function (blobInput, successCallback) {
     console.log('doMp3Conversion : ',blobInput);
     if (mp3Converter) {
-      console.log('mp3Converter available aftab : ');
       status.isConverting = true;
       mp3Converter.convert(blobInput, function (mp3Blob) {
         status.isConverting = false;
-        console.log('mp3blob aftab : ',mp3Blob);
         if (successCallback) {
           successCallback(mp3Blob);
         }
         scopeApply(control.onConversionComplete);
       }, function () {
-        console.log('some error');
         status.isConverting = false;
       });
       //call conversion started
@@ -301,12 +298,9 @@ var RecorderController = function (element, service, recorderUtils, $scope, $tim
         embedPlayer(inputBlob);
       };
 
-
       if (shouldConvertToMp3) {
-        console.log('dhould mp3 : ',blob);
         doMp3Conversion(blob, finalize);
       } else {
-        console.log('dhould mp3 not: ',blob);
         finalize(blob)
       }
 
@@ -317,7 +311,6 @@ var RecorderController = function (element, service, recorderUtils, $scope, $tim
     //To stop recording
     if (service.isCordova) {
       cordovaMedia.recorder.stopRecord();
-      console.log('cordovaMedia.url : ',cordovaMedia.url);
       window.resolveLocalFileSystemURL(cordovaMedia.url, function (entry) {
         entry.file(function (blob) {
           completed(blob);
@@ -335,7 +328,6 @@ var RecorderController = function (element, service, recorderUtils, $scope, $tim
         });
       });
     } else {
-      console.log('===================== >>>>>else');
       recordHandler.stopRecording(id);
       completed(recordHandler.getBlob(id));
     }
@@ -683,7 +675,7 @@ angular.module('angularAudioRecorder.services')
         swfUrl = scriptPath + '../lib/recorder.swf',
         utils,
         mp3Covert = false,
-        mp3Config = {bitRate: 32, lameJsUrl: scriptPath + '../lib/lame.min.js'}
+        mp3Config = {bitRate: 92, lameJsUrl: scriptPath + '../lib/lame.min.js'}
         ;
 
       var swfHandlerConfig = {
@@ -1683,44 +1675,35 @@ angular.module('angularAudioRecorder.services')
       var conversionId = 'conversion_' + Date.now(),
         tag = conversionId + ":"
         ;
-      //console.log(tag, 'Starting conversion',arguments);
-      //console.log('busy status : ',busy);
+      console.log(tag, 'Starting conversion');
       var preferredConfig = {}, onSuccess, onError;
       switch (typeof arguments[1]) {
         case 'object':
-          //console.log('object',arguments[1]);
           preferredConfig = arguments[1];
           break;
         case 'function':
-          //console.log('function',arguments[1]);
           onSuccess = arguments[1];
           break;
         default:
-          //console.log('throw error');
           throw "parameter 2 is expected to be an object (config) or function (success callback)"
       }
 
       if (typeof arguments[2] === 'function') {
-          //console.log('arguments[2]',arguments[2]);
         if (onSuccess) {
-          //console.log('onError',arguments[2]);
           onError = arguments[2];
         } else {
-          //console.log('onSuccess',arguments[2]);
           onSuccess = arguments[2];
         }
       }
 
       if (typeof arguments[3] === 'function' && !onError) {
-        //console.log('not on error',arguments[3]);
         onError = arguments[3];
       }
 
       if (busy) {
-        //console.log('busy poeple : ');
         throw ("Another conversion is in progress");
       }
-       // console.log('next phase : ');
+
       var initialSize = blob.size,
         fileReader = new FileReader(),
         startTime = Date.now();
