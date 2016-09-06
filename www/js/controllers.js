@@ -28,8 +28,8 @@ angular.module('starter.controllers', [])
         drawingElement.playRecording(function () {
           playbackInterruptCommand = "";
         }, function () {
-          $state.go('tab.dash');
-          $rootScope.$emit('user:loggedin', data);
+          $state.go('login');
+          //$rootScope.$emit('user:loggedin', {});
         }, function () {
           console.log('drawing playback paused');
         }, function () {
