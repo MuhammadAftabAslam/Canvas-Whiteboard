@@ -4,10 +4,10 @@
     <div ng-if="recordings.length" class="jcf-scrollable" custom-form>
       <ul class="info-list">
         <li id="{{ recording._id }}" ng-repeat="recording in recordings">
-          <div class="box" ng-click="savedPlaying(recording)">
+          <div class="box">
             <a class="btn-edit"><span class="icon-edit"></span></a>
 
-            <div class="info-box" data-drag="true"
+            <div ng-click="savedPlaying(recording)" class="info-box" data-drag="false"
                  data-jqyoui-options="{revert: 'invalid',containment:'#{{ recording._id }}',axis:'y'}"
                  jqyoui-draggable="{animate:true,onStart: 'startDragging', onStop:'checkPosition(recording)'}">
               <a class="link">

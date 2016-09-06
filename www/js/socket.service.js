@@ -98,13 +98,12 @@ angular.module('starter.services')
       $socket.emit('req:save:scene', sound_obj)
         .on('res:save:scene', function (alldata) {
           $socket.removeListener('res:save:scene');
-          deferred.resolve();
+          deferred.resolve(alldata);
         });
       return deferred.promise;
     }
 
-    var swap = function (arr, project_id) {
-    }
+    var swap = function (arr, project_id) {}
 
 
     var addProject = function (obj, defaultSettings) {
@@ -278,6 +277,13 @@ angular.module('starter.services')
     //var url = 'http://192.168.0.41:8080/';
     var url = 'http://172.16.10.228:8080/';
     //var url = 'http://172.16.11.202:8080/';
+    return url;
+  })
+  .factory('$weburl', function () {
+    //var url = 'http://localhost:8100/#/video/';
+    //var url = 'http://192.168.0.41:8100/#/video/';
+    var url = 'http://172.16.10.228:8100/#/video/';
+    //var url = 'http://localhost:8100/#/video/';
     return url;
   });
 

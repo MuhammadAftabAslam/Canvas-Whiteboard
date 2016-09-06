@@ -13,7 +13,7 @@ angular.module('starter.controllers', [])
       $ionicSideMenuDelegate.toggleLeft();
     };
   })
-  .controller('VideoCtrl', function ($scope, $stateParams, DrawingService, $state, $rootScope) {
+  .controller('VideoCtrl', function ($scope, $stateParams, DrawingService, $state, $rootScope, $serverurl) {
     console.log('$stateParams : ', $stateParams.key);
     var drawingElement = new RecordableDrawing("videocanvas");
     var c = document.getElementById("videocanvas");
@@ -28,20 +28,20 @@ angular.module('starter.controllers', [])
         drawingElement.playRecording(function () {
           playbackInterruptCommand = "";
         }, function () {
-          $state.go('tab.dash');
-          $rootScope.$emit('user:loggedin', data);
+          //$state.go('login');
+          //$rootScope.$emit('user:loggedin', {});
         }, function () {
           console.log('drawing playback paused');
-        }, function () { jao
+        }, function () {
           return playbackInterruptCommand;
         });
       }
 
       DrawingService.getProjectVideo($stateParams.key).then(function (res) {
         //debugger;
-        console.log('project video : ',res[res.length - 1]);
+        console.log('project video : ', res[res.length - 1]);
         if (res.length > 0) {
-          var result = deserializeDrawing(JSON.parse(res[res.length - 1].drawing_data));
+          var result = deserializeDrawing(res[res.length - 1].drawing_data);
           if (result == null)
             result = "Error : Unknown error in deserializing the data";
           if (result instanceof Array == false) {
@@ -52,25 +52,27 @@ angular.module('starter.controllers', [])
             for (var i = 0; i < result.length; i++) {
               result[i].drawing = drawingElement;
             }
-            $('.video-holder').removeClass('play');
-            playRecording();
-            var audio = document.getElementById('videoplayer');
+            var audioData = res[res.length - 1].audio_data;
 
-            var source = document.getElementById('oggSource');
-            source.src = JSON.parse(res[res.length - 1].audio_data);
+            $('.video-holder').removeClass('play');
+
+            var audio = document.getElementById('videoplayer');
+            var source = document.getElementById('mp3Source');
+            source.src = $serverurl + 'uploads/' + audioData;
             audio.load(); //call this to just preload the audio without playing
             audio.play();
+            playRecording();
             $('.video-holder').addClass('play');
           }
         }
         else {
           alert('Create atleast one scene before making this lecture into video.')
-          $state.go('tab.dash');
+          //$state.go('tab.dash');
           //$rootScope.$emit('user:loggedin', data);
         }
       })
     }
-    else{
+    else {
       //$state.go('tab.dash');
     }
   })
@@ -122,8 +124,8 @@ angular.module('starter.controllers', [])
 
   // Main directive for the canvas recordings
   .directive('arbiCanvas', ['$ionicPlatform', '$cordovaMedia', '$cordovaCapture', 'recorderService', '$ionicListDelegate', '$ionicPopup',
-    '$ionicModal', 'DrawingService', 'UserService', '$state', '$rootScope', '$serverurl', '$cordovaFile',
-    function ($ionicPlatform, $cordovaMedia, $cordovaCapture, recorderService, $ionicListDelegate, $ionicPopup, $ionicModal, DrawingService, UserService, $state, $rootScope, $serverurl, $cordovaFile) {
+    '$ionicModal', 'DrawingService', 'UserService', '$state', '$rootScope', '$serverurl', '$cordovaFile','$weburl',
+    function ($ionicPlatform, $cordovaMedia, $cordovaCapture, recorderService, $ionicListDelegate, $ionicPopup, $ionicModal, DrawingService, UserService, $state, $rootScope, $serverurl, $cordovaFile, $weburl) {
 
       return {
         restrict: "AE",
@@ -354,63 +356,12 @@ angular.module('starter.controllers', [])
                     console.log('resultingBlob : ', respond);
                     pausedAudios.push(respond);//abc)
                     onSave(pausedAudios[pausedAudios.length - 1]);
-
-                    //source.src = concateBlob;//content; //'http://www.stephaniequinn.com/Music/Commercial%20DEMO%20-%2013.mp3'; 
-                    //audio.load(); //call this to just preload the audio without playing 
-                    //audio.play();
-                    //});
                   })
 
                 });
               }
             }
 
-            function writeFileUsingCordova(filename, data, cb) {
-              console.log('writeFileUsingCordova : ', filename, data);
-              $cordovaFile.writeFile(cordova.file.externalDataDirectory, filename.toString()+'.mp3', getBlob(data), true)
-                .then(function (success) {
-                  console.log('success : ', success);
-                  cb(success.target.localURL);
-                  //var audio = document.getElementById('videoplayer');
-                  //var source = document.getElementById('mp3Source');
-                  //source.src = allData;
-                  //audio.load();
-                  //audio.play();
-
-                }, function (error) {
-                  console.log('err in file writing : ', error);
-                });
-            }
-
-            function onErrorCreateFile(err) {
-              console.log('onErrorCreateFile : ',err);
-            }
-
-            function onErrorLoadFs(err) {
-              console.log('onErrorLoadFs : ', err);
-            }
-            function writeFile(fileEntry, dataObj) {
-              // Create a FileWriter object for our FileEntry (log.txt).
-              fileEntry.createWriter(function (fileWriter) {
-
-                fileWriter.onwriteend = function () {
-                  console.log("Successful file write...",fileEntry);
-                  media.playbackRecording(fileEntry.nativeURL);
-                };
-
-                fileWriter.onerror = function (e) {
-                  console.log("Failed file write: " + e.toString());
-                };
-
-                // If data object is not passed in,
-                // create a new Blob instead.
-                if (!dataObj) {
-                  dataObj = new Blob(['some file data'], {type: 'text/plain'});
-                }
-
-                fileWriter.write(dataObj);
-              });
-            }
 
             var c = document.getElementById("rbcanvas");
             c.width = $('#wrapper').innerWidth(); //options.width;
@@ -455,17 +406,12 @@ angular.module('starter.controllers', [])
               }
               drawingElement.startRecording();
               media.startRecord();
-              //drawingElement.clearCanvas();
-              //drawingElement.setColor($('#hidden-color').value);
-              //drawingElement.setStokeSize(2);
             }
 
 
             scope.onPlay = function () {
               if (currentRecording) {
-                currentRecording.drawing_data = JSON.stringify(currentRecording.drawing_data);
-                currentRecording.audio_data = JSON.stringify(currentRecording.audio_data);
-                console.log('onplay : ');
+                console.log('onplay : ',currentRecording);
                 scope.savedPlaying(currentRecording);
               } else {
                 alert('Sorry, System do not have any recording yet. Please select from the right bar.');
@@ -476,7 +422,6 @@ angular.module('starter.controllers', [])
             var onSave = function (res) {
               scope.isloading = true;
               var serializedData = serializeDrawing(drawingElement);
-
               var obj = {
                 drawing_data: serializedData,
                 audio_data: res,
@@ -488,35 +433,17 @@ angular.module('starter.controllers', [])
               } else {
                 obj.name = 'scene :  1';
               }
-              currentRecording = obj;
-              DrawingService.save(obj, scope.project._id).then(function () {
+              DrawingService.save(obj, scope.project._id).then(function (newObj) {
+                currentRecording = newObj;
                 init(scope.project._id);
                 scope.isloading = false;
               })
             }
 
-            function isJSON(data) {
-              var ret = true;
-              try {
-                JSON.parse(data);
-              } catch (e) {
-                ret = false;
-              }
-              return ret;
-            }
-
             scope.savedPlaying = function (obj) {
-              console.log('savedplaying',obj);
+              console.log('savedplaying', obj);
               if (scope.modal) {
                 scope.modal.hide();
-              }
-              if(!isJSON(obj.drawing_data)){
-                obj.drawing_data = obj.drawing_data;
-                obj.audio_data = obj.audio_data
-              }
-              else{
-                obj.drawing_data = JSON.parse(obj.drawing_data)
-                obj.audio_data = JSON.parse(obj.audio_data)
               }
               var result = deserializeDrawing(obj.drawing_data);
               if (result == null)
@@ -531,10 +458,9 @@ angular.module('starter.controllers', [])
                   result[i].drawing = drawingElement;
                 }
 
-                writeFileUsingCordova(obj.id || obj._id, obj.audio_data, function (url) {
-                  playRecording();
-                  media.playbackRecording(url);
-                });
+                playRecording();
+                console.log('chal par : ', obj.audio_data);
+                media.playbackRecording($serverurl + 'uploads/' + obj.audio_data);
               }
             }
 
@@ -694,16 +620,6 @@ angular.module('starter.controllers', [])
               var xhr = new XMLHttpRequest();
               xhr.open("GET", url);
               xhr.responseType = "blob";
-              //xhr.onreadystatechange = function () {
-              //  if (xhr.readyState === 4) {
-              //    if (xhr.status === 200 || xhr.status == 0) {
-              //      xhr.responseText
-              //      console.log('xhr.responseText :',xhr.responseText);
-              //    }
-              //  }
-              //}
-
-
               xhr.addEventListener('load', function () {
                 cb(xhr.response);
               });
@@ -729,24 +645,6 @@ angular.module('starter.controllers', [])
                   drawingElement.setImage($serverurl + data.data.path, data.data.filename);
                 })
               });
-              /*var xhr = new XMLHttpRequest();
-               xhr.open("GET", event.target.src);
-               xhr.responseType = "blob";
-
-               function analyze_data(blob) {
-               var reader = new FileReader();
-               reader.readAsDataURL(blob)
-               reader.onload = imageIsLoaded;
-               UserService.uploadImage(new File([blob], 'anything.png',{type: "image/png", lastModified: new Date()})).then(function (data) {
-               console.log('blobl : ', blob, $serverurl + data.data.path, data.data.filename)
-               drawingElement.setImage($serverurl + data.data.path, data.data.filename);
-               })
-               }
-
-               xhr.onload = function () {
-               analyze_data(xhr.response);
-               }
-               xhr.send();*/
             });
 
 
@@ -851,7 +749,7 @@ angular.module('starter.controllers', [])
               if (direction == 1) {
                 console.log('please open browser')
                 //$state.go('video', {"key": "57c6b905280db28a0fc14561"});//obj._id});
-                window.open('http://172.16.10.228:8100/#/video/'+obj._id, '_system');
+                window.open($weburl+obj._id, '_system');
               } else {
 
               }

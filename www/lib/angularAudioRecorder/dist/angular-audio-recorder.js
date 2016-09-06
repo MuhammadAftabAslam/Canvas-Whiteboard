@@ -1032,7 +1032,7 @@ angular.module('angularAudioRecorder.services')
               break;
 
             case 'android':
-              url += '.mp3';
+              url += '.amr';
               break;
 
             case 'wp':
