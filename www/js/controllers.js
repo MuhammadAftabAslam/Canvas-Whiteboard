@@ -57,7 +57,7 @@ angular.module('starter.controllers', [])
             var audio = document.getElementById('videoplayer');
 
             var source = document.getElementById('oggSource');
-            source.src = JSON.parse(res[res.length - 1].audio_data);
+            source.src = JSON.parse(JSON.parse(res[res.length - 1].audio_data));
             audio.load(); //call this to just preload the audio without playing
             audio.play();
             $('.video-holder').addClass('play');
