@@ -28,7 +28,7 @@ angular.module('starter.controllers', [])
         drawingElement.playRecording(function () {
           playbackInterruptCommand = "";
         }, function () {
-          //$state.go('login');
+          $state.go('tab.dash');
           //$rootScope.$emit('user:loggedin', {});
         }, function () {
           console.log('drawing playback paused');
@@ -53,9 +53,7 @@ angular.module('starter.controllers', [])
               result[i].drawing = drawingElement;
             }
             var audioData = res[res.length - 1].audio_data;
-
             $('.video-holder').removeClass('play');
-
             var audio = document.getElementById('videoplayer');
             var source = document.getElementById('mp3Source');
             source.src = $serverurl + 'uploads/' + audioData;
@@ -67,12 +65,12 @@ angular.module('starter.controllers', [])
         }
         else {
           alert('Create atleast one scene before making this lecture into video.')
-          //$state.go('tab.dash');
+          $state.go('tab.dash');
           //$rootScope.$emit('user:loggedin', data);
         }
       })
     }
-    else {
+    else{
       //$state.go('tab.dash');
     }
   })
@@ -322,44 +320,48 @@ angular.module('starter.controllers', [])
 
             var getBlob = function (str) {
               var base64Data = str.split(',')[1];
-              return base64toBlob(base64Data, 'mpeg');
+              return base64toBlob(base64Data, 'amr');
             }
 
-
+var blob = new Blob([],  {type: "text/plain"});
+for (var i=0; i<10; i++){
+    blob = new Blob([blob," "+i], {type: "text/plain"});
+}
             media.onRecordComplete = function (locals) {
               var audio = document.getElementById('videoplayer');
               var source = document.getElementById('mp3Source');
               console.log('onRecordComplete callback: ======= >');
               if (scope.isRecording == 2) {
-                debugger;
                 media.save('audio', function (res, blobObj) {
                   console.log('wave  : pausedAudios', res, blobObj);
                   blobToDataURL(blobObj, function (respond) {
-                    //var abc = getBlob(respond)
-                    pausedAudios.push(respond);//abc)
-                    console.log('resultingBlob : ', resultingBlob);
-                    //blobToDataURL(resultingBlob, function (concateBlob) {
+                    pausedAudios.push(' '+respond.split(',')[1]);
                     //source.src = concateBlob;//content; //'http://www.stephaniequinn.com/Music/Commercial%20DEMO%20-%2013.mp3'; 
-                    //audio.load(); //call this to just preload the audio without playing 
-                    //audio.play();
-                    //});
                   })
-                  console.log('pausedAudios : ', pausedAudios);
                 });
               } else {
-
-                console.log('audio is recording and then stop');
+                console.log('audio is recording and then stop',pausedAudios);
                 media.save('audio', function (res, blobObj) {
-                  console.log('res : ', res, blobObj);
-                  debugger;
+                  console.log('res ee: ', res, blobObj);
                   blobToDataURL(blobObj, function (respond) {
-                    console.log('resultingBlob : ', respond);
-                    pausedAudios.push(respond);//abc)
-                    onSave(pausedAudios[pausedAudios.length - 1]);
+                    pausedAudios.push(' '+respond.split(',')[1]);
+                    ConcatenateBlobs12(pausedAudios, 'audio/amr', function (resultingBlob) {
+                      console.log('resultingBlob : ', resultingBlob);
+                      blobToDataURL(resultingBlob, function (allData) {
+                        console.log('allData : ', allData);
+                        onSave(allData);
+                      })
+                    })
                   })
 
                 });
               }
+            }
+
+            var ConcatenateBlobs12 = function (arr, type,cb) {
+              var blob = new Blob(arr, {type: type});
+              cb(blob);
+
             }
 
 
@@ -434,6 +436,7 @@ angular.module('starter.controllers', [])
                 obj.name = 'scene :  1';
               }
               DrawingService.save(obj, scope.project._id).then(function (newObj) {
+                console.log('newObj : ',newObj);
                 currentRecording = newObj;
                 init(scope.project._id);
                 scope.isloading = false;
@@ -457,7 +460,6 @@ angular.module('starter.controllers', [])
                 for (var i = 0; i < result.length; i++) {
                   result[i].drawing = drawingElement;
                 }
-
                 playRecording();
                 console.log('chal par : ', obj.audio_data);
                 media.playbackRecording($serverurl + 'uploads/' + obj.audio_data);

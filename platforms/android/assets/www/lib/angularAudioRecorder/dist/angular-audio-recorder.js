@@ -1729,13 +1729,13 @@ angular.module('angularAudioRecorder.services')
               "Final size = " + finalSize
               + ", Reduction: " + Number((100 * (initialSize - finalSize) / initialSize)).toPrecision(4) + "%");
 
-            busy = false;
+            //busy = false;
             if (onSuccess && typeof onSuccess === 'function') {
               onSuccess(mp3Blob);
             }
           }
         };
-        //busy = false;
+        busy = false;
       };
       busy = true;
       //console.log('file reader : ',blob);
