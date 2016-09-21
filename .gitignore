@@ -15,7 +15,7 @@ eggs/
 .eggs/
 lib64/
 parts/
-
+node_modules/
 var/
 .idea/
 *.egg-info/
