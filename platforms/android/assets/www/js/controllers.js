@@ -13,8 +13,9 @@ angular.module('starter.controllers', [])
       $ionicSideMenuDelegate.toggleLeft();
     };
   })
-  .controller('VideoCtrl', function ($scope, $stateParams, DrawingService, $state, $rootScope, $serverurl) {
-    console.log('$stateParams : ', $stateParams.key);
+  .controller('VideoCtrl', function ($scope, $stateParams, DrawingService, $state, $rootScope, $serverurl,$timeout) {
+    var audio = document.getElementById('videoplayer');
+    var source = document.getElementById('mp3Source');
     var drawingElement = new RecordableDrawing("videocanvas");
     var c = document.getElementById("videocanvas");
     c.width = $(window).innerWidth(); //options.width;
@@ -24,24 +25,32 @@ angular.module('starter.controllers', [])
 
       var ctx = c.getContext("2d");
 
-      var playRecording = function () {
-        drawingElement.playRecording(function () {
-          playbackInterruptCommand = "";
-        }, function () {
-          $state.go('tab.dash');
-          //$rootScope.$emit('user:loggedin', {});
-        }, function () {
-          console.log('drawing playback paused');
-        }, function () {
-          return playbackInterruptCommand;
-        });
-      }
 
-      DrawingService.getProjectVideo($stateParams.key).then(function (res) {
-        //debugger;
-        console.log('project video : ', res[res.length - 1]);
-        if (res.length > 0) {
-          var result = deserializeDrawing(res[res.length - 1].drawing_data);
+      var drawingGenerator = function (arr,cb) {
+        var playRecording = function () {
+          drawingElement.playRecording(function () {
+            playbackInterruptCommand = "";
+          }, function () {
+
+            console.log('drawing playback complete',indexofRunningRecording);
+            if(indexofRunningRecording < arr.length - 1){
+              indexofRunningRecording = indexofRunningRecording + 1;
+              playbackLogic(arr[indexofRunningRecording]);
+            }
+            else{
+              cb();
+            }
+          }, function () {
+            console.log('drawing playback paused');
+          }, function () {
+            return playbackInterruptCommand;
+          });
+        }
+
+        var playbackLogic = function(abc) {
+          var test = [];
+          test.push(abc);
+          var result = deserializeDrawing(JSON.stringify(test));
           if (result == null)
             result = "Error : Unknown error in deserializing the data";
           if (result instanceof Array == false) {
@@ -52,20 +61,127 @@ angular.module('starter.controllers', [])
             for (var i = 0; i < result.length; i++) {
               result[i].drawing = drawingElement;
             }
-            var audioData = res[res.length - 1].audio_data;
+
             $('.video-holder').removeClass('play');
-            var audio = document.getElementById('videoplayer');
-            var source = document.getElementById('mp3Source');
-            source.src = $serverurl + 'uploads/' + audioData;
-            audio.load(); //call this to just preload the audio without playing
-            audio.play();
             playRecording();
             $('.video-holder').addClass('play');
           }
         }
+        var indexofRunningRecording = 0;
+
+        audio.play();
+        playbackLogic(arr[0]);
+
+      }
+
+      var drawingConcatenator = function (arr, audioDuration, cb) {
+        console.log('arr : ', arr,audioDuration);
+        var timer = 0;
+        var concatenatedData = [];
+        var totalscenes = 0;
+        for (var i = 0; i < arr.length - 1; i++) {
+          totalscenes = totalscenes + arr[i].actionsets.length
+        }
+
+        console.log('totalscenes : ', totalscenes,audioDuration);
+        for (var i = 0; i < arr.length; i++) {
+          //if (arr[i].actionsets.length) {
+          for (var j = 0; j < arr[i].actionsets.length; j++) {
+            if (i > 0) {
+              arr[i].actionsets[j].interval = arr[i].actionsets[j].interval + timer;
+              //timer = arr[i].actionsets[j].interval;
+              concatenatedData.push(arr[i].actionsets[j]);
+            }
+            else {
+              concatenatedData.push(arr[i].actionsets[j]);
+            }
+            if (j == arr[i].actionsets.length - 1) {
+              timer = arr[i].actionsets[j].interval;
+              console.log('timer :',timer);
+            }
+            // }
+          }
+        }
+        var diff = audioDuration / totalscenes;
+        console.log('totalscenes : timer', audioDuration - timer, diff, concatenatedData);
+        for (var i = 0; i < concatenatedData.length; i++) {
+          console.log('b4 : ', i, concatenatedData[i].interval);
+          concatenatedData[i].interval = concatenatedData[i].interval + diff;
+          console.log('after : ', concatenatedData[i].interval)
+        }
+        cb({actionsets: concatenatedData});
+      }
+
+
+      var playRecording = function () {
+        drawingElement.playRecording(function () {
+          playbackInterruptCommand = "";
+        }, function () {
+
+          console.log('drawing playback complete');
+
+        }, function () {
+          console.log('drawing playback paused');
+        }, function () {
+          return playbackInterruptCommand;
+        });
+      }
+
+      DrawingService.getProjectVideo($stateParams.key).then(function (res) {
+        //debugger;
+        console.log('project video : ', res);
+        if (res) {
+          console.log('res.drawing_data : ', res.drawing_data);
+          source.src = $serverurl + 'uploads/' + res.audio_data;//'http://localhost:8080/' + 'uploads/' +res.audio_data;
+          audio.load();
+
+          audio.oncanplaythrough = function () {
+            console.log("Can play through video without stopping");
+            drawingConcatenator(angular.copy(res.drawing_data),audio.duration * 1000, function (res) {
+              console.log('AllDOne',res);
+              var test = [];
+              test.push(res);
+              var result = deserializeDrawing(JSON.stringify(test));
+              if (result == null)
+                result = "Error : Unknown error in deserializing the data";
+              if (result instanceof Array == false) {
+                return;
+              } else {
+                drawingElement.recordings = result;
+                //set drawing property of each recording
+                for (var i = 0; i < result.length; i++) {
+                  result[i].drawing = drawingElement;
+                }
+
+                $('.video-holder').removeClass('play');
+                audio.play();
+
+
+                playRecording();
+                $('.video-holder').addClass('play');
+              }
+
+
+            });
+          };
+          //audio.playbackRate = 1.4;
+
+          audio.onloadeddata = function () {
+            console.log("Browser has loaded the current frame");
+            console.log('duration load : ',audio.duration);
+          };
+          audio.oncanplay = function () {
+            console.log("Can start playing video");
+            console.log('duration : ',audio.duration);
+          };
+
+
+
+
+        }
         else {
           alert('Create atleast one scene before making this lecture into video.')
-          $state.go('tab.dash');
+          //$state.go('tab.dash');
           //$rootScope.$emit('user:loggedin', data);
         }
       })
@@ -83,7 +199,7 @@ angular.module('starter.controllers', [])
     $scope.data = {};
     $scope.login = function () {
       UserService.login({
-        username: $scope.data.username,
+        email: $scope.data.email,
         password: $scope.data.password
       }, $scope.data.remember).then(function (data) {
         if (data) {
@@ -283,50 +399,17 @@ angular.module('starter.controllers', [])
                 });
               } else {
                 media.save('audio', function (res, bloburl, blob) {
-                  debugger;
                   pausedAudios.push(blob);
                   console.log('mp3 completeAudios',pausedAudios);
                   ConcatenateBlobs(pausedAudios, 'audio/mp3', function (resultingBlob) {
                     blobToDataURL(resultingBlob, function (allData) {
-                      onSave(allData);
+                      onSave(allData,'mp3');
                     })
                   })
                 });
               }
             }
 
-
-            function base64toBlob(b64Data, contentType, sliceSize) {
-              contentType = contentType || '';
-              sliceSize = sliceSize || 512;
-
-              var byteCharacters = atob(b64Data);
-              var byteArrays = [];
-
-              for (var offset = 0; offset < byteCharacters.length; offset += sliceSize) {
-                var slice = byteCharacters.slice(offset, offset + sliceSize);
-
-                var byteNumbers = new Array(slice.length);
-                for (var i = 0; i < slice.length; i++) {
-                  byteNumbers[i] = slice.charCodeAt(i);
-                }
-
-                var byteArray = new Uint8Array(byteNumbers);
-                byteArrays.push(byteArray);
-              }
-
-              return new Blob(byteArrays, {type: contentType});
-            }
-
-            var getBlob = function (str) {
-              var base64Data = str.split(',')[1];
-              return base64toBlob(base64Data, 'amr');
-            }
-
-var blob = new Blob([],  {type: "text/plain"});
-for (var i=0; i<10; i++){
-    blob = new Blob([blob," "+i], {type: "text/plain"});
-}
             media.onRecordComplete = function (locals) {
               var audio = document.getElementById('videoplayer');
               var source = document.getElementById('mp3Source');
@@ -335,35 +418,21 @@ for (var i=0; i<10; i++){
                 media.save('audio', function (res, blobObj) {
                   console.log('wave  : pausedAudios', res, blobObj);
                   blobToDataURL(blobObj, function (respond) {
-                    pausedAudios.push(' '+respond.split(',')[1]);
+                    pausedAudios.push(respond);
                     //source.src = concateBlob;//content; //'http://www.stephaniequinn.com/Music/Commercial%20DEMO%20-%2013.mp3'; 
                   })
                 });
               } else {
-                console.log('audio is recording and then stop',pausedAudios);
+                console.log('audio is recording and then stop', pausedAudios);
                 media.save('audio', function (res, blobObj) {
                   console.log('res ee: ', res, blobObj);
                   blobToDataURL(blobObj, function (respond) {
-                    pausedAudios.push(' '+respond.split(',')[1]);
-                    ConcatenateBlobs12(pausedAudios, 'audio/amr', function (resultingBlob) {
-                      console.log('resultingBlob : ', resultingBlob);
-                      blobToDataURL(resultingBlob, function (allData) {
-                        console.log('allData : ', allData);
-                        onSave(allData);
-                      })
-                    })
+                    pausedAudios.push(respond);
+                    onSave(pausedAudios,'amr');
                   })
-
                 });
               }
             }
-
-            var ConcatenateBlobs12 = function (arr, type,cb) {
-              var blob = new Blob(arr, {type: type});
-              cb(blob);
-
-            }
-
 
             var c = document.getElementById("rbcanvas");
             c.width = $('#wrapper').innerWidth(); //options.width;
@@ -421,15 +490,17 @@ for (var i=0; i<10; i++){
             }
 
 
-            var onSave = function (res) {
+            var onSave = function (res, type) {
+              pausedAudios = [];
               scope.isloading = true;
               var serializedData = serializeDrawing(drawingElement);
               var obj = {
                 drawing_data: serializedData,
                 audio_data: res,
-                id: (!$.isEmptyObject(currentRecording)) ? currentRecording.id : (new Date()).getTime()
+                id: (!$.isEmptyObject(currentRecording)) ? currentRecording.id : (new Date()).getTime(),
+                type: type
               }
-              console.log('onsave  : ',obj);
+              console.log('onsave  : ', obj);
               if (scope.recordings) {
                 obj.name = 'scene : ' + (scope.recordings.length + 1);
               } else {

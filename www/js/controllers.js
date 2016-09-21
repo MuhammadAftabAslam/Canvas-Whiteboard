@@ -31,8 +31,7 @@ angular.module('starter.controllers', [])
           drawingElement.playRecording(function () {
             playbackInterruptCommand = "";
           }, function () {
-            //$state.go('tab.dash');
-            //$rootScope.$emit('user:loggedin', {});
+
             console.log('drawing playback complete',indexofRunningRecording);
             if(indexofRunningRecording < arr.length - 1){
               indexofRunningRecording = indexofRunningRecording + 1;
@@ -75,19 +74,94 @@ angular.module('starter.controllers', [])
 
       }
 
+      var drawingConcatenator = function (arr, audioDuration, cb) {
+        console.log('arr : ', arr,audioDuration);
+        var timer = 0;
+        var concatenatedData = [];
+        var totalscenes = 0;
+        for (var i = 0; i < arr.length - 1; i++) {
+          totalscenes = totalscenes + arr[i].actionsets.length
+        }
+
+        console.log('totalscenes : ', totalscenes,audioDuration);
+        for (var i = 0; i < arr.length; i++) {
+          //if (arr[i].actionsets.length) {
+          for (var j = 0; j < arr[i].actionsets.length; j++) {
+            if (i > 0) {
+              arr[i].actionsets[j].interval = arr[i].actionsets[j].interval + timer;
+              //timer = arr[i].actionsets[j].interval;
+              concatenatedData.push(arr[i].actionsets[j]);
+            }
+            else {
+              concatenatedData.push(arr[i].actionsets[j]);
+            }
+            if (j == arr[i].actionsets.length - 1) {
+              timer = arr[i].actionsets[j].interval;
+              console.log('timer :',timer);
+            }
+            // }
+          }
+        }
+        var diff = audioDuration / totalscenes;
+        console.log('totalscenes : timer', audioDuration - timer, diff, concatenatedData);
+        for (var i = 0; i < concatenatedData.length; i++) {
+          console.log('b4 : ', i, concatenatedData[i].interval);
+          concatenatedData[i].interval = concatenatedData[i].interval + diff;
+          console.log('after : ', concatenatedData[i].interval)
+        }
+        cb({actionsets: concatenatedData});
+      }
+
+
+      var playRecording = function () {
+        drawingElement.playRecording(function () {
+          playbackInterruptCommand = "";
+        }, function () {
+
+          console.log('drawing playback complete');
+
+        }, function () {
+          console.log('drawing playback paused');
+        }, function () {
+          return playbackInterruptCommand;
+        });
+      }
 
       DrawingService.getProjectVideo($stateParams.key).then(function (res) {
         //debugger;
         console.log('project video : ', res);
         if (res) {
-          console.log('res.drawing_data : ',res.drawing_data);
-          source.src = $serverurl+'uploads/' +res.audio_data;//'http://localhost:8080/' + 'uploads/' +res.audio_data;
+          console.log('res.drawing_data : ', res.drawing_data);
+          source.src = $serverurl + 'uploads/' + res.audio_data;//'http://localhost:8080/' + 'uploads/' +res.audio_data;
           audio.load();
 
           audio.oncanplaythrough = function () {
             console.log("Can play through video without stopping");
-            drawingGenerator(res.drawing_data,function(){
-              console.log('AllDOne');
+            drawingConcatenator(angular.copy(res.drawing_data),audio.duration * 1000, function (res) {
+              console.log('AllDOne',res);
+              var test = [];
+              test.push(res);
+              var result = deserializeDrawing(JSON.stringify(test));
+              if (result == null)
+                result = "Error : Unknown error in deserializing the data";
+              if (result instanceof Array == false) {
+                return;
+              } else {
+                drawingElement.recordings = result;
+                //set drawing property of each recording
+                for (var i = 0; i < result.length; i++) {
+                  result[i].drawing = drawingElement;
+                }
+
+                $('.video-holder').removeClass('play');
+                audio.play();
+
+
+                playRecording();
+                $('.video-holder').addClass('play');
+              }
+
+
             });
           };
           audio.onloadeddata = function () {
@@ -321,7 +395,6 @@ angular.module('starter.controllers', [])
                 });
               } else {
                 media.save('audio', function (res, bloburl, blob) {
-                  debugger;
                   pausedAudios.push(blob);
                   console.log('mp3 completeAudios',pausedAudios);
                   ConcatenateBlobs(pausedAudios, 'audio/mp3', function (resultingBlob) {
@@ -351,7 +424,7 @@ angular.module('starter.controllers', [])
                   console.log('res ee: ', res, blobObj);
                   blobToDataURL(blobObj, function (respond) {
                     pausedAudios.push(respond);
-                    onSave(allData,'amr');
+                    onSave(pausedAudios,'amr');
                   })
                 });
               }
