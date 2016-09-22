@@ -1,5 +1,12 @@
-angular.module('starter.services')
-  .factory('DrawingService', function ($q, $socket, $cordovaDevice) {
+(function () {
+  "use strict";
+
+  angular
+    .module('starter')
+    .factory('DrawingService', DrawingService);
+
+  function DrawingService($q, $socket) {
+
     var loggedin_user = '';
     localStorage.user ? loggedin_user = JSON.parse(localStorage.user) : loggedin_user = '';
     var completeData = [];
@@ -13,7 +20,7 @@ angular.module('starter.services')
           deferred.resolve(alldata);
         });
       return deferred.promise;
-    }
+    };
 
     var deleteAll = function (project_id) {
       var deferred = $q.defer();
@@ -29,7 +36,7 @@ angular.module('starter.services')
         deferred.resolve(false);
       }
       return deferred.promise;
-    }
+    };
 
     var getSounds = function () {
       localStorage.user ? loggedin_user = JSON.parse(localStorage.user) : loggedin_user = '';
@@ -44,18 +51,18 @@ angular.module('starter.services')
           });
       }
       else {
-        console.log('get nothing==== >')
+        console.log('get nothing==== >');
         deferred.resolve([]);
       }
       return deferred.promise;
-    }
+    };
 
     var getInitialProject = function (project_id) {
-      console.log('getInitialProject : ')
+      console.log('getInitialProject : ');
       var deferred = $q.defer();
       var sounds = [];
       getSounds().then(function (allProjects) {
-        console.log('after getting projects : ', allProjects)
+        console.log('after getting projects : ', allProjects);
         if (allProjects.length) {
           sounds = completeData = allProjects;
           var project = {};
@@ -77,17 +84,17 @@ angular.module('starter.services')
         }
       });
       return deferred.promise;
-    }
+    };
 
     var getProjectVideo = function (project_id) {
       var deferred = $q.defer();
-      $socket.emit('req:project:video', {project_id : project_id})
+      $socket.emit('req:project:video', {project_id: project_id})
         .on('res:project:video', function (alldata) {
           $socket.removeListener('res:project:video');
           deferred.resolve(alldata);
         });
       return deferred.promise;
-    }
+    };
 
     var saveSound = function (sound_obj, project_id) {
       var deferred = $q.defer();
@@ -101,10 +108,10 @@ angular.module('starter.services')
           deferred.resolve(alldata);
         });
       return deferred.promise;
-    }
+    };
 
-    var swap = function (arr, project_id) {}
-
+    var swap = function (arr, project_id) {
+    };
 
     var addProject = function (obj, defaultSettings) {
       var deferred = $q.defer();
@@ -119,9 +126,7 @@ angular.module('starter.services')
           deferred.resolve(alldata);
         });
       return deferred.promise;
-    }
-
-
+    };
 
     var concatenatefiles = function (files) {
       var deferred = $q.defer();
@@ -131,7 +136,7 @@ angular.module('starter.services')
           deferred.resolve(alldata);
         });
       return deferred.promise;
-    }
+    };
 
     var ClearUserData = function () {
       var deferred = $q.defer();
@@ -139,11 +144,11 @@ angular.module('starter.services')
       completeData = [];
       deferred.resolve();
       return deferred.promise;
-    }
+    };
 
     var loggedInUser = function () {
       return loggedin_user || JSON.parse(localStorage.user);
-    }
+    };
 
     return {
       get: getSounds,
@@ -154,140 +159,11 @@ angular.module('starter.services')
       delete: deleteSound,
       deleteAll: deleteAll,
       //play: playSound,
-      concatenateFiles : concatenatefiles,
+      concatenateFiles: concatenatefiles,
       swap: swap,
       ClearUserData: ClearUserData,
       loggedInUser: loggedInUser
     };
-  })
+  }
 
-
-  .factory('UserService', function ($q, $socket, $url, $http) {
-
-    var login = function (data, rememberFlag) {
-      var deferred = $q.defer();
-      $socket.emit('req:login', data)
-        .on('res:login', function (alldata) {
-          console.log('res:login socket: ', alldata);
-          if (alldata) {
-            if (rememberFlag)
-              localStorage.user = JSON.stringify(alldata);
-            deferred.resolve(alldata);
-          }
-          else {
-            localStorage.user = '';
-            deferred.resolve(false);
-          }
-        });
-      return deferred.promise;
-    }
-
-    var logout = function () {
-      var deferred = $q.defer();
-      localStorage.clear();
-      deferred.resolve();
-      return deferred.promise;
-    }
-
-    var register = function (data) {
-      console.log('=====> register', data);
-      var deferred = $q.defer();
-      $socket.emit('req:register', data)
-        .on('res:register', function (alldata) {
-          console.log('res:register socket: ', alldata);
-          if (alldata) {
-            delete alldata.password;
-            localStorage.user = JSON.stringify(alldata);
-            deferred.resolve(alldata);
-          }
-          else {
-            deferred.resolve(false);
-          }
-        });
-      return deferred.promise;
-    }
-
-    var authenticate = function (data) {
-      var deferred = $q.defer();
-      if (localStorage.user) {
-        var user = JSON.parse(localStorage.user);
-        $socket.emit('req:login', {username: user.username, _id: user._id, token: user.token})
-          .on('res:login', function (alldata) {
-            console.log('res:login authentication socket: ', alldata);
-            if (alldata) {
-              deferred.resolve(alldata);
-            }
-            else {
-              deferred.resolve(false);
-            }
-          });
-      }
-      else {
-        deferred.resolve(false);
-      }
-      return deferred.promise;
-    }
-
-
-    var uploadImage = function (data) {
-      console.log('uploadImage enter in fun : ',data)
-      var deferred = $q.defer();
-      if (data) {
-        var fd = new FormData();
-        fd.append('file', data);
-        $http.post($url+'/upload', fd, {
-          transformRequest: angular.identity,
-          headers: {'Content-Type': undefined}
-        }).success(function (res) {
-          console.log('uploadImage success',res);
-          deferred.resolve(res);
-        }).error(function (err) {
-          console.log('err on upload: ',err)
-          deferred.resolve(false);
-        });
-      }
-      else {
-        deferred.resolve(false);
-      }
-      return deferred.promise;
-    }
-
-
-    return {
-      login: login,
-      logout: logout,
-      register: register,
-      authenticate: authenticate,
-      uploadImage: uploadImage
-    };
-  })
-  .factory('$socket', ['$url', function ($url) {
-    var socket = io.connect($url);
-    return socket;
-  }])
-  .factory('$url', function () {
-    //var url = 'http://localhost:8080';
-    //var url = 'http://192.168.0.41:8080';
-    var url = 'http://172.16.10.228:8080';
-    //var url = 'http://172.16.11.202:8080';
-    return url;
-  })
-  .factory('$serverurl', function () {
-    //var url = 'http://localhost:8080/';
-    //var url = 'http://192.168.0.41:8080/';
-    var url = 'http://172.16.10.228:8080/';
-    //var url = 'http://172.16.11.202:8080/';
-    return url;
-  })
-  .factory('$weburl', function () {
-    //var url = 'http://localhost:8100/#/video/';
-    //var url = 'http://192.168.0.41:8100/#/video/';
-    var url = 'http://172.16.10.228:8100/#/video/';
-    //var url = 'http://localhost:8100/#/video/';
-    //var url = 'http://172.16.11.202:8100/#/video/';
-    return url;
-  });
-
-
-
-
+})();

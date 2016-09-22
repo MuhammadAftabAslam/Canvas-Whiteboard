@@ -1,5 +1,11 @@
-angular.module('starter.services', [])
-  .factory('Sounds', function ($q) {
+(function () {
+  "use strict";
+
+  angular
+    .module('starter')
+    .factory('Sounds', Sounds);
+
+  function Sounds($q) {
 
     var deleteSound = function (scene_id, project_id) {
       console.log("calling deleteSound service ");
@@ -18,14 +24,14 @@ angular.module('starter.services', [])
         deferred.resolve();
       });
       return deferred.promise;
-    }
+    };
 
     var deleteAll = function () {
       localStorage.clear();
       var deferred = $q.defer();
       deferred.resolve();
       return deferred.promise;
-    }
+    };
 
     var getSounds = function () {
       var deferred = $q.defer();
@@ -33,7 +39,7 @@ angular.module('starter.services', [])
       if (localStorage.rbboard) sounds = JSON.parse(localStorage.rbboard);
       deferred.resolve(sounds);
       return deferred.promise;
-    }
+    };
 
     var getInitialProject = function (project_id) {
       var deferred = $q.defer();
@@ -57,7 +63,7 @@ angular.module('starter.services', [])
         deferred.resolve(false);
       }
       return deferred.promise;
-    }
+    };
 
 
     /*var playSound = function (scene_id, project_id) {
@@ -110,7 +116,7 @@ angular.module('starter.services', [])
         deferred.resolve();
       });
       return deferred.promise;
-    }
+    };
 
     var swap = function (arr, project_id) {
       console.log("calling swap services");
@@ -126,7 +132,7 @@ angular.module('starter.services', [])
       });
 
       return deferred.promise;
-    }
+    };
 
     var addProject = function (obj, defaultSettings) {
       if (defaultSettings) {
@@ -139,7 +145,7 @@ angular.module('starter.services', [])
         deferred.resolve();
       });
       return deferred.promise;
-    }
+    };
 
     return {
       get: getSounds,
@@ -151,5 +157,7 @@ angular.module('starter.services', [])
       //play: playSound,
       swap: swap
     };
-  });
 
+  }
+
+})();
