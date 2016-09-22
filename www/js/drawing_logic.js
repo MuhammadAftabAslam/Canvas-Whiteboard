@@ -622,6 +622,34 @@ RecordableDrawing = function (canvasId)
     self.ctx.fill();
 	}
 
+	function resize() {
+		//debugger;
+		var canvas = document.getElementById(canvasId);
+		var canvasRatio = canvas.height / canvas.width;
+		var windowRatio = window.innerHeight / window.innerWidth;
+		var width;
+		var height;
+
+
+
+		if (windowRatio < canvasRatio) {
+			// pehle choti thi bad me brri thi
+			height = window.innerHeight;
+			width = height / canvasRatio;
+		} else {
+			// pehle brri thi bad me choti thi
+			width = window.innerWidth;
+			height = width * canvasRatio;
+		}
+		//canvas.width = $(window).innerWidth(); //options.width;
+		//canvas.height = $(window).innerHeight();
+		canvas.width = window.innerWidth + '';
+		canvas.height = window.innerHeight + 'px';
+		//canvas.width = $(self.canvas).width(); //$(window).innerWidth()
+		//canvas.height = $(self.canvas).height(); //$(window).innerHeight();
+		//console.log('width : ',canvas.width,'canvas.height : ',canvas.width)
+	};
+
 	__init = function()
 	{
 		self.canvas = $("#" + canvasId);
@@ -642,6 +670,9 @@ RecordableDrawing = function (canvasId)
 		$(self.canvas).bind("mouseup", onMouseUp);
 		$(self.canvas).bind("mousemove", onMouseMove);
 		$(window).on('mouseup',onMouseUp);
+
+
+		//window.addEventListener('resize', resize, false);
 
 
 		//  var el = document.getElementById(canvasId);
