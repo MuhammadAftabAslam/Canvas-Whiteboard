@@ -13,25 +13,28 @@
     ]);
 
   function LoginCtrl($scope, UserService, $ionicPopup, $state, $rootScope) {
+
     $scope.data = {};
+
     $scope.login = function () {
-      UserService.login(
-        {
-          email: $scope.data.email,
-          password: $scope.data.password
-        },
-        $scope.data.remember).then(function (data) {
-        if (data) {
-          $state.go('tab.dash');
-          $rootScope.$emit('user:loggedin', data);
-          $scope.data = {};
-        } else {
-          var alertPopup = $ionicPopup.alert({
-            title: 'Login failed!',
-            template: 'Please check your credentials!'
-          });
-        }
-      });
+      UserService
+        .login(
+          {
+            email: $scope.data.email,
+            password: $scope.data.password
+          }, $scope.data.remember)
+        .then(function (data) {
+          if (data) {
+            $rootScope.$emit('user:loggedin', data);
+            $scope.data = {};
+            $state.go('tab.dash');
+          } else {
+            var alertPopup = $ionicPopup.alert({
+              title: 'Login failed!',
+              template: 'Please check your credentials!'
+            });
+          }
+        });
     };
 
     $scope

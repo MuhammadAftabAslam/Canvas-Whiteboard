@@ -27,6 +27,7 @@
       restrict: "AE",
       scope: false,
       link: function (scope, element) {
+
         scope.isRecording = 0;
         $ionicListDelegate.showReorder(true);
         scope.shouldShowDelete = true;
@@ -50,11 +51,12 @@
           };
 
           var getAllProjects = function () {
-            DrawingService.get().then(function (res) {
-              console.log('loading end');
-              scope.allProjects = res;
-              scope.isloading = false;
-            });
+            DrawingService
+              .get()
+              .then(function (res) {
+                scope.allProjects = res;
+                scope.isloading = false;
+              });
           };
 
           scope.moveItem = function (item, fromIndex, toIndex) {
@@ -432,16 +434,17 @@
 
           scope.openProjectModal = function () {
             console.log('open modal directive');
-            $ionicModal.fromTemplateUrl('templates/project-view.html', {
-              scope: scope,
-              //animation: 'slide-in-up',
-              //backdropClickToClose: false,
-              //hardwareBackButtonClose: false
-            }).then(function (modal) {
-              console.log('open modal directive hode');
-              scope.modal = modal;
-              scope.modal.show();
-            });
+            $ionicModal
+              .fromTemplateUrl('templates/project-view.html', {
+                scope: scope
+                //animation: 'slide-in-up',
+                //backdropClickToClose: false,
+                //hardwareBackButtonClose: false
+              })
+              .then(function (modal) {
+                scope.modal = modal;
+                scope.modal.show();
+              });
           };
 
           scope.openSceneModal = function () {
@@ -510,24 +513,16 @@
             }
           });
 
-          scope.createProject = function () {
-            console.log('open modal createProject');
-            $ionicModal.fromTemplateUrl('templates/new-project.html', {
-              scope: scope
-            }).then(function (modal) {
-              scope.newModal = modal;
-              scope.newModal.show();
-            });
-          }
-
           scope.addProject = function (form) {
-            //console.log('open modal addProject', form.description.$modelValue, form.useAsDefault.$modelValue);
-            DrawingService.addProject({
-              project_name: form.description.$modelValue || "abc",
-            }, '').then(function (data) {
-              scope.newModal.hide();
-              getAllProjects();
-            })
+            DrawingService
+              .addProject(
+                {
+                  project_name: form.description.$modelValue || "abc"
+                }, '')
+              .then(function (data) {
+                getAllProjects();
+                scope.modal.hide();
+              })
           };
 
           scope.loadProject = function (project_id) {

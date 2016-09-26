@@ -1,31 +1,67 @@
 <ion-modal-view>
   <div class="info-block">
-    <button class="button btn-close" ng-click="modal.hide()"><span class="icon-cancel"></span></button>
+
+    <button class="button btn-close" ng-click="modal.hide()">
+      <span class="icon-cancel"></span>
+    </button>
+
+    <form name="form" ng-model="form">
+      <ion-list>
+        <div class="item item-input item-stacked-label">
+          <label for="lec-name">Add New Lecture</label>
+          <input type="text"
+                 id="lec-name"
+                 class="form-control"
+                 placeholder="Lecture 1"
+                 name="description"
+                 ng-model="description"
+                 value="abc"/>
+        </div>
+        <ion-button ng-init="saveEmpty(form)" class="btn btn-primary" ng-click="addProject(form)">
+          Add <span class="icon-plus text-right"></span>
+        </ion-button>
+      </ion-list>
+    </form>
+
     <div class="jcf-scrollable" custom-form>
       <ul class="info-list">
         <li id="{{ project._id }}" ng-repeat="project in allProjects">
           <div class="box">
-            <a class="btn-upload"><span class="icon-upload"></span></a>
-            <div class="info-box" ng-click="loadProject(project._id)" data-drag="true" data-jqyoui-options="{revert: 'invalid',containment:'#{{ project._id }}',axis:'y'}" jqyoui-draggable="{animate:true,onStop:'checkProjectPosition(project)'}">
+            <a class="btn-upload">
+              <span class="icon-upload"></span>
+            </a>
+            <div class="info-box"
+                 ng-click="loadProject(project._id)"
+                 data-drag="true"
+                 data-jqyoui-options="{revert: 'invalid',containment:'#{{ project._id }}',axis:'y'}"
+                 jqyoui-draggable="{animate:true,onStop:'checkProjectPosition(project)'}">
               <a class="link">
-              	<span class="info">{{ project.project_name }}</span>
-              	<span class="caption"><span class="by">by</span> <span class="name">{{ user.username }}</span></span>
+                <span class="info">{{ project.project_name }}</span>
+                <span class="caption">
+                  <span class="by">by</span>
+                  <span class="name">{{ user.username }}</span>
+                </span>
               </a>
               <div class="block-drop">
-              	<a href="#" class="opener icon-ellipsis-vert"></a>
-             	<div class="dropdown">
-					<button class="btn-close"><span class="icon-cancel"></span></button>
-              		<ul>
-              			<li><a>Rename</a></li>
-              		</ul>
-              	</div>
+                <a href="#" class="opener icon-ellipsis-vert"></a>
+                <div class="dropdown">
+                  <button class="btn-close">
+                    <span class="icon-cancel"></span>
+                  </button>
+                  <ul>
+                    <li>
+                      <a>Rename</a>
+                    </li>
+                  </ul>
+                </div>
               </div>
             </div>
-            <a class="btn-delete"><span class="icon-delete"></span></a>
+            <a class="btn-delete">
+              <span class="icon-delete"></span>
+            </a>
           </div>
         </li>
       </ul>
     </div>
-    <button class="button btn-add" ng-click="createProject()"><span class="icon-plus"></span></button>
   </div>
 </ion-modal-view>

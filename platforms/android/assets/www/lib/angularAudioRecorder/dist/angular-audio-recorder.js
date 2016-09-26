@@ -362,7 +362,6 @@ var RecorderController = function (element, service, recorderUtils, $scope, $tim
 
   control.playbackPause = function () {
     if (!status.isPlaying || !service.isAvailable() || status.isRecording) {
-      debugger;
       return false;
     }
     control.getAudioPlayer().pause();
