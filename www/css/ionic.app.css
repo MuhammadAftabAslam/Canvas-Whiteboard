@@ -11926,6 +11926,9 @@ label {
   height: 100%;
   overflow: hidden; }
 
+.info-holder.login {
+  min-height: inherit; }
+
 #header {
   position: fixed;
   left: 0;

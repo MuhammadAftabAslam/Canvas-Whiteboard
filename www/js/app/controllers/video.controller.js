@@ -127,8 +127,7 @@
         });
       };
 
-      DrawingService.getProjectVideo($stateParams.key).then(function (res) {
-        //debugger;
+      DrawingService.getVideo($stateParams.key).then(function (res) {
         console.log('project video : ', res);
         if (res) {
           console.log('res.drawing_data : ', res.drawing_data);

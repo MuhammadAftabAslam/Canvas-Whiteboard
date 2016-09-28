@@ -745,15 +745,12 @@ Recording = function (drawingArg)
 
 			if (self.currActionSet == null)
 			{
-				//console.log('current actionset is null');
 				self.currActionSet = new ActionsSet(timeSlot, self.buffer);
-				//console.log('current actionset is null',self.currActionSet);
 				self.actionsSet = self.currActionSet;
 			}
 			else
 			{
 				var tmpActionSet = self.currActionSet;
-				//console.log('current actionset is not null',tmpActionSet);
 				self.currActionSet = new ActionsSet(timeSlot, self.buffer);
 				tmpActionSet.next = self.currActionSet;
 			}

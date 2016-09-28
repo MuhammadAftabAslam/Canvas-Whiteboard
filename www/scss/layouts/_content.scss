@@ -3,3 +3,27 @@
 	height: 100%;
 	overflow: hidden;
 }
+
+//.pane,
+//.view-container,
+//.audioRecorder,
+//.scroll-content{
+//  overflow: hidden !important;
+//  width: 100% !important;
+//  height: 100% !important;
+//}
+//
+//#rbcanvas{
+//  overflow: hidden;
+//}
+
+//.scroll{
+//  -moz-transform: none !important;
+//  -webkit-transform: none !important;
+//  -o-transform: none !important;
+//  transform: none !important;
+//}
+
+.info-holder{
+  &.login{min-height: inherit;}
+}

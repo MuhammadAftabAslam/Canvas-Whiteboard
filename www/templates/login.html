@@ -1,8 +1,8 @@
 <ion-view hide-nav-bar="true">
-  <ion-content class="form-block">
-    <div class="info-holder" custom-form>
+  <ion-content class="form-block" scroll="false">
+    <div class="info-holder login" custom-form>
       <div class="holder">
-        <h1>Sign In</h1>
+        <!--<h1>Sign In</h1>-->
 
         <form ng-submit="login()" class="form" name="loginForm" custom-functions>
           <fieldset>
@@ -11,7 +11,7 @@
               <input type="email" id="email" name="email" class="form-control" ng-model="data.email" placeholder="Please write email">
               <p ng-show="loginForm.email.$invalid && !loginForm.email.$pristine" class="help-block">Enter a valid email.</p>
             </div>
-            <div class="form-group">
+            <!--<div class="form-group">
               <label for="pswd">Password</label>
               <input type="password" id="pswd" name="password" class="form-control" placeholder="Password" ng-model="data.password"
                      ng-minlength="3">
@@ -24,14 +24,14 @@
                 <input type="checkbox" name="remember" id="remember" ng-model="data.remember" checked>
                 <label for="remember">Remember me</label>
               </div>
-            </div>
-            <input type="submit" ng-disabled="loginForm.$invalid || !data.email || !data.password" value="Sign In" class="btn btn-primary btn-submit">
-            <span class="divider"><span class="divider-holder">or</span></span>
+            </div>-->
+            <input type="submit" ng-disabled="loginForm.$invalid || !data.email" value="Sign In" class="btn btn-primary btn-submit">
+            <!--<span class="divider"><span class="divider-holder">or</span></span>
             <ul class="btns-list">
               <li><a href="" class="btn btn-facebook">Facebook</a></li>
               <li><a href="" class="btn btn-twitter">Twitter</a></li>
             </ul>
-            <input ui-sref="register" value="Sign up" class="btn btn-success btn-submit">
+            <input ui-sref="register" value="Sign up" class="btn btn-success btn-submit">-->
           </fieldset>
         </form>
       </div>

@@ -33,7 +33,7 @@
 
         $ionicPlatform.ready(function () {
           var init = function (project_id) {
-            scope.isloading = true;
+            //scope.isloading = true;
             if (!project_id) {
               DrawingService.getInitialProject().then(function (res) {
                 scope.project = res;
@@ -44,7 +44,7 @@
               DrawingService.getInitialProject(project_id).then(function (res) {
                 scope.project = res;
                 scope.recordings = res.scenes;
-                scope.isloading = false;
+                //scope.isloading = false;
               });
             }
           };
@@ -53,7 +53,7 @@
             DrawingService.get().then(function (res) {
               console.log('loading end');
               scope.allProjects = res;
-              scope.isloading = false;
+              //scope.isloading = false;
             });
           };
 
@@ -206,10 +206,11 @@
               console.log('audio is recording and then stop', pausedAudios);
               media.save('audio', function (res, blobObj) {
                 console.log('res ee: ', res, blobObj);
-                blobToDataURL(blobObj, function (respond) {
+                /*blobToDataURL(blobObj, function (respond) { Code for the server side call
                   pausedAudios.push(respond);
                   onSave(pausedAudios, 'amr');
-                })
+                })*/
+                onSave(blobObj.localURL, 'amr');
               });
             }
           };
@@ -312,8 +313,7 @@
                 result[i].drawing = drawingElement;
               }
               playRecording();
-              console.log('chal par : ', obj.audio_data);
-              media.playbackRecording($serverurl + 'uploads/' + obj.audio_data);
+              media.playbackRecording(obj.audio_data); //($serverurl + 'uploads/' + obj.audio_data);//SERVER CODE
             }
           };
 
@@ -325,10 +325,10 @@
             });
             confirmPopup.then(function (res) {
               if (res) {
-                scope.isloading = true;
+                //scope.isloading = true;
                 DrawingService.delete(obj._id, scope.project._id).then(function () {
                   init(scope.project._id);
-                  scope.isloading = false;
+                  //scope.isloading = false;
                 });
               } else {
                 //console.log('You are not sure');
@@ -367,12 +367,12 @@
               if (res) {
                 drawingElement.clearCanvas();
                 if (!$.isEmptyObject(currentRecording)) {
-                  scope.isloading = true;
+                  //scope.isloading = true;
                   DrawingService.delete(currentRecording._id, scope.project._id).then(function () {
                     init(scope.project._id);
                     $wrapper.removeClass('record');
                     currentRecording = {};
-                    scope.isloading = false;
+                    //scope.isloading = false;
                   });
 
                 }
@@ -400,14 +400,14 @@
           };
 
           scope.editRecordingName = function () {
-            scope.isloading = true;
+            //scope.isloading = true;
             $wrapper.removeClass('aside-active');
             if ($('#recordingName').hasClass('form-active')) {
               if ($($('#edit-recording-text')[0]).val() != $($('#recording-text')[0]).text()) {
                 currentRecording.name = $($('#edit-recording-text')[0]).val();
                 DrawingService.save(currentRecording, scope.project._id).then(function () {
                   init(scope.project._id);
-                  scope.isloading = false;
+                  //scope.isloading = false;
                   $($('#recording-text')[0]).text(currentRecording.name);
                 })
               }
@@ -603,7 +603,10 @@
             if (direction == 1) {
               console.log('please open browser')
               //$state.go('video', {"key": "57c6b905280db28a0fc14561"});//obj._id});
-              window.open($weburl + obj._id, '_system');
+              DrawingService.uploadCompleteProject(obj._id).then(function(res){
+                console.log('directive file last point',res);
+                window.open($weburl + obj._id, '_system');
+              })
             } else {
 
             }

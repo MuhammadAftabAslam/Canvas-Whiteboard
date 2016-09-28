@@ -74,5 +74,5 @@
     <preference name="SplashScreen" value="screen" />
     <preference name="orientation" value="landscape" />
     <preference name="AndroidPersistentFileLocation" value="Compatibility" />
-    <preference name="AndroidExtraFilesystems" value="sdcard,cache" />
+    <preference name="AndroidExtraFilesystems" value="files,files-external,documents,sdcard,cache,cache-external,root" />
 </widget>

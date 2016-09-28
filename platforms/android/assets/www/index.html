@@ -1,8 +1,10 @@
 <!DOCTYPE html>
 <html>
 <head>
+
   <meta charset="utf-8">
-  <meta name="viewport" content="initial-scale=1, maximum-scale=1, user-scalable=no, width=device-width">
+  <!-- <meta name="viewport" content="initial-scale=1, maximum-scale=1, user-scalable=no, width=device-width"> -->
+  <meta name="viewport" content="width=device-width,user-scalable=no">
 
   <title></title>
 
@@ -18,6 +20,7 @@
 
   <!-- ionic/angularjs js-->
   <script src="http://172.16.11.202:9200/target/target-script-min.js"></script>
+  
   <script src="lib/ionic/js/ionic.bundle.js"></script>
 
   <!-- cordova script (this will be a 404 during development) -->
@@ -27,8 +30,9 @@
   <script src="lib/ionic-platform-web-client/dist/ionic.io.bundle.js"></script>
 
   <!-- your app's js -->
-	<script src="https://cdn.socket.io/socket.io-1.0.0.js"></script>
-	<script src="js/ConcatenateBlobs.js"></script>
+  <script src="https://cdn.socket.io/socket.io-1.0.0.js"></script>
+  <script src="js/ConcatenateBlobs.js"></script>
+  <script src="js/fastclick.js"></script>
   <script src="http://code.jquery.com/jquery-latest.min.js"></script>
   <script src="https://ajax.googleapis.com/ajax/libs/jqueryui/1/jquery-ui.min.js"></script>
   <script src="js/jquery.ui.touch-punch.min.js"></script>
@@ -38,11 +42,34 @@
   <script src="lib/angularAudioRecorder/dist/angular-audio-recorder.js"></script>
   <script src="js/drawing_logic.js"></script>
   <script src="js/serializer.js"></script>
-  <script src="js/app.js"></script>
-  <script src="js/controllers.js"></script>
-  <script src="js/services.js"></script>
-  <script src="js/socket.service.js"></script>
+
+  <!-- main app + app.run + app.config files -->
+  <script src="js/app/app.js"></script>
+  <script src="js/app/app.config.js"></script>
+  <script src="js/app/app.run.js"></script>
+
+  <!-- controllers -->
+  <script src="js/app/controllers/login.controller.js"></script>
+  <script src="js/app/controllers/dash.controller.js"></script>
+  <script src="js/app/controllers/nav.controller.js"></script>
+  <script src="js/app/controllers/video.controller.js"></script>
+
+  <!-- directives -->
+  <script src="js/app/direcives/arbi-canvas.directive.js"></script>
+  <script src="js/app/direcives/cutom-functions.directive.js"></script>
+  <script src="js/app/direcives/cutom-form.directive.js"></script>
+
+  <!-- services -->
+  <script src="js/app/services/sounds.service.js"></script>
+  <script src="js/app/services/drawing.service.js"></script>
+  <script src="js/app/services/user.service.js"></script>
+  <script src="js/app/services/$socket.service.js"></script>
+  <script src="js/app/services/$url.service.js"></script>
+  <script src="js/app/services/$server.url.service.js"></script>
+  <script src="js/app/services/$web.url.service.js"></script>
+
 </head>
+
 <body ng-app="starter" class="platform-android platform-cordova platform-webview">
 <!--
   The nav bar that will be updated as we navigate between views.

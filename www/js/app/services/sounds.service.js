@@ -33,11 +33,31 @@
       return deferred.promise;
     };
 
-    var getSounds = function () {
+    var getFileData = function () {
       var deferred = $q.defer();
       var sounds = [];
-      if (localStorage.rbboard) sounds = JSON.parse(localStorage.rbboard);
-      deferred.resolve(sounds);
+      $cordovaFile.readAsText('main.json')
+        .then(function (success) {
+          console.log("Successful in reading the file initially:" + JSON.parse(success));
+          deferred.resolve(JSON.parse(success));
+        }, function (error) {
+          deferred.resolve(false);
+          console.log("error reading the file" + JSON.stringify(error))
+        });
+      return deferred.promise;
+    };
+
+    var setFileData = function (data) {
+      var deferred = $q.defer();
+      var data = JSON.stringify(data);
+      $cordovaFile.writeFile(cordova.file.dataDirectory,'main.json', JSON.stringify(data), true)
+        .then(function (success) {
+          console.log("success the file has been created")
+          deferred.resolve(true);
+        }, function (error) {
+          console.log("error" + JSON.stringify(error))
+          deferred.resolve(error);
+        });
       return deferred.promise;
     };
 

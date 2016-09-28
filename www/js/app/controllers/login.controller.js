@@ -17,8 +17,7 @@
     $scope.login = function () {
       UserService.login(
         {
-          email: $scope.data.email,
-          password: $scope.data.password
+          email: $scope.data.email
         },
         $scope.data.remember).then(function (data) {
         if (data) {
