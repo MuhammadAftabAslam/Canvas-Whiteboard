@@ -146,11 +146,16 @@
 
     var getVideo = function (project_id) {
       var deferred = $q.defer();
-      $socket.emit('req:project:video', {project_id: project_id})
+      if(socket.connected){
+        $socket.emit('req:project:video', {project_id: project_id})
         .on('res:project:video', function (alldata) {
           $socket.removeListener('res:project:video');
           deferred.resolve(alldata);
         });
+      }
+      else{
+        deferred.resolve(false);
+      }
       return deferred.promise;
     };
 
@@ -302,38 +307,44 @@
     var uploadCompleteProject = function (project_id) {
       var deferred = $q.defer();
       var project_obj = "";
-      getFileData().then(function (alldata) {
-        if (alldata) {
-          var projectAlreadyExist = JSON.parse(alldata);
-          for (var i = 0; i < projectAlreadyExist.length; i++) {
-            if (projectAlreadyExist[i].project_id == project_id) {
-              console.log('project found in data : ');
-              project_obj = projectAlreadyExist[i];
-            }
-
-            if (projectAlreadyExist.length - 1 == i && project_obj) {
-              console.log('project_obj : ', project_obj);
-              if (project_obj && project_obj.scenes && project_obj.scenes.length) {
-                readSoundFiles(project_obj).then(function (response) {
-                  console.log("res all read file : ", response);
-                  var promises = [];
-                  angular.forEach(project_obj.scenes, function (value) {
-                    promises.push(uploadSceneToServer(value));
-                  });
-                  $q.all(promises).then(function () {
-                    console.log('all promises after server');
-                    deferred.resolve(true);
-                  });
-
-                });
+      console.log('socket.connected : ',$socket.connected);
+      if($socket.connected) {
+        getFileData().then(function (alldata) {
+          if (alldata) {
+            var projectAlreadyExist = JSON.parse(alldata);
+            for (var i = 0; i < projectAlreadyExist.length; i++) {
+              if (projectAlreadyExist[i].project_id == project_id) {
+                console.log('project found in data : ');
+                project_obj = projectAlreadyExist[i];
               }
-              else {
-                deferred.resolve(false);
+
+              if (projectAlreadyExist.length - 1 == i && project_obj) {
+                console.log('project_obj : ', project_obj);
+                if (project_obj && project_obj.scenes && project_obj.scenes.length) {
+                  readSoundFiles(project_obj).then(function (response) {
+                    console.log("res all read file : ", response);
+                    var promises = [];
+                    angular.forEach(project_obj.scenes, function (value) {
+                      promises.push(uploadSceneToServer(value));
+                    });
+                    $q.all(promises).then(function () {
+                      console.log('all promises after server');
+                      deferred.resolve(true);
+                    });
+
+                  });
+                }
+                else {
+                  deferred.resolve(false);
+                }
               }
             }
           }
-        }
-      });
+        });
+      }
+      else{
+        deferred.resolve(false);
+      }
       return deferred.promise;
     };
 

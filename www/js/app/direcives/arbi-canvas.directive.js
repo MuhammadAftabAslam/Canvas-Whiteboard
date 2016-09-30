@@ -601,11 +601,18 @@
               scope.modal.hide();
             }
             if (direction == 1) {
+              scope.isloading = true;
               console.log('please open browser')
               //$state.go('video', {"key": "57c6b905280db28a0fc14561"});//obj._id});
-              DrawingService.uploadCompleteProject(obj._id).then(function(res){
-                console.log('directive file last point',res);
-                window.open($weburl + obj._id, '_system');
+              DrawingService.uploadCompleteProject(obj._id).then(function (res) {
+                scope.isloading = false;
+                if (res) {
+                  console.log('directive file last point', res);
+                  window.open($weburl + obj._id, '_system');
+                }
+                else {
+                  alert('Could not connect to server. Check your internet and then try again!');
+                }
               })
             } else {
 
