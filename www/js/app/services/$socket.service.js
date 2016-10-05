@@ -10,6 +10,7 @@
 
   function $socket($url) {
     var socket = io.connect($url);
+    console.log('socket connection : ',socket);
     return socket;
   }
 

@@ -154,14 +154,14 @@
       return deferred.promise;
     };
 
-    var saveSound = function (sound_obj, project_id) {
+    var saveSound = function (sound_obj, project_id,flag) {
       var deferred = $q.defer();
       sound_obj.project_id = project_id;
       sound_obj.user_id = loggedin_user._id;
 
-      console.log('sound_obj : ', sound_obj);
+      console.log('sound_obj : ', sound_obj,'flag : ',flag);
       getFileData().then(function (alldata) {
-        if (alldata) {
+        if (alldata && !flag) {
           var projectAlreadyExist = JSON.parse(alldata);
           for (var i = 0; i < projectAlreadyExist.length; i++) {
             if (projectAlreadyExist[i].project_id == project_id) {
@@ -171,9 +171,40 @@
             if (projectAlreadyExist.length - 1 == i) {
               setFileData(projectAlreadyExist).then(function (respondObj) {
                 deferred.resolve(sound_obj);
+              });
+            }
+          }
+        }
+        else if (alldata && flag) {
+          var change = false
+          var projectAlreadyExist = JSON.parse(alldata);
+          for (var i = 0; i < projectAlreadyExist.length; i++) {
+            if (projectAlreadyExist[i].project_id == sound_obj.project_id) {
+              for (var j = 0; j < projectAlreadyExist[i].scenes.length; j++) {
+                if (projectAlreadyExist[i].scenes[j].id == sound_obj.id) {
+                  projectAlreadyExist[i].scenes[j] = sound_obj;
+                  console.log('scene found in data : ');
+                  change = true;
+                }
+              }
+            }
+
+            if (projectAlreadyExist.length - 1 == i) {
+              setFileData(projectAlreadyExist).then(function (respondObj) {
+                if (change) {
+                  deferred.resolve(sound_obj)
+                }
+                else {
+                  console.log('Could not find already existed object');
+                  deferred.resolve(false);
+                }
               })
             }
           }
+        }
+        else{
+          console.log('not possible');
+          deferred.resolve(false);
         }
       });
       return deferred.promise;
@@ -302,9 +333,11 @@
     var uploadCompleteProject = function (project_id) {
       var deferred = $q.defer();
       var project_obj = "";
-      console.log('socket.connected : ',$socket.connected);
-      if($socket.connected) {
+      console.log('socket.connected uploadCompleteProject: ',$socket.connected);
+
+        console.log('socket.connected : true');
         getFileData().then(function (alldata) {
+          console.log('uploadCompleteProject getFIle data');
           if (alldata) {
             var projectAlreadyExist = JSON.parse(alldata);
             for (var i = 0; i < projectAlreadyExist.length; i++) {
@@ -336,10 +369,7 @@
             }
           }
         });
-      }
-      else{
-        deferred.resolve(false);
-      }
+
       return deferred.promise;
     };
 

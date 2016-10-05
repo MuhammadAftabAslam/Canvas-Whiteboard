@@ -153,7 +153,8 @@
                 }
 
                 $('.video-holder').removeClass('play');
-                audio.play();
+                //audio.play();
+                document.getElementById('videoplayer').play();
 
 
                 playRecording();

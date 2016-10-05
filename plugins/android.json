@@ -13,6 +13,15 @@
         "cordova-plugin-device": {
             "PACKAGE_NAME": "com.ionicframework.canvasarbi103262"
         },
+        "cordova-plugin-file": {
+            "PACKAGE_NAME": "com.ionicframework.canvasarbi103262"
+        },
+        "cordova-plugin-media": {
+            "PACKAGE_NAME": "com.ionicframework.canvasarbi103262"
+        },
+        "cordova-plugin-media-capture": {
+            "PACKAGE_NAME": "com.ionicframework.canvasarbi103262"
+        },
         "cordova-plugin-splashscreen": {
             "PACKAGE_NAME": "com.ionicframework.canvasarbi103262"
         },
@@ -22,19 +31,10 @@
         "cordova-plugin-whitelist": {
             "PACKAGE_NAME": "com.ionicframework.canvasarbi103262"
         },
-        "ionic-plugin-keyboard": {
-            "PACKAGE_NAME": "com.ionicframework.canvasarbi103262"
-        },
-        "cordova-plugin-media-capture": {
-            "PACKAGE_NAME": "com.ionicframework.canvasarbi103262"
-        },
-        "cordova-plugin-media": {
-            "PACKAGE_NAME": "com.ionicframework.canvasarbi103262"
-        },
         "ionic-plugin-deploy": {
             "PACKAGE_NAME": "com.ionicframework.canvasarbi103262"
         },
-        "cordova-plugin-file": {
+        "ionic-plugin-keyboard": {
             "PACKAGE_NAME": "com.ionicframework.canvasarbi103262"
         },
         "cordova-plugin-inappbrowser": {

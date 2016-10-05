@@ -283,17 +283,25 @@
               id: (!$.isEmptyObject(currentRecording)) ? currentRecording.id : (new Date()).getTime(),
               type: type
             };
-            console.log('onsave  : ', obj);
-            if (scope.recordings) {
+            console.log('onsave  : ', obj,'------X',currentRecording.id);
+            if (!$.isEmptyObject(currentRecording) && currentRecording && currentRecording.id) {
+              obj.name = currentRecording.name;
+            } else if (scope.recordings) {
               obj.name = 'scene : ' + (scope.recordings.length + 1);
             } else {
               obj.name = 'scene :  1';
             }
-            DrawingService.save(obj, scope.project._id).then(function (newObj) {
+            DrawingService.save(obj, scope.project._id,(currentRecording && currentRecording.id && !$.isEmptyObject(currentRecording))).then(function (newObj) {
               console.log('newObj : ', newObj);
-              currentRecording = newObj;
-              init(scope.project._id);
-              scope.isloading = false;
+              if (newObj) {
+                currentRecording = newObj;
+                init(scope.project._id);
+                scope.isloading = false;
+              }
+              else {
+                alert('something went wrong on saving');
+              }
+
             })
           };
 
@@ -328,7 +336,7 @@
             confirmPopup.then(function (res) {
               if (res) {
                 //scope.isloading = true;
-                DrawingService.delete(obj._id, scope.project._id).then(function () {
+                DrawingService.hideScene(obj).then(function () {
                   init(scope.project._id);
                   //scope.isloading = false;
                 });
@@ -350,8 +358,8 @@
               if (res) {
                 drawingElement.clearCanvas();
                 if (!$.isEmptyObject(currentRecording)) {
-
-                  //onclick();
+                  console.log('here we go for the retake');
+                  onclick();
                 }
               } else {
                 //alert('select recording first');
@@ -437,7 +445,7 @@
             $ionicModal.fromTemplateUrl('templates/project-view.html', {
               scope: scope,
               //animation: 'slide-in-up',
-              backdropClickToClose: false,
+              //backdropClickToClose: false,
               //hardwareBackButtonClose: false
             }).then(function (modal) {
               console.log('open modal directive hode');
@@ -619,7 +627,7 @@
               scope.modal.remove();
             }
             if(ui.originalPosition.top == ui.position.top){
-              console.log('load Project');
+              console.log('load Project',obj);
               scope.loadProject(obj._id);
             }
             else if (ui.originalPosition.top > ui.position.top) {
@@ -628,7 +636,7 @@
               DrawingService.uploadCompleteProject(obj._id).then(function (res) {
                 scope.isloading = false;
                 if (res) {
-                  console.log('directive file last point', res);
+                  console.log('directive file last point', res,$weburl);
                   window.open($weburl + obj._id, '_system');
                 }
                 else {
