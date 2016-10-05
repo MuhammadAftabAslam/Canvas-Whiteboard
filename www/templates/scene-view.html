@@ -3,12 +3,12 @@
     <button class="button btn-close" ng-click="modal.hide()"><span class="icon-cancel"></span></button>
     <div ng-if="recordings.length" class="jcf-scrollable" custom-form>
       <ul class="info-list">
-        <li id="{{ recording._id }}" ng-repeat="recording in recordings">
+        <li id="{{ recording.id }}" ng-repeat="recording in recordings" ng-if="!recording.scene_hide">
           <div class="box">
             <a class="btn-edit"><span class="icon-edit"></span></a>
 
-            <div ng-click="savedPlaying(recording)" class="info-box" data-drag="false"
-                 data-jqyoui-options="{revert: 'invalid',containment:'#{{ recording._id }}',axis:'y'}"
+            <div ng-click="savedPlaying(recording)" class="info-box" data-drag="true"
+                 data-jqyoui-options="{revert: 'invalid',containment:'#{{ recording.id }}',axis:'y',refreshPositions: true}"
                  jqyoui-draggable="{animate:true,onStart: 'startDragging', onStop:'checkPosition(recording)'}">
               <a class="link">
                 <span class="info">{{ recording.name }}</span>

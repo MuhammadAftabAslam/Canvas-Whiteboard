@@ -1,7 +1,7 @@
 var express = require('express'),
 app = express();
 app.use(express.static('www'));
-app.set('port', process.env.PORT || 80);
-app.listen(app.get('port'), function () {
+app.set('port', process.env.PORT || 8080);
+app.listen(app.get('port'), '::' ,function () {
     console.log('Express server listening on port ' + app.get('port'));
 });

@@ -21,8 +21,8 @@
         },
         $scope.data.remember).then(function (data) {
         if (data) {
-          $state.go('tab.dash');
           $rootScope.$emit('user:loggedin', data);
+          $state.go('tab.dash');
           $scope.data = {};
         } else {
           var alertPopup = $ionicPopup.alert({

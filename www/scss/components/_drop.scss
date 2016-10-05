@@ -16,9 +16,12 @@
 
 		.drop-opener{
 			float: right;
-			margin: 20px 10px 0 0;
+		  	margin: 0;
 
-			@include media('≥tablet') {margin: 25px 25px 0 0;}
+		  > span{
+			margin: 15px 10px;
+			@include media('≥desktop') {margin: 20px 15px;}
+		  }
 		}
 	}
 }
@@ -259,9 +262,9 @@
 	float: left;
 	position: relative;
 	overflow: visible;
-	margin: 20px 0 0 10px;
+	margin: 0;
 	padding: 10px 0;
-	width: 30px;
+	width: inherit;
 	cursor: pointer;
 	transition-timing-function: linear;
 	transition-duration: .15s;
@@ -276,7 +279,12 @@
 
 	@include media('<tablet') {@include scale(0.8);}
 
-	@include media('≥tablet') {margin: 25px 0 0 25px;}
+
+
+  > span{
+		margin: 10px;
+		@include media('≥tablet') {margin: 15px;}
+  }
 
 	&:hover,
 	&:active{
@@ -323,6 +331,11 @@
 	}
 }
 
+.drop{
+  .menu-opener {
+	> span{margin: 0 !important;}
+  }
+}
 
 .menu-opener {
 	font: inherit;
@@ -330,7 +343,7 @@
 	position: relative;
 	overflow: visible;
 	padding: 10px 0;
-	width: 20px;
+	width: 40px;
 	cursor: pointer;
 	transition-timing-function: linear;
 	transition-duration: .15s;
@@ -344,6 +357,8 @@
 	background-color: transparent;
 
 	@include media('<tablet') {@include scale(0.8);}
+
+  	@include media('≥tablet') {width: 50px;}
 
 	&:hover,
 	&:active{

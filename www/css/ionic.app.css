@@ -11024,10 +11024,12 @@ label {
     right: 0; }
     .tool-box.right .drop-opener {
       float: right;
-      margin: 20px 10px 0 0; }
-      @media (min-width: 768px) {
-        .tool-box.right .drop-opener {
-          margin: 25px 25px 0 0; } }
+      margin: 0; }
+      .tool-box.right .drop-opener > span {
+        margin: 15px 10px; }
+        @media (min-width: 1024px) {
+          .tool-box.right .drop-opener > span {
+            margin: 20px 15px; } }
 
 .drop-opener {
   font-size: 30px;
@@ -11287,9 +11289,9 @@ label {
   float: left;
   position: relative;
   overflow: visible;
-  margin: 20px 0 0 10px;
+  margin: 0;
   padding: 10px 0;
-  width: 30px;
+  width: inherit;
   cursor: pointer;
   transition-timing-function: linear;
   transition-duration: .15s;
@@ -11308,9 +11310,11 @@ label {
       -ms-transform: scale(0.8);
       -webkit-transform: scale(0.8);
       transform: scale(0.8); } }
-  @media (min-width: 768px) {
-    .hamburger {
-      margin: 25px 0 0 25px; } }
+  .hamburger > span {
+    margin: 10px; }
+    @media (min-width: 768px) {
+      .hamburger > span {
+        margin: 15px; } }
   .hamburger:hover .hamburger-inner, .hamburger:active .hamburger-inner {
     background: #0ca4f0; }
     .hamburger:hover .hamburger-inner:after, .hamburger:hover .hamburger-inner:before, .hamburger:active .hamburger-inner:after, .hamburger:active .hamburger-inner:before {
@@ -11355,13 +11359,16 @@ label {
     .hamburger .hamburger-inner:after {
       bottom: -8px; }
 
+.drop .menu-opener > span {
+  margin: 0 !important; }
+
 .menu-opener {
   font: inherit;
   float: left;
   position: relative;
   overflow: visible;
   padding: 10px 0;
-  width: 20px;
+  width: 40px;
   cursor: pointer;
   transition-timing-function: linear;
   transition-duration: .15s;
@@ -11380,6 +11387,9 @@ label {
       -ms-transform: scale(0.8);
       -webkit-transform: scale(0.8);
       transform: scale(0.8); } }
+  @media (min-width: 768px) {
+    .menu-opener {
+      width: 50px; } }
   .menu-opener:hover .inner:after, .menu-opener:hover .inner:before, .menu-opener:active .inner:after, .menu-opener:active .inner:before {
     background: #0ca4f0; }
   .menu-opener .inner {

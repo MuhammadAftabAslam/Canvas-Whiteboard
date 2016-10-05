@@ -65,7 +65,7 @@
       var deferred = $q.defer();
       if (loggedin_user && loggedin_user._id) {
         getFileData().then(function (alldata) {
-          console.log('res:getFileData: ', alldata);
+          console.log('res:getFileData: ');
           if (alldata.length) {
             var all_project = [];
             all_project = JSON.parse(alldata);
@@ -146,16 +146,11 @@
 
     var getVideo = function (project_id) {
       var deferred = $q.defer();
-      if(socket.connected){
         $socket.emit('req:project:video', {project_id: project_id})
         .on('res:project:video', function (alldata) {
           $socket.removeListener('res:project:video');
           deferred.resolve(alldata);
         });
-      }
-      else{
-        deferred.resolve(false);
-      }
       return deferred.promise;
     };
 
@@ -261,8 +256,8 @@
             console.log("drawing Successful in reading the file initially:");
             deferred.resolve(success);
           }, function (error) {
-            deferred.resolve(false);
             console.log("drawing error reading the file", error)
+            deferred.resolve(false);
           });
       })
       return deferred.promise;
@@ -393,6 +388,70 @@
       return deferred.promise;
     };
 
+    var hideProject = function (id) {
+      var deferred = $q.defer();
+      console.log('hide project in drawing service')
+      getFileData().then(function (alldata) {
+        console.log('data found');
+        if (alldata) {
+          var projectAlreadyExist = JSON.parse(alldata);
+          var change = false;
+          for (var i = 0; i < projectAlreadyExist.length; i++) {
+            if (projectAlreadyExist[i].project_id == id) {
+              console.log('project found in data : ');
+              projectAlreadyExist[i].project_hide = true;
+              change = true;
+              console.log('data found', projectAlreadyExist[i].project_hide);
+            }
+            if (projectAlreadyExist.length - 1 == i) {
+              setFileData(projectAlreadyExist).then(function (respondObj) {
+                if (change) {
+                  deferred.resolve(true);
+                }
+                else {
+                  deferred.resolve(false);
+                }
+              })
+            }
+          }
+        }
+      });
+      return deferred.promise;
+    };
+
+    var hideScene = function (obj) {
+      var deferred = $q.defer();
+      getFileData().then(function (alldata) {
+        if (alldata) {
+          var projectAlreadyExist = JSON.parse(alldata);
+          var change = false;
+          for (var i = 0; i < projectAlreadyExist.length; i++) {
+            if (projectAlreadyExist[i].project_id == obj.project_id) {
+              for (var j = 0; j < projectAlreadyExist[i].scenes.length; j++) {
+                if (projectAlreadyExist[i].scenes[j].id == obj.id) {
+                  projectAlreadyExist[i].scenes[j].scene_hide = true;
+                  console.log('scene found in data : ');
+                  change = true;
+                }
+              }
+            }
+
+            if (projectAlreadyExist.length - 1 == i) {
+              setFileData(projectAlreadyExist).then(function (respondObj) {
+                if (change) {
+                  deferred.resolve(true)
+                }
+                else {
+                  deferred.resolve(false);
+                }
+              })
+            }
+          }
+        }
+      });
+      return deferred.promise;
+    };
+
 
     return {
       get: getSounds,
@@ -408,7 +467,9 @@
       swap: swap,
       ClearUserData: ClearUserData,
       loggedInUser: loggedInUser,
-      uploadCompleteProject : uploadCompleteProject
+      uploadCompleteProject : uploadCompleteProject,
+      hideProject : hideProject,
+      hideScene : hideScene
     };
   }
 

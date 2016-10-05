@@ -3,10 +3,12 @@
     <button class="button btn-close" ng-click="modal.hide()"><span class="icon-cancel"></span></button>
     <div class="jcf-scrollable" custom-form>
       <ul class="info-list">
-        <li id="{{ project._id }}" ng-repeat="project in allProjects">
+        <li id="{{ project._id }}" ng-repeat="project in allProjects" ng-if="!project.project_hide">
           <div class="box">
             <a class="btn-upload"><span class="icon-upload"></span></a>
-            <div class="info-box" ng-click="loadProject(project._id)" data-drag="true" data-jqyoui-options="{revert: 'invalid',containment:'#{{ project._id }}',axis:'y'}" jqyoui-draggable="{animate:true,onStop:'checkProjectPosition(project)'}">
+            <div class="info-box" ng-click="loadProject(project._id)" data-drag="true"
+                 data-jqyoui-options="{revert: 'invalid',containment:'#{{ project._id }}',axis:'y',refreshPositions: true}"
+                 jqyoui-draggable="{animate:true,onStop:'checkProjectPosition(project)'}">
               <a class="link">
               	<span class="info">{{ project.project_name }}</span>
               	<span class="caption"><span class="by">by</span> <span class="name">{{ user.username }}</span></span>

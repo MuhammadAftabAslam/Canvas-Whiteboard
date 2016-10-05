@@ -66,8 +66,9 @@
           };
 
           $rootScope.$on('user:loggedin', function (event, user) {
+            console.log('user:loggedin : ',event,user);
             scope.user = user;
-            init();
+            //init();
           });
 
           init();
@@ -256,6 +257,7 @@
               });
               return;
             }
+            $wrapper.addClass('record').removeClass('pause').removeClass('play').removeClass('stop');
             drawingElement.startRecording();
             media.startRecord();
           };
@@ -298,7 +300,7 @@
           scope.savedPlaying = function (obj) {
             console.log('savedplaying', obj);
             if (scope.modal) {
-              scope.modal.hide();
+              scope.modal.remove();
             }
             var result = deserializeDrawing(obj.drawing_data);
             if (result == null)
@@ -435,7 +437,7 @@
             $ionicModal.fromTemplateUrl('templates/project-view.html', {
               scope: scope,
               //animation: 'slide-in-up',
-              //backdropClickToClose: false,
+              backdropClickToClose: false,
               //hardwareBackButtonClose: false
             }).then(function (modal) {
               console.log('open modal directive hode');
@@ -522,23 +524,29 @@
 
           scope.addProject = function (form) {
             //console.log('open modal addProject', form.description.$modelValue, form.useAsDefault.$modelValue);
-            DrawingService.addProject({
-              project_name: form.description.$modelValue || "abc",
-            }, '').then(function (data) {
-              scope.newModal.hide();
-              getAllProjects();
-            })
+            console.log('add project',form);
+            if(form.description.$modelValue) {
+              DrawingService.addProject({
+                project_name: form.description.$modelValue || "abc",
+              }, '').then(function (data) {
+                console.log('add projectwith data', data);
+                scope.newModal.remove();
+                getAllProjects();
+              })
+            }
+            else{
+              return;
+            }
           };
 
           scope.loadProject = function (project_id) {
             init(project_id);
-            scope.modal.hide();
+            scope.modal.remove();
           };
 
 
           scope.onclickRecord = function () {
             console.log('onclickrecord');
-            $wrapper.addClass('record').removeClass('pause').removeClass('play').removeClass('stop');
             if (scope.isRecording == 2) { // pause to record
               drawingElement.resumeRecording();
               media.startRecord();
@@ -582,28 +590,41 @@
             var direction = (ui.originalPosition.top > ui.position.top) ? 1 : 0;
             console.log('has moved ' + direction);
             if (scope.modal) {
-              scope.modal.hide();
+              scope.modal.remove();
             }
-            if (direction == 1) {
+
+            if(ui.originalPosition.top == ui.position.top){
+              console.log('load scene');
+              scope.savedPlaying(obj);
+            }
+            else if (ui.originalPosition.top > ui.position.top) {
               scope.onRetake(obj);
-            } else {
+            } else if(ui.originalPosition.top < ui.position.top){
               scope.itemDelete(obj);
+              init();
             }
-            event.preventDefault();
-            event.stopPropagation();
+            else{
+              scope.savedPlaying(obj);
+            }
+            //event.preventDefault();
+            //event.stopPropagation();
           };
 
           scope.checkProjectPosition = function (event, ui, obj) {
-            console.log('event, ui : ', event, ui, obj);
+            console.log('event, ui : ', event)
+            console.log('event, ui : ', ui.originalPosition.top,ui.position.top);
             var direction = (ui.originalPosition.top > ui.position.top) ? 1 : 0;
             console.log('has moved project', direction);
             if (scope.modal) {
-              scope.modal.hide();
+              scope.modal.remove();
             }
-            if (direction == 1) {
+            if(ui.originalPosition.top == ui.position.top){
+              console.log('load Project');
+              scope.loadProject(obj._id);
+            }
+            else if (ui.originalPosition.top > ui.position.top) {
               scope.isloading = true;
               console.log('please open browser')
-              //$state.go('video', {"key": "57c6b905280db28a0fc14561"});//obj._id});
               DrawingService.uploadCompleteProject(obj._id).then(function (res) {
                 scope.isloading = false;
                 if (res) {
@@ -611,14 +632,30 @@
                   window.open($weburl + obj._id, '_system');
                 }
                 else {
+                  alert('Could not connect to server for Uploading. Check your internet and then try again!');
+                }
+              })
+            } else if(ui.originalPosition.top < ui.position.top){
+              scope.isloading = true;
+              console.log('delete project')
+              DrawingService.hideProject(obj._id).then(function (res) {
+                scope.isloading = false;
+                if (res) {
+                  console.log('directive file last point', res);
+                  init();
+                }
+                else {
                   alert('Could not connect to server. Check your internet and then try again!');
                 }
               })
-            } else {
-
             }
-            event.preventDefault();
-            event.stopPropagation();
+            else{
+              console.log('load Project');
+              scope.loadProject(obj._id);
+            }
+            return;
+            //event.preventDefault();
+            //event.stopPropagation();
           };
 
 
